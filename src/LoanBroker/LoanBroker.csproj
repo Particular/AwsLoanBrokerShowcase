@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="NLog.Extensions.Logging" Version="5.3.8" />
         <PackageReference Include="NServiceBus" Version="9.0.0"/>
         <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.0"/>
         <!-- The Microsoft.Net.Build.Containers package can be removed if using .NET SDK 8.0.200 or newer -->

@@ -1,7 +1,11 @@
 using Microsoft.Extensions.Hosting;
+using NLog.Extensions.Logging;
+using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
 
-
+// Integrate NServiceBus logging with Microsoft.Extensions.Logging
+Microsoft.Extensions.Logging.ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
+LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
 var defaultFactory = LogManager.Use<DefaultFactory>();
 defaultFactory.Level(LogLevel.Warn);
 
