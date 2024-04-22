@@ -28,4 +28,8 @@
       <ProjectReference Include="..\Messages\Messages.csproj" />
     </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tests" />
+  </ItemGroup>
+
 </Project>
