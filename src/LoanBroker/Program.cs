@@ -1,6 +1,9 @@
+using System.Runtime.ExceptionServices;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
+using LoanBroker.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
@@ -13,6 +16,9 @@ var defaultFactory = LogManager.Use<DefaultFactory>();
 defaultFactory.Level(LogLevel.Warn);
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.Services.AddSingleton<ICreditScoreProvider, CreditScoreProvider>();
+builder.Services.AddSingleton<IQuoteAggregator, QuoteAggregator>();
+
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 
 var localStackEdgeUrl = "http://localhost:4566";
