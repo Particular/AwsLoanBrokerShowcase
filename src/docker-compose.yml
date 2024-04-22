@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  localstack:
+    image: localstack/localstack
+    environment:
+      - SERVICES=sns,sqs,iam,s3,dynamodb
+      - DEBUG=1
+      - HOSTNAME=localstack
+      - EDGE_PORT=4566
+    ports:
+      - '4566-4597:4566-4597'
+      - "8000:5000"
