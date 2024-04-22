@@ -12,9 +12,8 @@
         <PackageReference Include="NLog.Extensions.Logging" Version="5.3.8" />
         <PackageReference Include="NServiceBus" Version="9.0.0"/>
         <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.0"/>
-        <!-- The Microsoft.Net.Build.Containers package can be removed if using .NET SDK 8.0.200 or newer -->
-        <PackageReference Include="Microsoft.Net.Build.Containers" Version="8.0.100"/>
-        <PackageReference Include="NServiceBus.Transport.SqlServer" Version="8.0.0"/>
+        <PackageReference Include="NServiceBus.AmazonSQS" Version="7.0.0" />
+        <PackageReference Include="NServiceBus.Extensions.Logging" Version="3.0.0" />
         <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="2.0.0"/>
     </ItemGroup>
 

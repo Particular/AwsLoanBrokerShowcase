@@ -1,3 +1,6 @@
+using Amazon.Runtime;
+using Amazon.SimpleNotificationService;
+using Amazon.SQS;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
@@ -9,34 +12,24 @@ LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
 var defaultFactory = LogManager.Use<DefaultFactory>();
 defaultFactory.Level(LogLevel.Warn);
 
-// To create a docker container, use the following command: dotnet publish /t:PublishContainer
-// See https://learn.microsoft.com/en-us/dotnet/core/docker/publish-as-container?pivots=dotnet-8-0#publish-net-app for details
 var builder = Host.CreateApplicationBuilder(args);
-
-// TODO: consider moving common endpoint configuration into a shared project
-// for use by all endpoints in the system
-
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 
-// SQL Server Transport: https://docs.particular.net/transports/sql/
-var transport = new SqlServerTransport("Data Source=.\\SqlExpress;Initial Catalog=dbname;Integrated Security=True");
-// var routing = endpointConfiguration.UseTransport(transport);
-var routing = endpointConfiguration.UseTransport<LearningTransport>();
+var localStackEdgeUrl = "http://localhost:4566";
+var dummy = new BasicAWSCredentials("xxx","xxx");
+var sqsConfig = new AmazonSQSConfig() { ServiceURL = localStackEdgeUrl };
+var snsConfig = new AmazonSimpleNotificationServiceConfig(){ ServiceURL = localStackEdgeUrl };
 
-// Define routing for commands: https://docs.particular.net/nservicebus/messaging/routing#command-routing
-// routing.RouteToEndpoint(typeof(MessageType), "DestinationEndpointForType");
-// routing.RouteToEndpoint(typeof(MessageType).Assembly, "DestinationForAllCommandsInAssembly");
+var transport = new SqsTransport(
+    new AmazonSQSClient(dummy, sqsConfig),
+    new AmazonSimpleNotificationServiceClient(dummy, snsConfig));
+endpointConfiguration.UseTransport(transport);
 
-// Amazon DynamoDB Persistence: https://docs.particular.net/persistence/dynamodb/
-var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
-
-// Message serialization
+//endpointConfiguration.UsePersistence<DynamoPersistence>();
+endpointConfiguration.UsePersistence<LearningPersistence>();
+endpointConfiguration.EnableOutbox();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
-// Installers are useful in development. Consider disabling in production.
-// https://docs.particular.net/nservicebus/operations/installers
 endpointConfiguration.EnableInstallers();
 
 builder.UseNServiceBus(endpointConfiguration);
@@ -46,13 +39,9 @@ app.Run();
 
 static async Task OnCriticalError(ICriticalErrorContext context, CancellationToken cancellationToken)
 {
-    // TODO: decide if stopping the endpoint and exiting the process is the best response to a critical error
-    // https://docs.particular.net/nservicebus/hosting/critical-errors
-    // and consider setting up service recovery
-    // https://docs.particular.net/nservicebus/hosting/windows-service#installation-restart-recovery
     try
     {
-        // await context.Stop(cancellationToken);
+        await context.Stop(cancellationToken);
     }
     finally
     {
