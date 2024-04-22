@@ -1,6 +1,7 @@
 ﻿namespace Messages;
 
-public class QuoteCreated
-{
-    public string CorrelationId { get; set; }
-}
+public record QuoteCreated(
+    string RequestId,
+    string BankIdentifier,
+    double InterestRate
+);

@@ -6,64 +6,59 @@ using Messages;
 
 internal class BestLoanPolicy(ILogger<BestLoanPolicy> log) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
-    IAmStartedByMessages<QuoteCreated>,
-    IHandleTimeouts<MyCustomTimeout>
+    IHandleMessages<QuoteCreated>,
+    IHandleTimeouts<MaxTimeout>
 {
+    private ICreditScoreProvider _creditScoreProvider;
+
+    private IQuoteAggregator _quoteAggregator;
+
+    
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
     {
         // https://docs.particular.net/nservicebus/sagas/message-correlation
-        mapper.MapSaga(saga => saga.CorrelationId)
-            .ToMessage<FindBestLoan>(message => message.CorrelationId)
-            .ToMessage<QuoteCreated>(message => message.CorrelationId);
+        mapper.MapSaga(saga => saga.RequestId)
+            .ToMessage<FindBestLoan>(message => message.RequestId)
+            .ToMessage<QuoteCreated>(message => message.RequestId);
     }
 
     public async Task Handle(FindBestLoan message, IMessageHandlerContext context)
     {
         // Business logic here
-        // http request score provider
-        // publish (QuoteRequested)
-        // request timeout
+        var score = _creditScoreProvider.Score();
+        await context.Publish(new QuoteRequested(message.RequestId,
+            message.Prospect,
+            score,
+            message.NumberOfYears,
+            message.Amount
+        ));
+
+        await RequestTimeout<MaxTimeout>(context, TimeSpan.FromMinutes(10));
     }
 
     public async Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
+        Data.Quotes[message.BankIdentifier] = message.InterestRate;
         
-        // save
-        
-        // Update saga data: https://docs.particular.net/nservicebus/sagas/#long-running-means-stateful
-        // this.Data.Property = ...
-
-        // Sending commands: https://docs.particular.net/nservicebus/messaging/send-a-message#inside-the-incoming-message-processing-pipeline
-        // await context.Send(...);
-
-        // Publishing events https://docs.particular.net/nservicebus/messaging/publish-subscribe/publish-handle-event
-        // await context.Publish(...);
-
-        // Request a timeout: https://docs.particular.net/nservicebus/sagas/timeouts
-        // await RequestTimeout<MyCustomTimeout>(context, TimeSpan.FromMinutes(10));
-
-        // Ending a saga: https://docs.particular.net/nservicebus/sagas/#ending-a-saga
-        // MarkAsComplete();
     }
 
-    public async Task Timeout(MyCustomTimeout timeout, IMessageHandlerContext context)
+
+    public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
-        
-        // Remove if saga does not require timeouts
-        // reduce
-        // publish / send(reply)
+        Quote best = _quoteAggregator.Reduce(Data.Quotes);
+        await ReplyToOriginator(context, new BestLoanFound(Data.RequestId, best));
+        MarkAsComplete();
     }
-    
-    
 }
 
 internal class BestLoanData : ContainSagaData
 {
-    public string CorrelationId { get; set; }
+    public string RequestId { get; set; }
+
+    public Dictionary<string, double> Quotes = new Dictionary<string, double>();
     // Other properties
 }
 
-internal class MyCustomTimeout
-{
-    // Optional extra properties
-}
+
+internal record MaxTimeout();
+

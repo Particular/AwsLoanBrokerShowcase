@@ -1,6 +1,8 @@
 ﻿namespace Messages;
 
-public class FindBestLoan
-{
-    public string CorrelationId { get; set; }
-}
+public record FindBestLoan(
+    string RequestId,
+    Prospect Prospect,
+    int NumberOfYears,
+    int Amount
+);

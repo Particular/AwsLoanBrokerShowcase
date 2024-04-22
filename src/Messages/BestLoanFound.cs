@@ -1,6 +1,5 @@
 ﻿namespace Messages;
 
-public class BestLoanFound
-{
-    
-}
+public record BestLoanFound(
+    string RequestId,
+    Quote Quote);

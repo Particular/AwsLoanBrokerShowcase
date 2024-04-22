@@ -1,6 +1,9 @@
 ﻿namespace Messages;
 
-public class QuoteRequested
-{
-    
-}
+public record QuoteRequested(
+    string RequestIdentifier,
+    Prospect Prospect,
+    int Score,
+    int NumberOfYears,
+    int Amount
+);

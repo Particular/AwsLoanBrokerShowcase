@@ -1,6 +1,5 @@
 ﻿namespace Messages;
 
-public class QuoteRequestRefused
-{
-    
-}
+public record QuoteRequestRefused(
+    string RequestId,
+    string BankId);
