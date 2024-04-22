@@ -1,19 +1,17 @@
+using LoanBroker.Services;
+using Messages;
 using Microsoft.Extensions.Logging;
 
-namespace Handlers;
+namespace LoanBroker.Policies;
 
-using Messages;
-
-internal class BestLoanPolicy(ILogger<BestLoanPolicy> log) : Saga<BestLoanData>,
+class BestLoanPolicy(ILogger<BestLoanPolicy> log) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
     IHandleMessages<QuoteCreated>,
     IHandleTimeouts<MaxTimeout>
 {
-    private ICreditScoreProvider _creditScoreProvider;
+    ICreditScoreProvider _creditScoreProvider;
+    IQuoteAggregator _quoteAggregator;
 
-    private IQuoteAggregator _quoteAggregator;
-
-    
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
     {
         // https://docs.particular.net/nservicebus/sagas/message-correlation
@@ -39,9 +37,8 @@ internal class BestLoanPolicy(ILogger<BestLoanPolicy> log) : Saga<BestLoanData>,
     public async Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
         Data.Quotes[message.BankIdentifier] = message.InterestRate;
-        
-    }
 
+    }
 
     public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
@@ -51,7 +48,7 @@ internal class BestLoanPolicy(ILogger<BestLoanPolicy> log) : Saga<BestLoanData>,
     }
 }
 
-internal class BestLoanData : ContainSagaData
+class BestLoanData : ContainSagaData
 {
     public string RequestId { get; set; }
 
@@ -59,6 +56,5 @@ internal class BestLoanData : ContainSagaData
     // Other properties
 }
 
-
-internal record MaxTimeout();
+record MaxTimeout();
 

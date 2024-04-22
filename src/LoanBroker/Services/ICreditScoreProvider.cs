@@ -1,4 +1,4 @@
-﻿namespace Handlers;
+﻿namespace LoanBroker.Services;
 
 public interface ICreditScoreProvider
 {

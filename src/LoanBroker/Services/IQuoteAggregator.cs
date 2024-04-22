@@ -1,6 +1,6 @@
-﻿namespace Handlers;
+﻿using Messages;
 
-using Messages;
+namespace LoanBroker.Services;
 
 public interface IQuoteAggregator
 {
