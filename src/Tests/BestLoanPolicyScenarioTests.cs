@@ -19,7 +19,7 @@ public class BestLoanPolicyScenarioTests
         var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateAggregator()));
+            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
 
         var result1 = await policy.Handle(initialCommand);
         var quoteRequested = result1.FindPublishedMessage<QuoteRequested>();
@@ -32,9 +32,9 @@ public class BestLoanPolicyScenarioTests
 
         (string BankId, double InterestRate)[] bankResponses =
         [
-            new ("FirstNational", 3.05),
-            new ("SecondRegional", 2.95),
-            new ("AreYouKidding", 99.99)
+            new("FirstNational", 3.05),
+            new("SecondRegional", 2.95),
+            new("AreYouKidding", 99.99)
         ];
 
         var quoteCount = 0;
@@ -44,6 +44,7 @@ public class BestLoanPolicyScenarioTests
             Assert.That(quoteResult.Completed, Is.False);
             Assert.That(quoteResult.Context.SentMessages, Is.Empty);
             Assert.That(quoteResult.Context.PublishedMessages, Is.Empty);
+            Assert.That(quoteResult.Context.TimeoutMessages, Is.Empty);
             Assert.That(quoteResult.SagaDataSnapshot.Quotes.Count, Is.EqualTo(++quoteCount));
         }
 
@@ -64,10 +65,6 @@ public class BestLoanPolicyScenarioTests
         public int Score() => score;
     }
 
-    class BestRateAggregator : IQuoteAggregator
-    {
-        public Quote Reduce(List<Quote> quotes) => quotes.OrderBy(q => q.InterestRate).First();
-    }
 
     static readonly ILogger<BestLoanPolicy> log = new NullLogger<BestLoanPolicy>();
 }

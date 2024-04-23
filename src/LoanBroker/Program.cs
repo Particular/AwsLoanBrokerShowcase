@@ -1,4 +1,4 @@
-using System.Runtime.ExceptionServices;
+// using System.Runtime.ExceptionServices;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
@@ -17,7 +17,7 @@ defaultFactory.Level(LogLevel.Warn);
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddSingleton<ICreditScoreProvider, CreditScoreProvider>();
-builder.Services.AddSingleton<IQuoteAggregator, QuoteAggregator>();
+builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 
@@ -33,7 +33,7 @@ endpointConfiguration.UseTransport(transport);
 
 //endpointConfiguration.UsePersistence<DynamoPersistence>();
 endpointConfiguration.UsePersistence<LearningPersistence>();
-endpointConfiguration.EnableOutbox();
+//endpointConfiguration.EnableOutbox();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 endpointConfiguration.EnableInstallers();
