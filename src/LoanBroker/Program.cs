@@ -14,8 +14,6 @@ using NServiceBus.Logging;
 // Integrate NServiceBus logging with Microsoft.Extensions.Logging
 Microsoft.Extensions.Logging.ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
 LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
-var defaultFactory = LogManager.Use<DefaultFactory>();
-defaultFactory.Level(LogLevel.Warn);
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddSingleton<ICreditScoreProvider, CacheCreditScoreProvider>(sp => new CacheCreditScoreProvider(new RandomCreditScoreProvider()));
