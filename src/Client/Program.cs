@@ -28,19 +28,37 @@ endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 endpointConfiguration.EnableInstallers();
 
-
 builder.UseNServiceBus(endpointConfiguration);
 
 var app = builder.Build();
 
 await app.StartAsync();
-var messageSession = app.Services.GetRequiredService<IMessageSession>();
-var requestId = Guid.NewGuid().ToString().Substring(0, 8);
-var prospect = new Prospect("Scrooge", "McDuck");
-await messageSession.Send(new FindBestLoan(requestId, prospect, 10, 1000));
+
+const ConsoleKey sendMessageConsoleKey = ConsoleKey.F;
+Console.WriteLine($"Press {sendMessageConsoleKey} to send a new FindBestLoan request");
+Console.WriteLine("Press Q to quit");
+
+var running = true;
+while (running)
+{
+    var k = Console.ReadKey();
+    switch (k.Key)
+    {
+        case sendMessageConsoleKey:
+            var messageSession = app.Services.GetRequiredService<IMessageSession>();
+            var requestId = Guid.NewGuid().ToString()[..8];
+            var prospect = new Prospect("Scrooge", "McDuck");
+            Console.WriteLine($"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
+            await messageSession.Send(new FindBestLoan(requestId, prospect, 10, 1000));
+            break;
+        case ConsoleKey.Q:
+            running = false;
+            break;
+    }
+}
+
 await app.StopAsync();
-
-
+app.Dispose();
 
 static async Task OnCriticalError(ICriticalErrorContext context, CancellationToken cancellationToken)
 {
