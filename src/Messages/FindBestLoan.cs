@@ -1,8 +1,10 @@
-﻿namespace Messages;
+﻿using NServiceBus;
+
+namespace Messages;
 
 public record FindBestLoan(
     string RequestId,
     Prospect Prospect,
     int NumberOfYears,
     int Amount
-);
+) : ICommand;

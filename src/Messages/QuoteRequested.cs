@@ -1,4 +1,6 @@
-﻿namespace Messages;
+﻿using NServiceBus;
+
+namespace Messages;
 
 public record QuoteRequested(
     string RequestIdentifier,
@@ -6,4 +8,4 @@ public record QuoteRequested(
     int Score,
     int NumberOfYears,
     int Amount
-);
+) : IEvent;
