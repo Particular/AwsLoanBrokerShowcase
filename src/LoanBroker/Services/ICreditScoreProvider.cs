@@ -1,7 +1,9 @@
-﻿namespace LoanBroker.Services;
+﻿using Messages;
+
+namespace LoanBroker.Services;
 
 public interface ICreditScoreProvider
 {
-    int Score();
+    int Score(Prospect prospect);
 
 }

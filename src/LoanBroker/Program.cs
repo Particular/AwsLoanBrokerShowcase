@@ -18,7 +18,7 @@ var defaultFactory = LogManager.Use<DefaultFactory>();
 defaultFactory.Level(LogLevel.Warn);
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddSingleton<ICreditScoreProvider, CreditScoreProvider>();
+builder.Services.AddSingleton<ICreditScoreProvider, CacheCreditScoreProvider>(sp => new CacheCreditScoreProvider(new RandomCreditScoreProvider()));
 builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");

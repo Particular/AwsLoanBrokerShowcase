@@ -22,7 +22,7 @@ class BestLoanPolicy(
 
     public async Task Handle(FindBestLoan message, IMessageHandlerContext context)
     {
-        var score = creditScoreProvider.Score();
+        var score = creditScoreProvider.Score(message.Prospect);
         await context.Publish(new QuoteRequested(message.RequestId,
             message.Prospect,
             score,

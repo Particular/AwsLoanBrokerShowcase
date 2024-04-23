@@ -62,7 +62,7 @@ public class BestLoanPolicyScenarioTests
 
     class FixedCreditScorer(int score) : ICreditScoreProvider
     {
-        public int Score() => score;
+        public int Score(Prospect prospect) => score;
     }
 
 
