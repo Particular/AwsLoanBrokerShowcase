@@ -4,7 +4,10 @@ using Microsoft.Extensions.Logging;
 
 namespace LoanBroker.Policies;
 
-class BestLoanPolicy(ILogger<BestLoanPolicy> log, ICreditScoreProvider creditScoreProvider, IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
+class BestLoanPolicy(
+    ILogger<BestLoanPolicy> log,
+    ICreditScoreProvider creditScoreProvider,
+    IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
     IHandleMessages<QuoteCreated>,
     IHandleTimeouts<MaxTimeout>
@@ -18,7 +21,6 @@ class BestLoanPolicy(ILogger<BestLoanPolicy> log, ICreditScoreProvider creditSco
 
     public async Task Handle(FindBestLoan message, IMessageHandlerContext context)
     {
-        // Business logic here
         var score = creditScoreProvider.Score();
         await context.Publish(new QuoteRequested(message.RequestId,
             message.Prospect,
@@ -31,13 +33,14 @@ class BestLoanPolicy(ILogger<BestLoanPolicy> log, ICreditScoreProvider creditSco
 
     public Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
+        Data.Quotes ??= [];
         Data.Quotes.Add(new Quote(message.BankIdentifier, message.InterestRate));
         return Task.CompletedTask;
     }
 
     public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
-        var best = quoteAggregator.Reduce(Data.Quotes);
+        var best = quoteAggregator.Reduce(Data.Quotes ?? []);
         await ReplyToOriginator(context, new BestLoanFound(Data.RequestId, best));
         MarkAsComplete();
     }
@@ -45,10 +48,10 @@ class BestLoanPolicy(ILogger<BestLoanPolicy> log, ICreditScoreProvider creditSco
 
 class BestLoanData : ContainSagaData
 {
-    // TODO do we need setters or the serializer will complain?
-    public string RequestId { get; set; }
-    public List<Quote> Quotes { get; set; } = [];
+    public string RequestId { get; set; } = null!;
+
+    //DynamoDB does not accept empty list, they must be null.
+    public List<Quote>? Quotes { get; set; }
 }
 
 record MaxTimeout();
-
