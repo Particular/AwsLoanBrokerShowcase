@@ -4,9 +4,14 @@ using Amazon.SQS;
 using Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog.Extensions.Logging;
+using NServiceBus.Extensions.Logging;
+using NServiceBus.Logging;
 
-// To create a docker container, use the following command: dotnet publish /t:PublishContainer
-// See https://learn.microsoft.com/en-us/dotnet/core/docker/publish-as-container?pivots=dotnet-8-0#publish-net-app for details
+// Integrate NServiceBus logging with Microsoft.Extensions.Logging
+Microsoft.Extensions.Logging.ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
+LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
+
 var builder = Host.CreateApplicationBuilder(args);
 
 // TODO: consider moving common endpoint configuration into a shared project
