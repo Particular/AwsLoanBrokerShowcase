@@ -10,6 +10,7 @@ class BestLoanPolicy(
     IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
     IHandleMessages<QuoteCreated>,
+    IHandleMessages<QuoteRequestRefused>,
     IHandleTimeouts<MaxTimeout>
 {
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
@@ -38,8 +39,16 @@ class BestLoanPolicy(
         return Task.CompletedTask;
     }
 
+    public Task Handle(QuoteRequestRefused message, IMessageHandlerContext context)
+    {
+        Data.RejectedBy ??= [];
+        Data.RejectedBy.Add(message.BankId);
+        return Task.CompletedTask;
+    }
+
     public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
+        // Add some logic about whether banks were not available vs. banks refused the request
         var best = quoteAggregator.Reduce(Data.Quotes ?? []);
         await ReplyToOriginator(context, new BestLoanFound(Data.RequestId, best));
         MarkAsComplete();
@@ -52,6 +61,8 @@ class BestLoanData : ContainSagaData
 
     //DynamoDB does not accept empty list, they must be null.
     public List<Quote>? Quotes { get; set; }
+
+    public List<string>? RejectedBy { get; set; }
 }
 
 record MaxTimeout();
