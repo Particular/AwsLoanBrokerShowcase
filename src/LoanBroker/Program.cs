@@ -34,6 +34,7 @@ var transport = new SqsTransport(
 endpointConfiguration.UseTransport(transport);
 
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
+persistence.Sagas().UsePessimisticLocking = true;
 persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
     new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
 endpointConfiguration.EnableOutbox();
