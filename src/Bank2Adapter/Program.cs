@@ -1,32 +1,33 @@
+using Amazon.DynamoDBv2;
+using Amazon.Runtime;
+using Amazon.SimpleNotificationService;
+using Amazon.SQS;
 using Microsoft.Extensions.Hosting;
 
 // To create a docker container, use the following command: dotnet publish /t:PublishContainer
 // See https://learn.microsoft.com/en-us/dotnet/core/docker/publish-as-container?pivots=dotnet-8-0#publish-net-app for details
-var builder = Host.CreateApplicationBuilder(args);
 
-// TODO: consider moving common endpoint configuration into a shared project
-// for use by all endpoints in the system
+var builder = Host.CreateApplicationBuilder(args);
 
 var endpointConfiguration = new EndpointConfiguration("Bank2Adapter");
 
-// SQL Server Transport: https://docs.particular.net/transports/sql/
-var transport = new SqlServerTransport("Data Source=.\\SqlExpress;Initial Catalog=dbname;Integrated Security=True");
-var routing = endpointConfiguration.UseTransport(transport);
+var localStackEdgeUrl = "http://localhost:4566";
+var emptyLocalStackCredentials = new BasicAWSCredentials("xxx","xxx");
+var sqsConfig = new AmazonSQSConfig() { ServiceURL = localStackEdgeUrl };
+var snsConfig = new AmazonSimpleNotificationServiceConfig(){ ServiceURL = localStackEdgeUrl };
 
-// Define routing for commands: https://docs.particular.net/nservicebus/messaging/routing#command-routing
-// routing.RouteToEndpoint(typeof(MessageType), "DestinationEndpointForType");
-// routing.RouteToEndpoint(typeof(MessageType).Assembly, "DestinationForAllCommandsInAssembly");
+var transport = new SqsTransport(
+    new AmazonSQSClient(emptyLocalStackCredentials, sqsConfig),
+    new AmazonSimpleNotificationServiceClient(emptyLocalStackCredentials, snsConfig));
+endpointConfiguration.UseTransport(transport);
 
-// Amazon DynamoDB Persistence: https://docs.particular.net/persistence/dynamodb/
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
-
-// Message serialization
+persistence.Sagas().UsePessimisticLocking = true;
+persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
+    new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
+endpointConfiguration.EnableOutbox();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
-// Installers are useful in development. Consider disabling in production.
-// https://docs.particular.net/nservicebus/operations/installers
 endpointConfiguration.EnableInstallers();
 
 builder.UseNServiceBus(endpointConfiguration);
