@@ -48,9 +48,22 @@ class BestLoanPolicy(
 
     public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
-        // Add some logic about whether banks were not available vs. banks refused the request
-        var best = quoteAggregator.Reduce(Data.Quotes ?? []);
-        await ReplyToOriginator(context, new BestLoanFound(Data.RequestId, best));
+        var receivedQuotes = Data.Quotes ?? [];
+        var receivedRejections = Data.RejectedBy ?? [];
+
+        if (receivedQuotes.Count > 0)
+        {
+            var best = quoteAggregator.Reduce(receivedQuotes);
+            await ReplyToOriginator(context, new BestLoanFound(Data.RequestId, best));
+        }
+
+        if (receivedRejections.Count > 0)
+        {
+            await ReplyToOriginator(context, new QuoteRequestRejected(Data.RequestId));
+        }
+
+        await ReplyToOriginator(context, new NoQuotesReceived(Data.RequestId));
+
         MarkAsComplete();
     }
 }
@@ -58,10 +71,7 @@ class BestLoanPolicy(
 class BestLoanData : ContainSagaData
 {
     public string RequestId { get; set; } = null!;
-
-    //DynamoDB does not accept empty list, they must be null.
     public List<Quote>? Quotes { get; set; }
-
     public List<string>? RejectedBy { get; set; }
 }
 
