@@ -4,6 +4,6 @@ class CreditScoreProvider : ICreditScoreProvider
 {
     public int Score()
     {
-        throw new NotImplementedException();
+        return 42;
     }
 }
