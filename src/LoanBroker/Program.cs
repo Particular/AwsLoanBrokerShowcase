@@ -1,4 +1,6 @@
 // using System.Runtime.ExceptionServices;
+
+using Amazon.DynamoDBv2;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
@@ -22,18 +24,19 @@ builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 
 var localStackEdgeUrl = "http://localhost:4566";
-var dummy = new BasicAWSCredentials("xxx","xxx");
+var emptyLocalStackCredentials = new BasicAWSCredentials("xxx","xxx");
 var sqsConfig = new AmazonSQSConfig() { ServiceURL = localStackEdgeUrl };
 var snsConfig = new AmazonSimpleNotificationServiceConfig(){ ServiceURL = localStackEdgeUrl };
 
 var transport = new SqsTransport(
-    new AmazonSQSClient(dummy, sqsConfig),
-    new AmazonSimpleNotificationServiceClient(dummy, snsConfig));
+    new AmazonSQSClient(emptyLocalStackCredentials, sqsConfig),
+    new AmazonSimpleNotificationServiceClient(emptyLocalStackCredentials, snsConfig));
 endpointConfiguration.UseTransport(transport);
 
-//endpointConfiguration.UsePersistence<DynamoPersistence>();
-endpointConfiguration.UsePersistence<LearningPersistence>();
-//endpointConfiguration.EnableOutbox();
+var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
+persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
+    new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
+endpointConfiguration.EnableOutbox();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 endpointConfiguration.EnableInstallers();
