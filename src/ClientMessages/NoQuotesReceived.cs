@@ -1,5 +1,5 @@
 using NServiceBus;
 
-namespace Messages;
+namespace ClientMessages;
 
 public record NoQuotesReceived(string RequestId) : IMessage;

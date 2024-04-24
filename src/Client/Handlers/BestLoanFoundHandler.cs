@@ -1,4 +1,4 @@
-using Messages;
+using ClientMessages;
 using Microsoft.Extensions.Logging;
 
 namespace Client.Handlers;

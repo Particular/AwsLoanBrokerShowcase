@@ -1,6 +1,7 @@
-﻿using LoanBroker.Policies;
+﻿using BankMessages;
+using ClientMessages;
+using LoanBroker.Policies;
 using LoanBroker.Services;
-using Messages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NServiceBus.Testing;

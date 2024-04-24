@@ -1,5 +1,5 @@
+using ClientMessages;
 using CommonConfigurations;
-using Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;

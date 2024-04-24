@@ -26,7 +26,7 @@ static async Task OnCriticalError(ICriticalErrorContext context, CancellationTok
     // https://docs.particular.net/nservicebus/hosting/windows-service#installation-restart-recovery
     try
     {
-        // await context.Stop(cancellationToken);
+        await context.Stop(cancellationToken);
     }
     finally
     {

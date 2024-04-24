@@ -1,6 +1,6 @@
 ﻿using NServiceBus;
 
-namespace Messages;
+namespace BankMessages;
 
 public record QuoteCreated(
     string RequestId,

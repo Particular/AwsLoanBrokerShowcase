@@ -1,6 +1,6 @@
 ﻿using NServiceBus;
 
-namespace Messages;
+namespace ClientMessages;
 
 public record FindBestLoan(
     string RequestId,

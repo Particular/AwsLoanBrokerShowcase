@@ -1,5 +1,6 @@
+using BankMessages;
+using ClientMessages;
 using LoanBroker.Services;
-using Messages;
 using Microsoft.Extensions.Logging;
 
 namespace LoanBroker.Policies;

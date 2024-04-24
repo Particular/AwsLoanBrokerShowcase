@@ -1,4 +1,4 @@
-﻿using Messages;
+﻿using ClientMessages;
 
 namespace LoanBroker.Services;
 
