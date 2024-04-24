@@ -4,4 +4,5 @@ namespace Messages;
 
 public record BestLoanFound(
     string RequestId,
-    Quote Quote) : IMessage;
+    string BankId,
+    double InterestRate) : IMessage;

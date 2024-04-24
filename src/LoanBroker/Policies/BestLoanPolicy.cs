@@ -25,12 +25,11 @@ class BestLoanPolicy(
     {
         var score = creditScoreProvider.Score(message.Prospect);
         await context.Publish(new QuoteRequested(message.RequestId,
-            message.Prospect,
             score,
             message.NumberOfYears,
             message.Amount
         ));
-        await RequestTimeout<MaxTimeout>(context, TimeSpan.FromMinutes(10));
+        await RequestTimeout<MaxTimeout>(context, TimeSpan.FromSeconds(10));
     }
 
     public Task Handle(QuoteCreated message, IMessageHandlerContext context)
@@ -56,8 +55,8 @@ class BestLoanPolicy(
 
         if (receivedQuotes.Count > 0)
         {
-            var best = quoteAggregator.Reduce(receivedQuotes);
-            replyMessage = new BestLoanFound(Data.RequestId, best);
+            var quote = quoteAggregator.Reduce(receivedQuotes);
+            replyMessage = new BestLoanFound(Data.RequestId, quote.BankId, quote.InterestRate);
         }
         else if (receivedRejections.Count > 0)
         {

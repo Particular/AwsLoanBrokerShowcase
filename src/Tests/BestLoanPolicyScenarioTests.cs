@@ -56,8 +56,8 @@ public class BestLoanPolicyScenarioTests
 
         Assert.That(responseMessage, Is.Not.Null);
         Assert.That(responseMessage.RequestId, Is.EqualTo(requestId));
-        Assert.That(responseMessage.Quote.BankId, Is.EqualTo("SecondRegional"));
-        Assert.That(responseMessage.Quote.InterestRate, Is.EqualTo(2.95));
+        Assert.That(responseMessage.BankId, Is.EqualTo("SecondRegional"));
+        Assert.That(responseMessage.InterestRate, Is.EqualTo(2.95));
     }
 
     [Test]
@@ -127,8 +127,8 @@ public class BestLoanPolicyScenarioTests
         var handleResult = advanceTime[0];
         var replyMessage = handleResult.FindReplyMessage<BestLoanFound>();
         Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
-        Assert.That(replyMessage.Quote.BankId, Is.EqualTo(answeringBank));
-        Assert.That(replyMessage.Quote.InterestRate, Is.EqualTo(interestRate));
+        Assert.That(replyMessage.BankId, Is.EqualTo(answeringBank));
+        Assert.That(replyMessage.InterestRate, Is.EqualTo(interestRate));
         Assert.That(handleResult.Completed, Is.True);
         Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
         Assert.That(handleResult.Context.PublishedMessages, Is.Empty);

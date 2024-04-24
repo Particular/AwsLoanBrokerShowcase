@@ -1,6 +1,4 @@
-using Amazon.Runtime;
-using Amazon.SimpleNotificationService;
-using Amazon.SQS;
+using CommonConfigurations;
 using Microsoft.Extensions.Hosting;
 
 // To create a docker container, use the following command: dotnet publish /t:PublishContainer
@@ -10,21 +8,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 var endpointConfiguration = new EndpointConfiguration("Bank2Adapter");
 
-var localStackEdgeUrl = "http://localhost:4566";
-var emptyLocalStackCredentials = new BasicAWSCredentials("xxx","xxx");
-var sqsConfig = new AmazonSQSConfig() { ServiceURL = localStackEdgeUrl };
-var snsConfig = new AmazonSimpleNotificationServiceConfig(){ ServiceURL = localStackEdgeUrl };
-
-var transport = new SqsTransport(
-    new AmazonSQSClient(emptyLocalStackCredentials, sqsConfig),
-    new AmazonSimpleNotificationServiceClient(emptyLocalStackCredentials, snsConfig));
-endpointConfiguration.UseTransport(transport);
-
-// var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
-// persistence.Sagas().UsePessimisticLocking = true;
-// persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
-    // new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
-// endpointConfiguration.EnableOutbox();
+endpointConfiguration.UseCommonTransport();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 endpointConfiguration.EnableInstallers();

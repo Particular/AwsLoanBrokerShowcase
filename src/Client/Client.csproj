@@ -24,7 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Messages\Messages.csproj" />
+      <ProjectReference Include="..\ClientMessages\ClientMessages.csproj" />
+      <ProjectReference Include="..\CommonConfigurations\CommonConfigurations.csproj" />
     </ItemGroup>
 
 </Project>

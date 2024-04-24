@@ -1,15 +1,14 @@
-using Amazon.Runtime;
-using Amazon.SimpleNotificationService;
-using Amazon.SQS;
+using CommonConfigurations;
 using Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
+using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 // Integrate NServiceBus logging with Microsoft.Extensions.Logging
-Microsoft.Extensions.Logging.ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
+ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
 LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -19,15 +18,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 var endpointConfiguration = new EndpointConfiguration("Client");
 
-var localStackEdgeUrl = "http://localhost:4566";
-var emptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
-var sqsConfig = new AmazonSQSConfig() { ServiceURL = localStackEdgeUrl };
-var snsConfig = new AmazonSimpleNotificationServiceConfig() { ServiceURL = localStackEdgeUrl };
-
-var transport = new SqsTransport(
-    new AmazonSQSClient(emptyLocalStackCredentials, sqsConfig),
-    new AmazonSimpleNotificationServiceClient(emptyLocalStackCredentials, snsConfig));
-var routingSettings = endpointConfiguration.UseTransport(transport);
+var routingSettings = endpointConfiguration.UseCommonTransport();
 routingSettings.RouteToEndpoint(typeof(FindBestLoan), "LoanBroker");
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
@@ -53,7 +44,8 @@ while (running)
             var messageSession = app.Services.GetRequiredService<IMessageSession>();
             var requestId = Guid.NewGuid().ToString()[..8];
             var prospect = new Prospect("Scrooge", "McDuck");
-            Console.WriteLine($"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
+            Console.WriteLine(
+                $"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
             await messageSession.Send(new FindBestLoan(requestId, prospect, 10, 1000));
             break;
         case ConsoleKey.Q:

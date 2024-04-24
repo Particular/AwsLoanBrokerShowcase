@@ -2,17 +2,17 @@
 
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
-using Amazon.SimpleNotificationService;
-using Amazon.SQS;
+using CommonConfigurations;
 using LoanBroker.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
+using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 // Integrate NServiceBus logging with Microsoft.Extensions.Logging
-Microsoft.Extensions.Logging.ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
+ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
 LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -21,18 +21,12 @@ builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 
-var localStackEdgeUrl = "http://localhost:4566";
-var emptyLocalStackCredentials = new BasicAWSCredentials("xxx","xxx");
-var sqsConfig = new AmazonSQSConfig() { ServiceURL = localStackEdgeUrl };
-var snsConfig = new AmazonSimpleNotificationServiceConfig(){ ServiceURL = localStackEdgeUrl };
-
-var transport = new SqsTransport(
-    new AmazonSQSClient(emptyLocalStackCredentials, sqsConfig),
-    new AmazonSimpleNotificationServiceClient(emptyLocalStackCredentials, snsConfig));
-endpointConfiguration.UseTransport(transport);
+endpointConfiguration.UseCommonTransport();
 
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
 persistence.Sagas().UsePessimisticLocking = true;
+var localStackEdgeUrl = "http://localhost:4566";
+var emptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
 persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
     new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
 endpointConfiguration.EnableOutbox();
