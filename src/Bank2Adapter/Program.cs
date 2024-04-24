@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
@@ -21,11 +20,11 @@ var transport = new SqsTransport(
     new AmazonSimpleNotificationServiceClient(emptyLocalStackCredentials, snsConfig));
 endpointConfiguration.UseTransport(transport);
 
-var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
-persistence.Sagas().UsePessimisticLocking = true;
-persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
-    new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
-endpointConfiguration.EnableOutbox();
+// var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
+// persistence.Sagas().UsePessimisticLocking = true;
+// persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
+    // new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
+// endpointConfiguration.EnableOutbox();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 endpointConfiguration.EnableInstallers();
