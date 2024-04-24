@@ -13,7 +13,7 @@ public class BestLoanPolicyScenarioTests
     [Test]
     public async Task HappyPath()
     {
-        var requestId = Guid.NewGuid().ToString().Substring(0, 8);
+        var requestId = Guid.NewGuid().ToString()[..8];
         var prospect = new Prospect("Scrooge", "McDuck");
 
         var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
@@ -59,6 +59,85 @@ public class BestLoanPolicyScenarioTests
         Assert.That(responseMessage.Quote.BankId, Is.EqualTo("SecondRegional"));
         Assert.That(responseMessage.Quote.InterestRate, Is.EqualTo(2.95));
     }
+
+    [Test]
+    public async Task NoResponsesFromBanks()
+    {
+        var requestId = Guid.NewGuid().ToString()[..8];
+        var prospect = new Prospect("Scrooge", "McDuck");
+        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+
+        var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
+            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+
+        await policy.Handle(initialCommand);
+        var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
+        Assert.That(advanceTime.Length, Is.EqualTo(1));
+        var handleResult = advanceTime[0];
+        var replyMessage = handleResult.FindReplyMessage<NoQuotesReceived>();
+        Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
+        Assert.That(handleResult.Completed, Is.True);
+        Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
+        Assert.That(handleResult.Context.PublishedMessages, Is.Empty);
+        Assert.That(handleResult.Context.TimeoutMessages, Is.Empty);
+        Assert.That(handleResult.Context.SentMessages, Is.Empty);
+    }
+
+    [Test]
+    public async Task LoanRequestRefusedByAllBanks()
+    {
+        var requestId = Guid.NewGuid().ToString()[..8];
+        var prospect = new Prospect("Scrooge", "McDuck");
+        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+
+        var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
+            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+
+        await policy.Handle(initialCommand);
+        await policy.Handle(new QuoteRequestRefusedByBank(requestId, "bank1"));
+        var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
+        Assert.That(advanceTime.Length, Is.EqualTo(1));
+        var handleResult = advanceTime[0];
+        var replyMessage = handleResult.FindReplyMessage<QuoteRequestRefused>();
+        Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
+        Assert.That(handleResult.Completed, Is.True);
+        Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
+        Assert.That(handleResult.Context.PublishedMessages, Is.Empty);
+        Assert.That(handleResult.Context.TimeoutMessages, Is.Empty);
+        Assert.That(handleResult.Context.SentMessages, Is.Empty);
+    }
+
+    [Test]
+    public async Task LoanRequestRefusedByOneBankAcceptedByAnother()
+    {
+        var requestId = Guid.NewGuid().ToString()[..8];
+        var prospect = new Prospect("Scrooge", "McDuck");
+        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+
+        var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
+            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+
+        await policy.Handle(initialCommand);
+        await policy.Handle(new QuoteRequestRefusedByBank(requestId, "bank1"));
+        var answeringBank = "bank2";
+        var interestRate = 1.5;
+        await policy.Handle(new QuoteCreated(requestId, answeringBank, interestRate));
+        var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
+        Assert.That(advanceTime.Length, Is.EqualTo(1));
+        var handleResult = advanceTime[0];
+        var replyMessage = handleResult.FindReplyMessage<BestLoanFound>();
+        Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
+        Assert.That(replyMessage.Quote.BankId, Is.EqualTo(answeringBank));
+        Assert.That(replyMessage.Quote.InterestRate, Is.EqualTo(interestRate));
+        Assert.That(handleResult.Completed, Is.True);
+        Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
+        Assert.That(handleResult.Context.PublishedMessages, Is.Empty);
+        Assert.That(handleResult.Context.TimeoutMessages, Is.Empty);
+        Assert.That(handleResult.Context.SentMessages, Is.Empty);
+    }
+
+
+
 
     class FixedCreditScorer(int score) : ICreditScoreProvider
     {

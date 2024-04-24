@@ -11,7 +11,7 @@ public class QuoteRequestedHandler : IHandleMessages<QuoteRequested>
     {
         if (Random.Next(0, 5) == 0 || message.Score < 90)
         {
-            var quoteRejected = new QuoteRequestRefused(message.RequestIdentifier, BankIdentifier);
+            var quoteRejected = new QuoteRequestRefusedByBank(message.RequestIdentifier, BankIdentifier);
 
             await context.Reply(quoteRejected);
         }

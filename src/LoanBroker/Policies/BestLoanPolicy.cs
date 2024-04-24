@@ -10,14 +10,15 @@ class BestLoanPolicy(
     IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
     IHandleMessages<QuoteCreated>,
-    IHandleMessages<QuoteRequestRefused>,
+    IHandleMessages<QuoteRequestRefusedByBank>,
     IHandleTimeouts<MaxTimeout>
 {
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
     {
         mapper.MapSaga(saga => saga.RequestId)
             .ToMessage<FindBestLoan>(message => message.RequestId)
-            .ToMessage<QuoteCreated>(message => message.RequestId);
+            .ToMessage<QuoteCreated>(message => message.RequestId)
+            .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
     }
 
     public async Task Handle(FindBestLoan message, IMessageHandlerContext context)
@@ -39,7 +40,7 @@ class BestLoanPolicy(
         return Task.CompletedTask;
     }
 
-    public Task Handle(QuoteRequestRefused message, IMessageHandlerContext context)
+    public Task Handle(QuoteRequestRefusedByBank message, IMessageHandlerContext context)
     {
         Data.RejectedBy ??= [];
         Data.RejectedBy.Add(message.BankId);
@@ -51,19 +52,23 @@ class BestLoanPolicy(
         var receivedQuotes = Data.Quotes ?? [];
         var receivedRejections = Data.RejectedBy ?? [];
 
+        IMessage replyMessage;
+
         if (receivedQuotes.Count > 0)
         {
             var best = quoteAggregator.Reduce(receivedQuotes);
-            await ReplyToOriginator(context, new BestLoanFound(Data.RequestId, best));
+            replyMessage = new BestLoanFound(Data.RequestId, best);
         }
-
-        if (receivedRejections.Count > 0)
+        else if (receivedRejections.Count > 0)
         {
-            await ReplyToOriginator(context, new QuoteRequestRejected(Data.RequestId));
+            replyMessage = new QuoteRequestRefused(Data.RequestId);
+        }
+        else
+        {
+            replyMessage = new NoQuotesReceived(Data.RequestId);
         }
 
-        await ReplyToOriginator(context, new NoQuotesReceived(Data.RequestId));
-
+        await ReplyToOriginator(context, replyMessage);
         MarkAsComplete();
     }
 }
