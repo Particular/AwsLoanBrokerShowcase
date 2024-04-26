@@ -38,6 +38,7 @@ var running = true;
 while (running)
 {
     var k = Console.ReadKey();
+    Console.WriteLine();
     switch (k.Key)
     {
         case sendMessageConsoleKey:
