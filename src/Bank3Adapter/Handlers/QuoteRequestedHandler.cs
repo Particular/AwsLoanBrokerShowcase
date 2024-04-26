@@ -1,15 +1,15 @@
 ﻿using BankMessages;
 
-namespace Bank2Adapter.Handlers;
+namespace Bank3Adapter.Handlers;
 
 public class QuoteRequestedHandler : IHandleMessages<QuoteRequested>
 {
     private static readonly Random Random = new();
-    private const string BankIdentifier = "Bank2";
+    private const string BankIdentifier = "Bank3";
 
     public async Task Handle(QuoteRequested message, IMessageHandlerContext context)
     {
-        if (Random.Next(0, 5) == 0 || message.Score < 90)
+        if (Random.Next(0, 2) == 0)
         {
             var quoteRejected = new QuoteRequestRefusedByBank(message.RequestIdentifier, BankIdentifier);
 

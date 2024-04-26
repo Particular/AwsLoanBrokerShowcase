@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMessages", "BankMessage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonConfigurations", "CommonConfigurations\CommonConfigurations.csproj", "{2E8EFD1A-43B4-4037-85A0-9726AC7E2D01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank1Adapter", "Bank1Adapter\Bank1Adapter.csproj", "{7F854B19-0855-4FCD-8335-7DD8D0E76D7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank3Adapter", "Bank3Adapter\Bank3Adapter.csproj", "{7EE0786C-8F1D-4FAE-842B-A38D8B947504}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{2E8EFD1A-43B4-4037-85A0-9726AC7E2D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E8EFD1A-43B4-4037-85A0-9726AC7E2D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E8EFD1A-43B4-4037-85A0-9726AC7E2D01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F854B19-0855-4FCD-8335-7DD8D0E76D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F854B19-0855-4FCD-8335-7DD8D0E76D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F854B19-0855-4FCD-8335-7DD8D0E76D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F854B19-0855-4FCD-8335-7DD8D0E76D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
