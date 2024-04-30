@@ -4,7 +4,7 @@ using LoanBroker.Services;
 
 namespace LoanBroker.Policies;
 
-internal class BestLoanPolicy(
+class BestLoanPolicy(
     ICreditScoreProvider creditScoreProvider,
     IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
@@ -72,11 +72,11 @@ internal class BestLoanPolicy(
     }
 }
 
-internal class BestLoanData : ContainSagaData
+class BestLoanData : ContainSagaData
 {
     public string RequestId { get; set; } = null!;
     public List<Quote>? Quotes { get; set; }
     public List<string>? RejectedBy { get; set; }
 }
 
-internal record MaxTimeout;
+record MaxTimeout;

@@ -6,7 +6,7 @@ namespace CommonConfigurations;
 
 public static class TransportConventions
 {
-    private const string LocalStackEdgeUrl = "http://localhost:4566";
+    const string LocalStackEdgeUrl = "http://localhost:4566";
 
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
     {

@@ -2,9 +2,9 @@ using ClientMessages;
 
 namespace LoanBroker.Services;
 
-internal class CacheCreditScoreProvider(ICreditScoreProvider delegateProvider) : ICreditScoreProvider
+class CacheCreditScoreProvider(ICreditScoreProvider delegateProvider) : ICreditScoreProvider
 {
-    private readonly Dictionary<Prospect, (DateTime Expiration, int Score)> _cache = new();
+    readonly Dictionary<Prospect, (DateTime Expiration, int Score)> _cache = new();
 
     public int Score(Prospect prospect)
     {

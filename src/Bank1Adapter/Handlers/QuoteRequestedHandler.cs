@@ -4,7 +4,7 @@ namespace Bank1Adapter.Handlers;
 
 public class QuoteRequestedHandler : IHandleMessages<QuoteRequested>
 {
-    private const string BankIdentifier = "Bank1";
+    const string BankIdentifier = "Bank1";
 
     public async Task Handle(QuoteRequested message, IMessageHandlerContext context)
     {
