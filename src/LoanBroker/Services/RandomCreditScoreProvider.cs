@@ -2,8 +2,8 @@ using ClientMessages;
 
 namespace LoanBroker.Services;
 
-class RandomCreditScoreProvider : ICreditScoreProvider
+internal class RandomCreditScoreProvider : ICreditScoreProvider
 {
-    readonly Random rnd = new (42);
-    public int Score(Prospect prospect) => rnd.Next(0, 1000);
+    private readonly Random _rnd = new (42);
+    public int Score(Prospect prospect) => _rnd.Next(0, 1000);
 }

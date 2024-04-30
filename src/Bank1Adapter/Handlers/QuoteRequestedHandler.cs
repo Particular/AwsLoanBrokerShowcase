@@ -8,7 +8,7 @@ public class QuoteRequestedHandler : IHandleMessages<QuoteRequested>
 
     public async Task Handle(QuoteRequested message, IMessageHandlerContext context)
     {
-        if (message.Score < 900)
+        if (message is { Score: < 900, Amount: < 1_000_000 })
         {
             var quoteRejected = new QuoteRequestRefusedByBank(message.RequestIdentifier, BankIdentifier);
 
@@ -16,7 +16,7 @@ public class QuoteRequestedHandler : IHandleMessages<QuoteRequested>
         }
         else
         {
-            var interestRate = 0.1;
+            const double interestRate = 0.1;
             var quoteCreated = new QuoteCreated(message.RequestIdentifier, BankIdentifier, interestRate);
 
             await context.Reply(quoteCreated);

@@ -57,6 +57,7 @@ while (running)
 
 await app.StopAsync();
 app.Dispose();
+return;
 
 static async Task OnCriticalError(ICriticalErrorContext context, CancellationToken cancellationToken)
 {

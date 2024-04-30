@@ -17,6 +17,7 @@ builder.UseNServiceBus(endpointConfiguration);
 
 var app = builder.Build();
 app.Run();
+return;
 
 static async Task OnCriticalError(ICriticalErrorContext context, CancellationToken cancellationToken)
 {

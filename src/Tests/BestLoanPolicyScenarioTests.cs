@@ -1,9 +1,8 @@
-﻿using BankMessages;
+﻿using System.Diagnostics;
+using BankMessages;
 using ClientMessages;
 using LoanBroker.Policies;
 using LoanBroker.Services;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using NServiceBus.Testing;
 using NUnit.Framework;
 
@@ -20,16 +19,18 @@ public class BestLoanPolicyScenarioTests
         var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(new FixedCreditScorer(800), new BestRateQuoteAggregator()));
 
         var result1 = await policy.Handle(initialCommand);
         var quoteRequested = result1.FindPublishedMessage<QuoteRequested>();
-        var timeoutRequested = result1.FindTimeoutMessage<MaxTimeout>();
 
         Assert.That(quoteRequested, Is.Not.Null);
         Assert.That(quoteRequested.RequestIdentifier, Is.EqualTo(requestId));
         Assert.That(quoteRequested.NumberOfYears, Is.EqualTo(30));
         Assert.That(quoteRequested.Score, Is.EqualTo(800));
+
+        var timeoutRequested = result1.FindTimeoutMessage<MaxTimeout>();
+        Assert.That(timeoutRequested, Is.Not.Null);
 
         (string BankId, double InterestRate)[] bankResponses =
         [
@@ -46,6 +47,7 @@ public class BestLoanPolicyScenarioTests
             Assert.That(quoteResult.Context.SentMessages, Is.Empty);
             Assert.That(quoteResult.Context.PublishedMessages, Is.Empty);
             Assert.That(quoteResult.Context.TimeoutMessages, Is.Empty);
+            Debug.Assert(quoteResult.SagaDataSnapshot.Quotes != null, "quoteResult.SagaDataSnapshot.Quotes != null");
             Assert.That(quoteResult.SagaDataSnapshot.Quotes.Count, Is.EqualTo(++quoteCount));
         }
 
@@ -69,7 +71,7 @@ public class BestLoanPolicyScenarioTests
         var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(new FixedCreditScorer(800), new BestRateQuoteAggregator()));
 
         await policy.Handle(initialCommand);
         var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
@@ -92,7 +94,7 @@ public class BestLoanPolicyScenarioTests
         var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(new FixedCreditScorer(800), new BestRateQuoteAggregator()));
 
         await policy.Handle(initialCommand);
         await policy.Handle(new QuoteRequestRefusedByBank(requestId, "bank1"));
@@ -116,12 +118,12 @@ public class BestLoanPolicyScenarioTests
         var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(new FixedCreditScorer(800), new BestRateQuoteAggregator()));
 
         await policy.Handle(initialCommand);
         await policy.Handle(new QuoteRequestRefusedByBank(requestId, "bank1"));
-        var answeringBank = "bank2";
-        var interestRate = 1.5;
+        const string answeringBank = "bank2";
+        const double interestRate = 1.5;
         await policy.Handle(new QuoteCreated(requestId, answeringBank, interestRate));
         var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
         Assert.That(advanceTime.Length, Is.EqualTo(1));
@@ -138,13 +140,9 @@ public class BestLoanPolicyScenarioTests
     }
 
 
-
-
-    class FixedCreditScorer(int score) : ICreditScoreProvider
+    private class FixedCreditScorer(int score) : ICreditScoreProvider
     {
         public int Score(Prospect prospect) => score;
     }
 
-
-    static readonly ILogger<BestLoanPolicy> log = new NullLogger<BestLoanPolicy>();
 }

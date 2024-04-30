@@ -1,12 +1,10 @@
 using BankMessages;
 using ClientMessages;
 using LoanBroker.Services;
-using Microsoft.Extensions.Logging;
 
 namespace LoanBroker.Policies;
 
-class BestLoanPolicy(
-    ILogger<BestLoanPolicy> log,
+internal class BestLoanPolicy(
     ICreditScoreProvider creditScoreProvider,
     IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoan>,
@@ -16,6 +14,7 @@ class BestLoanPolicy(
 {
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
     {
+
         mapper.MapSaga(saga => saga.RequestId)
             .ToMessage<FindBestLoan>(message => message.RequestId)
             .ToMessage<QuoteCreated>(message => message.RequestId)
@@ -73,11 +72,11 @@ class BestLoanPolicy(
     }
 }
 
-class BestLoanData : ContainSagaData
+internal class BestLoanData : ContainSagaData
 {
     public string RequestId { get; set; } = null!;
     public List<Quote>? Quotes { get; set; }
     public List<string>? RejectedBy { get; set; }
 }
 
-record MaxTimeout();
+internal record MaxTimeout;

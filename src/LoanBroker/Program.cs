@@ -16,7 +16,8 @@ ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
 LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddSingleton<ICreditScoreProvider, CacheCreditScoreProvider>(sp => new CacheCreditScoreProvider(new RandomCreditScoreProvider()));
+builder.Services.AddSingleton<ICreditScoreProvider, CacheCreditScoreProvider>(_ =>
+    new CacheCreditScoreProvider(new RandomCreditScoreProvider()));
 builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
@@ -25,10 +26,10 @@ endpointConfiguration.UseCommonTransport();
 
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
 persistence.Sagas().UsePessimisticLocking = true;
-var localStackEdgeUrl = "http://localhost:4566";
+const string localStackEdgeUrl = "http://localhost:4566";
 var emptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
 persistence.DynamoClient(new AmazonDynamoDBClient(emptyLocalStackCredentials,
-    new AmazonDynamoDBConfig() { ServiceURL = localStackEdgeUrl }));
+    new AmazonDynamoDBConfig { ServiceURL = localStackEdgeUrl }));
 endpointConfiguration.EnableOutbox();
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
@@ -38,6 +39,7 @@ builder.UseNServiceBus(endpointConfiguration);
 
 var app = builder.Build();
 app.Run();
+return;
 
 static async Task OnCriticalError(ICriticalErrorContext context, CancellationToken cancellationToken)
 {
