@@ -4,8 +4,8 @@ namespace Bank2Adapter.Handlers;
 
 public class QuoteRequestedHandler : IHandleMessages<QuoteRequested>
 {
-    private static readonly Random Random = new();
-    private const string BankIdentifier = "Bank2";
+    static readonly Random Random = new();
+    const string BankIdentifier = "Bank2";
 
     public async Task Handle(QuoteRequested message, IMessageHandlerContext context)
     {
