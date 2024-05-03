@@ -6,7 +6,7 @@ namespace CommonConfigurations;
 
 public static class SharedConventions
 {
-    public const string LocalStackEdgeUrl = "http://localhost:4566";
+    public const string LocalStackEdgeUrl = "http://localstack:4566";
     public static readonly AWSCredentials EmptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
 
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)

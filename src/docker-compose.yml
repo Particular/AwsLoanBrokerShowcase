@@ -10,3 +10,16 @@ services:
     ports:
       - '4566-4597:4566-4597'
       - "8000:5000"
+  loanBroker:
+    image: loanbroker
+  bank1:
+    image: bank1adapter
+  bank2:
+    image: bank2adapter
+  bank3:
+    image: bank3adapter
+  client:
+    image: client
+    tty: true
+    stdin_open: true
+    command: sh
