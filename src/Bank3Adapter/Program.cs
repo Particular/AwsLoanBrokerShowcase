@@ -8,9 +8,8 @@ var builder = Host.CreateApplicationBuilder(args);
 
 var endpointConfiguration = new EndpointConfiguration("Bank3Adapter");
 
+endpointConfiguration.CommonEndpointSetting();
 endpointConfiguration.UseCommonTransport();
-endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-endpointConfiguration.EnableInstallers();
 
 builder.UseNServiceBus(endpointConfiguration);
 

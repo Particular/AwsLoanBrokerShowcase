@@ -18,7 +18,7 @@ builder.Services.AddSingleton<ICreditScoreProvider, CacheCreditScoreProvider>(_ 
 builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
-
+endpointConfiguration.CommonEndpointSetting();
 endpointConfiguration.UseCommonTransport();
 
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
@@ -27,8 +27,6 @@ persistence.DynamoClient(new AmazonDynamoDBClient(SharedConventions.EmptyLocalSt
     new AmazonDynamoDBConfig { ServiceURL = SharedConventions.LocalStackEdgeUrl }));
 
 endpointConfiguration.EnableOutbox();
-endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-endpointConfiguration.EnableInstallers();
 
 builder.UseNServiceBus(endpointConfiguration);
 

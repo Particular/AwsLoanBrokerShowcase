@@ -1,3 +1,4 @@
+using Amazon.Runtime.CredentialManagement.Internal;
 using ClientMessages;
 using CommonConfigurations;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,10 +19,9 @@ var builder = Host.CreateApplicationBuilder(args);
 
 var endpointConfiguration = new EndpointConfiguration("Client");
 
+endpointConfiguration.CommonEndpointSetting();
 var routingSettings = endpointConfiguration.UseCommonTransport();
 routingSettings.RouteToEndpoint(typeof(FindBestLoan), "LoanBroker");
-endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-endpointConfiguration.EnableInstallers();
 
 builder.UseNServiceBus(endpointConfiguration);
 
@@ -34,23 +34,31 @@ Console.WriteLine($"Press {sendMessageConsoleKey} to send a new FindBestLoan req
 Console.WriteLine("Press Q to quit");
 
 var running = true;
+Console.CancelKeyPress += (_, e) =>
+{
+    e.Cancel = true;
+    running = false;
+};
+
 while (running)
 {
-    var k = Console.ReadKey();
-    Console.WriteLine();
-    switch (k.Key)
+    if (Console.KeyAvailable)
     {
-        case sendMessageConsoleKey:
-            var messageSession = app.Services.GetRequiredService<IMessageSession>();
-            var requestId = Guid.NewGuid().ToString()[..8];
-            var prospect = new Prospect("Scrooge", "McDuck");
-            Console.WriteLine(
-                $"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
-            await messageSession.Send(new FindBestLoan(requestId, prospect, 10, 1000));
-            break;
-        case ConsoleKey.Q:
-            running = false;
-            break;
+        var k = Console.ReadKey(true);
+        switch (k.Key)
+        {
+            case sendMessageConsoleKey:
+                var messageSession = app.Services.GetRequiredService<IMessageSession>();
+                var requestId = Guid.NewGuid().ToString()[..8];
+                var prospect = new Prospect("Scrooge", "McDuck");
+                Console.WriteLine(
+                    $"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
+                await messageSession.Send(new FindBestLoan(requestId, prospect, 10, 1000));
+                break;
+            case ConsoleKey.Q:
+                running = false;
+                break;
+        }
     }
 }
 

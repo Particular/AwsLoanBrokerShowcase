@@ -12,14 +12,19 @@ services:
       - "8000:5000"
   loanBroker:
     image: loanbroker
+    network_mode: service:localstack
   bank1:
     image: bank1adapter
+    network_mode: service:localstack
   bank2:
     image: bank2adapter
+    network_mode: service:localstack
   bank3:
     image: bank3adapter
+    network_mode: service:localstack
   client:
     image: client
+    network_mode: service:localstack
     tty: true
     stdin_open: true
     command: sh
