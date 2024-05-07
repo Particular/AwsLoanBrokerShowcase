@@ -18,7 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="license.xml" CopyToOutputDirectory="PreserveNewest"/>
         <Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest"/>
         <None Remove="appsettings*.json"/>
         <ProjectCapability Include="DynamicFileNestingEnabled"/>
