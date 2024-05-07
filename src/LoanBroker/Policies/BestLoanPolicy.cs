@@ -34,31 +34,27 @@ class BestLoanPolicy(
 
     public Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
-        Data.Quotes ??= [];
         Data.Quotes.Add(new Quote(message.BankIdentifier, message.InterestRate));
         return Task.CompletedTask;
     }
 
     public Task Handle(QuoteRequestRefusedByBank message, IMessageHandlerContext context)
     {
-        Data.RejectedBy ??= [];
         Data.RejectedBy.Add(message.BankId);
         return Task.CompletedTask;
     }
 
     public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
-        var receivedQuotes = Data.Quotes ?? [];
-        var receivedRejections = Data.RejectedBy ?? [];
 
         IMessage replyMessage;
 
-        if (receivedQuotes.Count > 0)
+        if (Data.Quotes.Count > 0)
         {
-            var quote = quoteAggregator.Reduce(receivedQuotes);
+            var quote = quoteAggregator.Reduce(Data.Quotes);
             replyMessage = new BestLoanFound(Data.RequestId, quote.BankId, quote.InterestRate);
         }
-        else if (receivedRejections.Count > 0)
+        else if (Data.RejectedBy.Count > 0)
         {
             replyMessage = new QuoteRequestRefused(Data.RequestId);
         }
@@ -75,8 +71,8 @@ class BestLoanPolicy(
 class BestLoanData : ContainSagaData
 {
     public string RequestId { get; set; } = null!;
-    public List<Quote>? Quotes { get; set; }
-    public List<string>? RejectedBy { get; set; }
+    public List<Quote> Quotes { get; set; } = [];
+    public List<string> RejectedBy { get; set; } = [];
 }
 
 record MaxTimeout;
