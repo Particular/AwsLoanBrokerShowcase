@@ -1,5 +1,3 @@
-version: "3.3"
-name: "aws-loan-broker"
 services:
   localstack:
     image: localstack/localstack
