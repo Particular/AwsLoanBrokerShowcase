@@ -10,8 +10,8 @@ The sample is composed by:
 
 ## Requirements
 
-- .NET 8 or greater.
-- Docker.
+- .NET 8 or greater
+- Docker
 
 ## How to run the sample from the development IDE
 
@@ -23,7 +23,7 @@ docker-compose up localstack
 
 The above command will execute the sample `docker-compose.yml` file starting only the LocalStack container.
 
-Once the LocalStack container is up and running, from the developement environment start the following projects:
+Once the LocalStack container is up and running, from the development environment start the following projects:
 
 - Client
 - LoanBroker
