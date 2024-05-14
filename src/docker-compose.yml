@@ -1,0 +1,72 @@
+version: "3.3"
+name: "aws-loan-broker"
+services:
+  localstack:
+    image: localstack/localstack
+    environment:
+      - SERVICES=sns,sqs,iam,s3,dynamodb
+      - DEBUG=1
+      - HOSTNAME=localstack
+      - EDGE_PORT=4566
+    ports:
+      - '4566-4597:4566-4597'
+      - "8000:5000"
+  loanBroker:
+    image: loanbroker
+    ports:
+      - '1464:9464'
+  #    network_mode: service:localstack
+  bank1:
+    image: bank1adapter
+    ports:
+      - '2464:9464'
+  #    network_mode: service:localstack
+  bank2:
+    image: bank2adapter
+    ports:
+      - '3464:9464'
+  #    network_mode: service:localstack
+  bank3:
+    image: bank3adapter
+    ports:
+      - '4464:9464'
+  #    network_mode: service:localstack
+  client:
+    image: client
+    ports:
+      - '5464:9464'
+    #    network_mode: service:localstack
+    tty: true
+    stdin_open: true
+    command: sh
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    ports:
+      - '9000:9090'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./data-prometheus:/prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana-oss:latest
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./data-grafana:/var/lib/grafana
+  jeager:
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - 16686:16686
+      - 4317:4317
+      - 4318:4318
+      - 9411:9411
+volumes:
+  prometheus-data:
+  grafana-data:
