@@ -95,7 +95,6 @@ TODO
 Docker compose file:
 
 ```
-version: "3.3"
 services:
   localstack:
     image: localstack/localstack
