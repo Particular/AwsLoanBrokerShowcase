@@ -75,10 +75,9 @@ public static class SharedConventions
             .AddSource("NServiceBus.Core")
             .AddOtlpExporter(cfg =>
             {
-                cfg.Endpoint = new Uri("http://jeager:4318/v1/traces");
+                cfg.Endpoint = new Uri("http://jaeger:4318/v1/traces");
                 cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
             })
-            .AddConsoleExporter()
             .Build();
 
         endpointConfiguration.EnableOpenTelemetry();
