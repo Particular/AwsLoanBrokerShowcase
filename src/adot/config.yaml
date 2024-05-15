@@ -1,7 +1,5 @@
 extensions:
   health_check:
- # pprof:
-  #  endpoint: 0.0.0.0:1777
 
 receivers:
   otlp:
@@ -19,17 +17,14 @@ exporters:
     loglevel: debug
   prometheus:
     endpoint: "0.0.0.0:1234"
+  otlp:
+    endpoint: jaeger:4317
 
 service:
   pipelines:
-  #  traces:
-   #   receivers: [otlp]
-    #  exporters: [otlp]
+    traces:
+      receivers: [otlp]
+      exporters: [otlp]
     metrics:
       receivers: [otlp]
       exporters: [prometheus]
-
- # extensions: [pprof]
- # telemetry:
-  #  logs:
-   #   level: debug

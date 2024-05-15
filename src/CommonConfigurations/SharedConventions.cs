@@ -13,7 +13,7 @@ namespace CommonConfigurations;
 public static class SharedConventions
 {
     public const string LocalStackEdgeDefaultUrl = "http://localhost:4566";
-    public const string OtlpMetricsDefaultUrl = "http://localhost:5318/";
+    public const string OtlpMetricsDefaultUrl = "http://localhost:5318/v1/metrics";
     public const string OtlpTracesDefaultUrl = "http://localhost:4318/v1/traces";
     public const string LocalStackEdgeEnvVar = "LOCALSTACK_URL";
     public const string OtlpMetricsUrlEnvVar = "OTLP_METRICS_URL";

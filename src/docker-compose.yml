@@ -15,7 +15,7 @@ services:
       dockerfile: ./LoanBroker/Dockerfile
     environment:
       - LOCALSTACK_URL=http://localhost:4566
-      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
     network_mode: service:localstack
   bank1:
@@ -24,7 +24,7 @@ services:
       dockerfile: ./Bank1Adapter/Dockerfile
     environment:
       - LOCALSTACK_URL=http://localhost:4566
-      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
     network_mode: service:localstack
   bank2:
@@ -33,7 +33,7 @@ services:
       dockerfile: ./Bank2Adapter/Dockerfile
     environment:
       - LOCALSTACK_URL=http://localhost:4566
-      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
     network_mode: service:localstack
   bank3:
@@ -42,7 +42,7 @@ services:
       dockerfile: ./Bank3Adapter/Dockerfile
     environment:
       - LOCALSTACK_URL=http://localhost:4566
-      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
     network_mode: service:localstack
   client:
@@ -51,7 +51,7 @@ services:
       dockerfile: ./Client/Dockerfile
     environment:
       - LOCALSTACK_URL=http://localhost:4566
-      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
     network_mode: service:localstack
     tty: true
@@ -83,6 +83,7 @@ services:
       - 16686:16686
       - 4318:4318
       - 9411:9411
+      - 14250
   adot:
     image: amazon/aws-otel-collector
     command: [ "--config=/etc/otel-agent-config.yaml" ]
