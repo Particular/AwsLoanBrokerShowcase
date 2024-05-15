@@ -7,7 +7,7 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: 0.0.0.0:5318
+        endpoint: 0.0.0.0:5317
       http:
         endpoint: 0.0.0.0:5318
 
