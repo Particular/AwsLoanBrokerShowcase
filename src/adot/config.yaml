@@ -1,0 +1,35 @@
+extensions:
+  health_check:
+ # pprof:
+  #  endpoint: 0.0.0.0:1777
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:5318
+      http:
+        endpoint: 0.0.0.0:5318
+
+processors:
+  batch:
+
+exporters:
+  logging:
+    loglevel: debug
+  prometheus:
+    endpoint: "0.0.0.0:1234"
+
+service:
+  pipelines:
+  #  traces:
+   #   receivers: [otlp]
+    #  exporters: [otlp]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
+
+ # extensions: [pprof]
+ # telemetry:
+  #  logs:
+   #   level: debug
