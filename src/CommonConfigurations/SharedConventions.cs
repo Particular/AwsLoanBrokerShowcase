@@ -12,13 +12,20 @@ namespace CommonConfigurations;
 
 public static class SharedConventions
 {
-    public const string LocalStackEdgeUrl = "http://localstack:4566";
+    public const string LocalStackEdgeDefaultUrl = "http://localhost:4566";
+    public const string OtlpMetricsDefaultUrl = "http://localhost:5318/";
+    public const string OtlpTracesDefaultUrl = "http://localhost:4318/v1/traces";
+    public const string LocalStackEdgeEnvVar = "LOCALSTACK_URL";
+    public const string OtlpMetricsUrlEnvVar = "OTLP_METRICS_URL";
+    public const string OtlpTracesUrlEnvVar = "OTLP_TRACING_URL";
     public static readonly AWSCredentials EmptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
 
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
     {
-        var sqsConfig = new AmazonSQSConfig { ServiceURL = LocalStackEdgeUrl };
-        var snsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = LocalStackEdgeUrl };
+        var url = Environment.GetEnvironmentVariable("LOCALSTACK_URL") ?? LocalStackEdgeDefaultUrl;
+        Console.WriteLine(url);
+        var sqsConfig = new AmazonSQSConfig { ServiceURL = url };
+        var snsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = url };
 
         var transport = new SqsTransport(
             new AmazonSQSClient(EmptyLocalStackCredentials, sqsConfig),
@@ -52,7 +59,13 @@ public static class SharedConventions
         Sdk.CreateMeterProviderBuilder()
             .SetResourceBuilder(resourceBuilder)
             .AddMeter("NServiceBus.Core")
-            .AddPrometheusHttpListener(options => options.UriPrefixes = new[] { "http://*:9464/" })
+            .AddOtlpExporter(cfg =>
+            {
+                var url = Environment.GetEnvironmentVariable(OtlpMetricsUrlEnvVar) ?? OtlpMetricsDefaultUrl;
+                Console.WriteLine(url);
+                cfg.Endpoint = new Uri(url);
+                cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
+            })
             .Build();
 
         endpointConfiguration.EnableOpenTelemetry();
@@ -75,7 +88,9 @@ public static class SharedConventions
             .AddSource("NServiceBus.Core")
             .AddOtlpExporter(cfg =>
             {
-                cfg.Endpoint = new Uri("http://jaeger:4318/v1/traces");
+                var url = Environment.GetEnvironmentVariable(OtlpTracesUrlEnvVar) ?? OtlpTracesDefaultUrl;
+                Console.WriteLine(url);
+                cfg.Endpoint = new Uri(url);
                 cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
             })
             .Build();

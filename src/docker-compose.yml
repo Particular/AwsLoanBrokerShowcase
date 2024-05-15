@@ -13,38 +13,47 @@ services:
     build:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
-    ports:
-      - '1464:9464'
-  #    network_mode: service:localstack
+    environment:
+      - LOCALSTACK_URL=http://localhost:4566
+      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    network_mode: service:localstack
   bank1:
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
-    ports:
-      - '2464:9464'
-  #    network_mode: service:localstack
+    environment:
+      - LOCALSTACK_URL=http://localhost:4566
+      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    network_mode: service:localstack
   bank2:
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
-
-    ports:
-      - '3464:9464'
-  #    network_mode: service:localstack
+    environment:
+      - LOCALSTACK_URL=http://localhost:4566
+      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    network_mode: service:localstack
   bank3:
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
-    ports:
-      - '4464:9464'
-  #    network_mode: service:localstack
+    environment:
+      - LOCALSTACK_URL=http://localhost:4566
+      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    network_mode: service:localstack
   client:
     build:
       context: ./
       dockerfile: ./Client/Dockerfile
-    ports:
-      - '5464:9464'
-    #    network_mode: service:localstack
+    environment:
+      - LOCALSTACK_URL=http://localhost:4566
+      - OTLP_METRICS_URL=http://adot:5318
+      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    network_mode: service:localstack
     tty: true
     stdin_open: true
     command: sh
@@ -69,13 +78,18 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:latest
     environment:
-      - COLLECTOR_ZIPKIN_HTTP_PORT=:9411
       - COLLECTOR_OTLP_ENABLED=true
     ports:
       - 16686:16686
-      - 4317:4317
       - 4318:4318
       - 9411:9411
-volumes:
-  prometheus-data:
-  grafana-data:
+  adot:
+    image: amazon/aws-otel-collector
+    command: [ "--config=/etc/otel-agent-config.yaml" ]
+    ports:
+      - "13133:13133"     # adot health_check
+      - "5317:5317"       # adot
+      - "5318:5318"       # adot
+      - "1234:1234"       # adot
+    volumes:
+      - ./adot/config.yaml:/etc/otel-agent-config.yaml

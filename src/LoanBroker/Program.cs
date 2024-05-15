@@ -24,7 +24,7 @@ endpointConfiguration.UseCommonTransport();
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
 persistence.Sagas().UsePessimisticLocking = true;
 persistence.DynamoClient(new AmazonDynamoDBClient(SharedConventions.EmptyLocalStackCredentials,
-    new AmazonDynamoDBConfig { ServiceURL = SharedConventions.LocalStackEdgeUrl }));
+    new AmazonDynamoDBConfig { ServiceURL = SharedConventions.LocalStackEdgeDefaultUrl }));
 
 endpointConfiguration.EnableOutbox();
 
