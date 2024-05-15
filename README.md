@@ -10,8 +10,8 @@ The sample is composed by:
 
 ## Requirements
 
-- .NET 8 or greater.
-- Docker.
+- .NET 8 or greater
+- Docker
 
 ## How to run the sample from the development IDE
 
@@ -23,7 +23,7 @@ docker-compose up localstack
 
 The above command will execute the sample `docker-compose.yml` file starting only the LocalStack container.
 
-Once the LocalStack container is up and running, from the developement environment start the following projects:
+Once the LocalStack container is up and running, from the development environment start the following projects:
 
 - Client
 - LoanBroker
@@ -42,12 +42,12 @@ docker-compose stop localstack
 The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside with the LocalStack one to mock the AWS services. To do, from the `src` folder, execute the following command:  
 
 ```shell
-dotnet publish /t:PublishContainer
+docker-compose up --build
 ```
 
-The above command will build all projects, build container images for each of them, and deploy them to the local Docker registry.
+The above command will build all projects, build container images for each of them, deploy them to the local Docker registry, and start them.
 
-Once the build process completes, from the `src` folder, using a command prompt, execute the following command to create and start all sample required containers:
+To run the solution without rebuilding container images, from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
 docker-compose up
@@ -67,7 +67,7 @@ All containers will use the same network as the LocalStack container instance.
 To interact with the sample, attach a console to the Client running container by executing the following command:
 
 ```shell
-docker attach aws-loan-broker-client-1
+docker attach src-client-1
 ```
 
 Attach and use the `F` key
@@ -95,7 +95,6 @@ TODO
 Docker compose file:
 
 ```
-version: "3.3"
 services:
   localstack:
     image: localstack/localstack

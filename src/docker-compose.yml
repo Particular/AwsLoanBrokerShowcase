@@ -1,5 +1,3 @@
-version: "3.3"
-name: "aws-loan-broker"
 services:
   localstack:
     image: localstack/localstack
@@ -12,27 +10,27 @@ services:
       - '4566-4597:4566-4597'
       - "8000:5000"
   loanBroker:
-    image: loanbroker
+    build: ./LoanBroker
     ports:
       - '1464:9464'
   #    network_mode: service:localstack
   bank1:
-    image: bank1adapter
+    build: ./Bank1Adapter
     ports:
       - '2464:9464'
   #    network_mode: service:localstack
   bank2:
-    image: bank2adapter
+    build: ./Bank2Adapter
     ports:
       - '3464:9464'
   #    network_mode: service:localstack
   bank3:
-    image: bank3adapter
+    build: ./Bank3Adapter
     ports:
       - '4464:9464'
   #    network_mode: service:localstack
   client:
-    image: client
+    build: ./Client
     ports:
       - '5464:9464'
     #    network_mode: service:localstack
