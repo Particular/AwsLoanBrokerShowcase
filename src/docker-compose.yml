@@ -89,7 +89,6 @@ services:
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
-      - "5317:5317"       # adot
       - "5318:5318"       # adot
       - "1234:1234"       # adot
     volumes:
