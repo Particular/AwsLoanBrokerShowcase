@@ -76,6 +76,14 @@ Attach and use the `F` key
 docker-compose down
 ```
 
+### Telemetry 
+
+NServiceBus supports OpenTelemetry.
+All endpoints are configured to send telemetry data to Jaeger.
+
+To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
+
+
 ### Sample scenarios
 
 TODO
