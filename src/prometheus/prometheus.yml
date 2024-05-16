@@ -8,8 +8,5 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets:
-        - 'loanBroker:9464'
-        - 'client:9464'
-        - 'bank1:9464'
-        - 'bank2:9464'
-        - 'bank3:9464'
+        - 'adot:1234'
+        - 'localhost:1234'

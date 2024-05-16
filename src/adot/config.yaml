@@ -1,0 +1,23 @@
+extensions:
+  health_check:
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:5318
+
+processors:
+  batch:
+
+exporters:
+  logging:
+    loglevel: debug
+  prometheus:
+    endpoint: "0.0.0.0:1234"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]

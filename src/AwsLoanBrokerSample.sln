@@ -25,6 +25,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 		..\README.md = ..\README.md
+		prometheus\prometheus.yml = prometheus\prometheus.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adot", "adot", "{F8D716D1-48D4-4DC4-996D-8A910AC76B14}"
+	ProjectSection(SolutionItems) = preProject
+		adot\config.yaml = adot\config.yaml
 	EndProjectSection
 EndProject
 Global
@@ -72,5 +78,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F8D716D1-48D4-4DC4-996D-8A910AC76B14} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
 	EndGlobalSection
 EndGlobal
