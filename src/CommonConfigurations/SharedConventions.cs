@@ -1,12 +1,16 @@
 ﻿using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
+using NLog.Extensions.Logging;
 using NServiceBus.Configuration.AdvancedExtensibility;
+using NServiceBus.Extensions.Logging;
+using NServiceBus.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 namespace CommonConfigurations;
 
@@ -95,5 +99,12 @@ public static class SharedConventions
             .Build();
 
         endpointConfiguration.EnableOpenTelemetry();
+    }
+
+    public static void ConfigureMicrosoftLoggingIntegration()
+    {
+        // Integrate NServiceBus logging with Microsoft.Extensions.Logging
+        ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
+        LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
     }
 }
