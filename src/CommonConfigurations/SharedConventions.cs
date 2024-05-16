@@ -20,10 +20,11 @@ public static class SharedConventions
     public const string OtlpTracesUrlEnvVar = "OTLP_TRACING_URL";
     public static readonly AWSCredentials EmptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
 
+    public static string LocalStackUrl() => Environment.GetEnvironmentVariable(LocalStackEdgeEnvVar) ?? LocalStackEdgeDefaultUrl;
+
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
     {
-        var url = Environment.GetEnvironmentVariable("LOCALSTACK_URL") ?? LocalStackEdgeDefaultUrl;
-        Console.WriteLine(url);
+        var url = LocalStackUrl();
         var sqsConfig = new AmazonSQSConfig { ServiceURL = url };
         var snsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = url };
 
@@ -62,7 +63,6 @@ public static class SharedConventions
             .AddOtlpExporter(cfg =>
             {
                 var url = Environment.GetEnvironmentVariable(OtlpMetricsUrlEnvVar) ?? OtlpMetricsDefaultUrl;
-                Console.WriteLine(url);
                 cfg.Endpoint = new Uri(url);
                 cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
             })
@@ -89,7 +89,6 @@ public static class SharedConventions
             .AddOtlpExporter(cfg =>
             {
                 var url = Environment.GetEnvironmentVariable(OtlpTracesUrlEnvVar) ?? OtlpTracesDefaultUrl;
-                Console.WriteLine(url);
                 cfg.Endpoint = new Uri(url);
                 cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
             })

@@ -14,46 +14,41 @@ services:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localhost:4566
+      - LOCALSTACK_URL=http://localstack:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
-    network_mode: service:localstack
   bank1:
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localhost:4566
+      - LOCALSTACK_URL=http://localstack:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
-    network_mode: service:localstack
   bank2:
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localhost:4566
+      - LOCALSTACK_URL=http://localstack:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
-    network_mode: service:localstack
   bank3:
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localhost:4566
+      - LOCALSTACK_URL=http://localstack:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
-    network_mode: service:localstack
   client:
     build:
       context: ./
       dockerfile: ./Client/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localhost:4566
+      - LOCALSTACK_URL=http://localstack:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
-    network_mode: service:localstack
     tty: true
     stdin_open: true
     command: sh
