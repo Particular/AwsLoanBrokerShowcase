@@ -4,6 +4,6 @@ namespace BankMessages;
 
 public record QuoteCreated(
     string RequestId,
-    string BankIdentifier,
+    string BankId,
     double InterestRate
 ) : IMessage;

@@ -3,7 +3,7 @@
 namespace BankMessages;
 
 public record QuoteRequested(
-    string RequestIdentifier,
+    string RequestId,
     int Score,
     int NumberOfYears,
     int Amount

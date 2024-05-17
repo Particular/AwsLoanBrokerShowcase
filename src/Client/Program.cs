@@ -1,16 +1,9 @@
-using Amazon.Runtime.CredentialManagement.Internal;
 using ClientMessages;
 using CommonConfigurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NLog.Extensions.Logging;
-using NServiceBus.Extensions.Logging;
-using NServiceBus.Logging;
-using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
-// Integrate NServiceBus logging with Microsoft.Extensions.Logging
-ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
-LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
+SharedConventions.ConfigureMicrosoftLoggingIntegration();
 
 var builder = Host.CreateApplicationBuilder(args);
 
