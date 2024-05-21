@@ -47,9 +47,9 @@ static class Extensions
         return false;
     }
 
-    static bool TryGetRequestId(this IReadOnlyDictionary<string, string> headers, out string requestId)
+    public static bool TryGetRequestId(this IReadOnlyDictionary<string, string> headers, out string requestId)
     {
-        if (headers.TryGetValue("LoanBroker.RequestId", out var requestIdValue))
+        if (headers.TryGetValue(LoanBrokerHeaders.RequestId, out var requestIdValue))
         {
             requestId = requestIdValue;
             return true;
