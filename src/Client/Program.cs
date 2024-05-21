@@ -46,7 +46,13 @@ while (running)
                 var prospect = new Prospect("Scrooge", "McDuck");
                 Console.WriteLine(
                     $"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
-                await messageSession.Send(new FindBestLoan(requestId, prospect, 10, 1000));
+
+                var sendOptions = new SendOptions();
+                sendOptions.SetHeader(LoanBrokerHeaders.RequestId, requestId);
+
+                var findBestLoan = new FindBestLoan(requestId, prospect, 10, 1000);
+
+                await messageSession.Send(findBestLoan, sendOptions);
                 break;
             case ConsoleKey.Q:
                 running = false;
