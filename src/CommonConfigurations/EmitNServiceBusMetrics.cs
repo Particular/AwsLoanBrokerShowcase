@@ -19,12 +19,14 @@ public class EmitNServiceBusMetrics : Feature
         context.Pipeline.OnReceivePipelineCompleted((e, _) =>
         {
             e.TryGetMessageType(out var messageType);
+            e.TryGetRequestId(out var requestId);
 
             var tags = new TagList(
             [
                 new(Tags.QueueName, queueName ?? ""),
                 new(Tags.EndpointDiscriminator, discriminator ?? ""),
                 new(Tags.MessageType, messageType ?? ""),
+                new(Tags.LoanBrokerRequestId, requestId ?? "")
             ]);
 
             ProcessingTime.Record((e.CompletedAt - e.StartedAt).TotalMilliseconds, tags);
@@ -51,5 +53,6 @@ public class EmitNServiceBusMetrics : Feature
         public const string EndpointDiscriminator = "nservicebus.discriminator";
         public const string QueueName = "nservicebus.queue";
         public const string MessageType = "nservicebus.message_type";
+        public const string LoanBrokerRequestId = "loan_broker.request_id";
     }
 }
