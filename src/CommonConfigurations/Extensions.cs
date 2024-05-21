@@ -33,7 +33,10 @@ static class Extensions
     public static bool TryGetMessageType(this ReceivePipelineCompleted completed, out string processedMessageType)
         => completed.ProcessedMessage.Headers.TryGetMessageType(out processedMessageType);
 
-    internal static bool TryGetMessageType(this IReadOnlyDictionary<string, string> headers, out string processedMessageType)
+    public static bool TryGetRequestId(this ReceivePipelineCompleted completed, out string requestId)
+        => completed.ProcessedMessage.Headers.TryGetRequestId(out requestId);
+
+    static bool TryGetMessageType(this IReadOnlyDictionary<string, string> headers, out string processedMessageType)
     {
         if (headers.TryGetValue(Headers.EnclosedMessageTypes, out var enclosedMessageType))
         {
@@ -41,6 +44,17 @@ static class Extensions
             return true;
         }
         processedMessageType = null;
+        return false;
+    }
+
+    static bool TryGetRequestId(this IReadOnlyDictionary<string, string> headers, out string requestId)
+    {
+        if (headers.TryGetValue("LoanBroker.RequestId", out var requestIdValue))
+        {
+            requestId = requestIdValue;
+            return true;
+        }
+        requestId = null;
         return false;
     }
 }
