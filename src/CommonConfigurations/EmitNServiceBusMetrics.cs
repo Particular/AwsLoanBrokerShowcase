@@ -26,7 +26,7 @@ public class EmitNServiceBusMetrics : Feature
                 new(Tags.QueueName, queueName ?? ""),
                 new(Tags.EndpointDiscriminator, discriminator ?? ""),
                 new(Tags.MessageType, messageType ?? ""),
-                new(Tags.LoanBrokerRequestId, requestId ?? "")
+                //new(Tags.LoanBrokerRequestId, requestId ?? "")
             ]);
 
             ProcessingTime.Record((e.CompletedAt - e.StartedAt).TotalMilliseconds, tags);
