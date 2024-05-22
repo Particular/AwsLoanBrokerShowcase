@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{C41F
 		grafana\dashboards\common_dashboard.json = grafana\dashboards\common_dashboard.json
 		grafana\provisioning\dashboards\dashboard_provider.yml = grafana\provisioning\dashboards\dashboard_provider.yml
 		grafana\provisioning\datasources\prometheus_ds.yml = grafana\provisioning\datasources\prometheus_ds.yml
+		grafana\dashboards\loan_broker_dashboard.json = grafana\dashboards\loan_broker_dashboard.json
 	EndProjectSection
 EndProject
 Global

@@ -1,5 +1,8 @@
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using BankMessages;
 using ClientMessages;
+using CommonConfigurations;
 using LoanBroker.Services;
 using Microsoft.Extensions.Logging;
 
@@ -32,6 +35,7 @@ class BestLoanPolicy(
             message.NumberOfYears,
             message.Amount
         ));
+        Data.RequestSentToBanks = DateTime.UtcNow;
         var requestExpiration = TimeSpan.FromSeconds(10);
         await RequestTimeout<MaxTimeout>(context, requestExpiration);
         logger.LogInformation($"Quote, with request ID {message.RequestId}, requested to banks. The request expires in {requestExpiration}");
@@ -41,6 +45,17 @@ class BestLoanPolicy(
     {
         logger.LogInformation($"Quote, for request ID {message.RequestId}, received from bank {message.BankId}. Interest rate: {message.InterestRate}");
         Data.Quotes.Add(new Quote(message.BankId, message.InterestRate));
+
+        var tags = new TagList(
+        [
+            new(Tags.MessageType, typeof(QuoteCreated)),
+            new(Tags.BankId,message.BankId),
+        ]);
+
+        if (Data.RequestSentToBanks.HasValue)
+        {
+            BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
+        }
         return Task.CompletedTask;
     }
 
@@ -48,6 +63,17 @@ class BestLoanPolicy(
     {
         logger.LogWarning($"Quote, for request ID {message.RequestId}, refused by bank {message.BankId}. Request: {message.RequestId}");
         Data.RejectedBy.Add(message.BankId);
+
+        var tags = new TagList(
+        [
+            new(Tags.MessageType, typeof(QuoteRequestRefusedByBank)),
+            new(Tags.BankId,message.BankId),
+        ]);
+
+        if (Data.RequestSentToBanks.HasValue)
+        {
+            BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
+        }
         return Task.CompletedTask;
     }
 
@@ -75,13 +101,24 @@ class BestLoanPolicy(
         await ReplyToOriginator(context, replyMessage);
         MarkAsComplete();
     }
+
+    static readonly Histogram<double> BankResponseTime =
+        SharedConventions.LoanBrokerMeter.CreateHistogram<double>("loan_broker.bank_processing_time", "ms",
+            "The time banks take to respond to quote requests.");
 }
 
 class BestLoanData : ContainSagaData
 {
+    public DateTime? RequestSentToBanks { get; set; } = null;
     public string RequestId { get; set; } = null!;
     public List<Quote> Quotes { get; set; } = [];
     public List<string> RejectedBy { get; set; } = [];
 }
 
 record MaxTimeout;
+
+static class Tags
+{
+    public const string MessageType = "nservicebus.message_type";
+    public const string BankId = "loan_broker.bank_id";
+}
