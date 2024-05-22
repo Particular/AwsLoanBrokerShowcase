@@ -35,84 +35,51 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 0
-      },
-      "id": 13,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {},
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "expr": "sum without (messaging_type) (rate(nservicebus_messaging_successes_total[5m])*100)",
-          "refId": "A"
-        }
-      ],
-      "title": "Total successful messages ",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 10
               },
               {
                 "color": "red",
-                "value": 40
+                "value": 80
               }
             ]
           }
@@ -121,27 +88,22 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 6,
+        "w": 12,
+        "x": 0,
         "y": 0
       },
-      "id": 11,
+      "id": 15,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "text": {},
-        "textMode": "auto",
-        "wideLayout": true
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "10.4.2",
       "targets": [
@@ -149,73 +111,98 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "rate(nservicebus_messaging_failures_total[5m])*100",
-          "refId": "A"
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "(avg by(nservicebus_queue) (rate(nservicebus_messaging_criticaltime_milliseconds_sum[1m]))) / (avg by(nservicebus_queue) (rate(nservicebus_messaging_criticaltime_milliseconds_count[1m])))",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Average error msg ",
-      "type": "stat"
+      "title": "Critical Time by Endpoint ",
+      "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "(?:\\w+)"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "$1"
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 12,
         "x": 12,
         "y": 0
       },
-      "id": 6,
+      "id": 16,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "text": {},
-        "textMode": "value",
-        "wideLayout": true
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "10.4.2",
       "targets": [
@@ -223,76 +210,21 @@
           "datasource": {
             "type": "prometheus"
           },
-          "editorMode": "code",
-          "expr": "rate(nservicebus_messaging_successes_total[5m])*100",
-          "interval": "",
-          "legendFormat": "{{nservicebus_message_type}}",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "avg by(nservicebus_message_type) (rate(nservicebus_messaging_criticaltime_milliseconds_sum[1m])) / avg by(nservicebus_message_type) (rate(nservicebus_messaging_criticaltime_milliseconds_count[1m]))",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Messages processed per endpoint",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 0
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {},
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "expr": "rate(nservicebus_messaging_successes_total[5m])*100",
-          "refId": "A"
-        }
-      ],
-      "title": "Average msg ",
-      "type": "stat"
+      "title": "Critical Time by MessageType",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -374,7 +306,10 @@
           "datasource": {
             "type": "prometheus"
           },
+          "editorMode": "code",
           "expr": "rate(nservicebus_messaging_successes_total[5m])*100",
+          "legendFormat": "{{nservicebus_queue}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -465,7 +400,10 @@
           "datasource": {
             "type": "prometheus"
           },
+          "editorMode": "code",
           "expr": "rate(nservicebus_messaging_fetches_total[5m])*100",
+          "legendFormat": "{{nservicebus_queue}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -572,7 +510,10 @@
           "datasource": {
             "type": "prometheus"
           },
+          "editorMode": "code",
           "expr": "rate(nservicebus_messaging_failures_total[5m]) * 100",
+          "legendFormat": "{{exported_job}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -594,6 +535,6 @@
   "timezone": "",
   "title": "NServiceBus",
   "uid": "MHqYOIqnz",
-  "version": 7,
+  "version": 2,
   "weekStart": ""
 }
