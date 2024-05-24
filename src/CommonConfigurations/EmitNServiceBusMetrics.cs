@@ -70,7 +70,7 @@ class RecordHandlerTimeMetric(string queueName) : Behavior<IInvokeHandlerContext
     {
         var start = DateTime.UtcNow;
         var type = context.MessageHandler.Instance.GetType();
-        return next().ContinueWith(_ =>
+        return next().ContinueWith(t =>
         {
             var tags = new TagList(
             [
@@ -78,6 +78,10 @@ class RecordHandlerTimeMetric(string queueName) : Behavior<IInvokeHandlerContext
                 new(Tags.QueueName, queueName ),
             ]);
             HandlerTime.Record((DateTime.UtcNow - start).TotalMilliseconds, tags);
+            if (t.IsFaulted)
+            {
+                throw t.Exception;
+            }
         }, context.CancellationToken);
     }
 
