@@ -69,13 +69,16 @@ class RecordHandlerTimeMetric(string queueName) : Behavior<IInvokeHandlerContext
     public override Task Invoke(IInvokeHandlerContext context, Func<Task> next)
     {
         var start = DateTime.UtcNow;
-        var type = context.MessageHandler.Instance.GetType();
+        var handlerType = context.MessageHandler.Instance.GetType();
+        var messageType = context.MessageBeingHandled.GetType();
         return next().ContinueWith(t =>
         {
             var tags = new TagList(
             [
-                new(Tags.MessageHandler, type),
+                new(Tags.MessageHandler, handlerType),
                 new(Tags.QueueName, queueName ),
+                new(Tags.MessageType, messageType )
+
             ]);
             HandlerTime.Record((DateTime.UtcNow - start).TotalMilliseconds, tags);
             if (t.IsFaulted)
@@ -89,6 +92,7 @@ class RecordHandlerTimeMetric(string queueName) : Behavior<IInvokeHandlerContext
     {
         public const string MessageHandler = "nservicebus.message_handler";
         public const string QueueName = "nservicebus.queue";
+        public const string MessageType = "nservicebus.message_type";
     }
 
     static readonly Histogram<double> HandlerTime =
