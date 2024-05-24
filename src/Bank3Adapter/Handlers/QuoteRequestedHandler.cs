@@ -13,7 +13,7 @@ public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHan
         logger.LogInformation(
             $"Quote request with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}, credit score: {message.Score}");
 
-        while (DateTime.Now.Ticks % 3 == 0)
+        while (Random.Next(0, 3) == 0)
         {
             throw new Exception("Random error");
         }
