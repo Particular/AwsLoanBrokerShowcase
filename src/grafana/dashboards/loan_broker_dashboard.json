@@ -86,7 +86,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 2,
+      "id": 7,
       "options": {
         "legend": {
           "calcs": [],
@@ -95,6 +95,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -106,7 +107,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg(increase(nservicebus_messaging_handlerTime_milliseconds_sum{nservicebus_queue=\"LoanBroker\"}[1m])) / avg(increase(nservicebus_messaging_handlerTime_milliseconds_count{nservicebus_queue=\"LoanBroker\"}[1m]))",
+          "expr": "avg(increase(nservicebus_messaging_handler_time_milliseconds_sum{nservicebus_queue=\"LoanBroker\"}[1m])) / avg(increase(nservicebus_messaging_handler_time_milliseconds_count{nservicebus_queue=\"LoanBroker\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -148,7 +149,7 @@
           "useBackend": false
         }
       ],
-      "title": "Critical vs Processing vs Handling time per Loan Broker application",
+      "title": "Critical vs Processing vs Handling time per LoanBroker",
       "type": "timeseries"
     },
     {
@@ -224,6 +225,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -235,7 +237,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg(increase(nservicebus_messaging_handlerTime_milliseconds_sum{nservicebus_queue=\"Client\"}[1m])) / avg(increase(nservicebus_messaging_handlerTime_milliseconds_count{nservicebus_queue=\"Client\"}[1m]))",
+          "expr": "avg(increase(nservicebus_messaging_handler_time_milliseconds_sum{nservicebus_queue=\"Client\"}[1m])) / avg(increase(nservicebus_messaging_handler_time_milliseconds_count{nservicebus_queue=\"Client\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -353,6 +355,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -364,7 +367,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg(increase(nservicebus_messaging_handlerTime_milliseconds_sum{nservicebus_queue=\"Bank1Adapter\"}[1m])) / avg(increase(nservicebus_messaging_handlerTime_milliseconds_count{nservicebus_queue=\"Bank1Adapter\"}[1m]))",
+          "expr": "avg(increase(nservicebus_messaging_handler_time_milliseconds_sum{nservicebus_queue=\"Bank1Adapter\"}[1m])) / avg(increase(nservicebus_messaging_handler_time_milliseconds_count{nservicebus_queue=\"Bank1Adapter\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -482,6 +485,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -493,7 +497,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg(increase(nservicebus_messaging_handlerTime_milliseconds_sum{nservicebus_queue=\"Bank2Adapter\"}[1m])) / avg(increase(nservicebus_messaging_handlerTime_milliseconds_count{nservicebus_queue=\"Bank2Adapter\"}[1m]))",
+          "expr": "avg(increase(nservicebus_messaging_handler_time_milliseconds_sum{nservicebus_queue=\"Bank2Adapter\"}[1m])) / avg(increase(nservicebus_messaging_handler_time_milliseconds_count{nservicebus_queue=\"Bank2Adapter\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -611,6 +615,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -622,7 +627,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg(increase(nservicebus_messaging_handlerTime_milliseconds_sum{nservicebus_queue=\"Bank3Adapter\"}[1m])) / avg(increase(nservicebus_messaging_handlerTime_milliseconds_count{nservicebus_queue=\"Bank3Adapter\"}[1m]))",
+          "expr": "avg(increase(nservicebus_messaging_handler_time_milliseconds_sum{nservicebus_queue=\"Bank3Adapter\"}[1m])) / avg(increase(nservicebus_messaging_handler_time_milliseconds_count{nservicebus_queue=\"Bank3Adapter\"}[1m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -740,6 +745,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -775,10 +781,11 @@
     "from": "now-15m",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "browser",
   "title": "LoanBroker",
   "uid": "edmhjobnxatc0b",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }

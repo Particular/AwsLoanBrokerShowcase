@@ -101,6 +101,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -200,6 +201,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -308,6 +310,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -407,6 +410,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -515,6 +519,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -527,7 +532,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg by(nservicebus_queue) (increase(nservicebus_messaging_handlerTime_milliseconds_sum[1m])) / avg by(nservicebus_queue) (increase(nservicebus_messaging_handlerTime_milliseconds_count[1m]))",
+          "expr": "avg by(nservicebus_queue) (increase(nservicebus_messaging_handler_time_milliseconds_sum[1m])) / avg by(nservicebus_queue) (increase(nservicebus_messaging_handler_time_milliseconds_count[1m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -614,6 +619,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -626,7 +632,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "avg by(nservicebus_message_handler) (increase(nservicebus_messaging_handlerTime_milliseconds_sum[1m])) / avg by(nservicebus_message_handler) (increase(nservicebus_messaging_handlerTime_milliseconds_count[1m]))",
+          "expr": "avg by(nservicebus_message_handler_type) (increase(nservicebus_messaging_handler_time_milliseconds_sum[1m])) / avg by(nservicebus_message_handler_type) (increase(nservicebus_messaging_handler_time_milliseconds_count[1m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -726,6 +732,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -829,6 +836,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -901,7 +909,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -927,6 +936,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -997,7 +1007,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1023,6 +1034,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -1058,10 +1070,11 @@
     "from": "now-5m",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "NServiceBus",
   "uid": "MHqYOIqnz",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
