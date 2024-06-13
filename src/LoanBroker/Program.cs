@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2;
 using CommonConfigurations;
+using LoanBroker.Messages;
 using LoanBroker.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +14,9 @@ builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 endpointConfiguration.CommonEndpointSetting();
-endpointConfiguration.UseCommonTransport();
+var routingSettings = endpointConfiguration.UseCommonTransport();
+routingSettings.RouteToEndpoint(typeof(FindBestLoanWithScore), "LoanBroker");
+
 
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
 persistence.Sagas().UsePessimisticLocking = true;

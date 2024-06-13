@@ -2,4 +2,4 @@ using NServiceBus;
 
 namespace ClientMessages;
 
-public record QuoteRequestRefused(string RequestId) : IMessage;
+public record QuoteRequestRefused(string RequestId) : IEvent;

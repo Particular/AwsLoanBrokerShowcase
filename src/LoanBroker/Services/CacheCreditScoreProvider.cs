@@ -8,10 +8,10 @@ class CacheCreditScoreProvider(ICreditScoreProvider delegateProvider) : ICreditS
 
     public int Score(Prospect prospect)
     {
-        if (!_cache.TryGetValue(prospect, out var score) || DateTime.Now > score.Expiration)
+        if (!_cache.TryGetValue(prospect, out var score) || DateTime.UtcNow > score.Expiration)
         {
             var remoteScore = delegateProvider.Score(prospect);
-            _cache[prospect] = ( DateTime.Now.AddMonths(1), remoteScore);
+            _cache[prospect] = ( DateTime.UtcNow.AddMonths(1), remoteScore);
             return remoteScore;
         }
 

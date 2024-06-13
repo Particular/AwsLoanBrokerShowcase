@@ -1,5 +1,7 @@
 using BankMessages;
 using ClientMessages;
+using CommonConfigurations;
+using LoanBroker.Messages;
 using LoanBroker.Services;
 using Microsoft.Extensions.Logging;
 
@@ -7,9 +9,8 @@ namespace LoanBroker.Policies;
 
 class BestLoanPolicy(
     ILogger<BestLoanPolicy> logger,
-    ICreditScoreProvider creditScoreProvider,
     IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
-    IAmStartedByMessages<FindBestLoan>,
+    IAmStartedByMessages<FindBestLoanWithScore>,
     IHandleMessages<QuoteCreated>,
     IHandleMessages<QuoteRequestRefusedByBank>,
     IHandleTimeouts<MaxTimeout>
@@ -17,18 +18,17 @@ class BestLoanPolicy(
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
     {
         mapper.MapSaga(saga => saga.RequestId)
-            .ToMessage<FindBestLoan>(message => message.RequestId)
+            .ToMessage<FindBestLoanWithScore>(message => message.RequestId)
             .ToMessage<QuoteCreated>(message => message.RequestId)
             .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
     }
 
-    public async Task Handle(FindBestLoan message, IMessageHandlerContext context)
-    {
-        logger.LogInformation($"FindBestLoan request received from {message.Prospect}, with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}");
 
-        var score = creditScoreProvider.Score(message.Prospect);
+
+    public async Task Handle(FindBestLoanWithScore message, IMessageHandlerContext context)
+    {
         await context.Publish(new QuoteRequested(message.RequestId,
-            score,
+            message.Score,
             message.NumberOfYears,
             message.Amount
         ));
@@ -36,6 +36,8 @@ class BestLoanPolicy(
         await RequestTimeout<MaxTimeout>(context, requestExpiration);
         logger.LogInformation($"Quote, with request ID {message.RequestId}, requested to banks. The request expires in {requestExpiration}");
     }
+
+
 
     public Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
@@ -72,7 +74,7 @@ class BestLoanPolicy(
             logger.LogWarning($"The request ID {Data.RequestId} expired with no responses from banks.");
         }
 
-        await ReplyToOriginator(context, replyMessage);
+        await context.Publish(replyMessage);
         MarkAsComplete();
     }
 }

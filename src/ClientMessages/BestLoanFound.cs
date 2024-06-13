@@ -5,4 +5,4 @@ namespace ClientMessages;
 public record BestLoanFound(
     string RequestId,
     string BankId,
-    double InterestRate) : IMessage;
+    double InterestRate) : IEvent;

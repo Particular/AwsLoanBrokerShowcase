@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using BankMessages;
 using ClientMessages;
+using LoanBroker.Messages;
 using LoanBroker.Policies;
 using LoanBroker.Services;
 using Microsoft.Extensions.Logging;
@@ -18,10 +19,10 @@ public class BestLoanPolicyScenarioTests
         var requestId = Guid.NewGuid().ToString()[..8];
         var prospect = new Prospect("Scrooge", "McDuck");
 
-        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+        var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000, 800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(log,  new BestRateQuoteAggregator()));
 
         var result1 = await policy.Handle(initialCommand);
         var quoteRequested = result1.FindPublishedMessage<QuoteRequested>();
@@ -70,10 +71,10 @@ public class BestLoanPolicyScenarioTests
     {
         var requestId = Guid.NewGuid().ToString()[..8];
         var prospect = new Prospect("Scrooge", "McDuck");
-        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+        var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000,800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(log, new BestRateQuoteAggregator()));
 
         await policy.Handle(initialCommand);
         var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
@@ -93,10 +94,10 @@ public class BestLoanPolicyScenarioTests
     {
         var requestId = Guid.NewGuid().ToString()[..8];
         var prospect = new Prospect("Scrooge", "McDuck");
-        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+        var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000, 800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(log,  new BestRateQuoteAggregator()));
 
         await policy.Handle(initialCommand);
         await policy.Handle(new QuoteRequestRefusedByBank(requestId, "bank1"));
@@ -117,10 +118,10 @@ public class BestLoanPolicyScenarioTests
     {
         var requestId = Guid.NewGuid().ToString()[..8];
         var prospect = new Prospect("Scrooge", "McDuck");
-        var initialCommand = new FindBestLoan(requestId, prospect, 30, 1_000_000);
+        var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000, 800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
-            sagaFactory: () => new BestLoanPolicy(log, new FixedCreditScorer(800), new BestRateQuoteAggregator()));
+            sagaFactory: () => new BestLoanPolicy(log, new BestRateQuoteAggregator()));
 
         await policy.Handle(initialCommand);
         await policy.Handle(new QuoteRequestRefusedByBank(requestId, "bank1"));
