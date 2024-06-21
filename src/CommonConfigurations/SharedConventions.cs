@@ -26,7 +26,6 @@ public static class SharedConventions
     public static readonly AWSCredentials EmptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
     public static readonly Meter LoanBrokerMeter = new ("LoanBroker", "0.1.0");
 
-
     public static string LocalStackUrl() => Environment.GetEnvironmentVariable(LocalStackEdgeEnvVar) ?? LocalStackEdgeDefaultUrl;
 
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
