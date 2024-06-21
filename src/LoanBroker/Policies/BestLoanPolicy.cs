@@ -103,7 +103,7 @@ class BestLoanPolicy(
     }
 
     static readonly Histogram<double> BankResponseTime =
-        SharedConventions.LoanBrokerMeter.CreateHistogram<double>("loan_broker.bank_processing_time", "ms",
+        SharedConventions.LoanBrokerMeter.CreateHistogram<double>("loan_broker.bank_processing_time", "s",
             "The time banks take to respond to quote requests.");
 }
 
