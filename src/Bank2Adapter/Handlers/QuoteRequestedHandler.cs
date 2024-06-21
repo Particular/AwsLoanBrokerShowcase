@@ -14,11 +14,20 @@ public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHan
 
         while (DateTime.Now.Ticks % 300 == 0)
         {
+            if (context.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
             throw new Exception("Random error");
         }
 
         while (DateTime.Now.Ticks % 5 == 0)
         {
+            if (context.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             var randomDelayMilliseconds = Random.Next(500, 3000);
             Thread.Sleep(randomDelayMilliseconds);
         }
