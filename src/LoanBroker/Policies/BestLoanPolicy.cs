@@ -85,17 +85,17 @@ class BestLoanPolicy(
         {
             var quote = quoteAggregator.Reduce(Data.Quotes);
             replyMessage = new BestLoanFound(Data.RequestId, quote.BankId, quote.InterestRate);
-            logger.LogInformation($"Best Loan found for request ID {Data.RequestId}, from bank {quote.BankId}. Details, interest rate: {quote.InterestRate}.");
+            logger.LogInformation($"Best Loan found for request ID {Data.RequestId}, from bank {quote.BankId}. Details, interest rate: {quote.InterestRate}");
         }
         else if (Data.RejectedBy.Count > 0)
         {
             replyMessage = new QuoteRequestRefused(Data.RequestId);
-            logger.LogWarning($"All banks that responded rejected the quote request with ID {Data.RequestId}.");
+            logger.LogWarning($"All banks that responded rejected the quote request with ID {Data.RequestId}");
         }
         else
         {
             replyMessage = new NoQuotesReceived(Data.RequestId);
-            logger.LogWarning($"The request ID {Data.RequestId} expired with no responses from banks.");
+            logger.LogWarning($"The request ID {Data.RequestId} expired with no responses from banks");
         }
 
         await ReplyToOriginator(context, replyMessage);
