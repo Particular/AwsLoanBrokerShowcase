@@ -1,6 +1,6 @@
 services:
   localstack:
-    image: localstack/localstack
+    image: localstack/localstack:3
     environment:
       - SERVICES=sns,sqs,iam,s3,dynamodb
       - DEBUG=1
