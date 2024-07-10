@@ -75,7 +75,6 @@ static Task SendMessage(IMessageSession messageSession)
         $"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
 
     var sendOptions = new SendOptions();
-    sendOptions.SetHeader(LoanBrokerHeaders.RequestId, requestId);
 
     var findBestLoan = new FindBestLoan(requestId, prospect, 10, 1000);
 

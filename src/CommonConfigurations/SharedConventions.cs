@@ -66,7 +66,7 @@ public static class SharedConventions
 
         Sdk.CreateMeterProviderBuilder()
             .SetResourceBuilder(resourceBuilder)
-            .AddMeter("NServiceBus.Core")
+            .AddMeter("NServiceBus.Core.Pipeline.Incoming")
             .AddMeter("LoanBroker")
             .AddOtlpExporter(cfg =>
             {
