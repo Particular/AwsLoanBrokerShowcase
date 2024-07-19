@@ -30,11 +30,13 @@ class BestLoanPolicy(
         logger.LogInformation($"FindBestLoan request received from {message.Prospect}, with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}");
 
         var score = creditScoreProvider.Score(message.Prospect);
+        var publishOptions = new PublishOptions();
+        publishOptions.ContinueExistingTraceOnReceive();
         await context.Publish(new QuoteRequested(message.RequestId,
             score,
             message.NumberOfYears,
             message.Amount
-        ));
+        ), publishOptions);
         Data.RequestSentToBanks = DateTime.UtcNow;
         var requestExpiration = TimeSpan.FromSeconds(10);
         await RequestTimeout<MaxTimeout>(context, requestExpiration);
