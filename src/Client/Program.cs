@@ -76,7 +76,7 @@ static Task SendMessage(IMessageSession messageSession)
 
     var sendOptions = new SendOptions();
 
-    var findBestLoan = new FindBestLoan(requestId, prospect, 10, 1000);
+    var findBestLoan = new FindBestLoan(requestId, prospect, 10, Random.Shared.Next(1000,1_000_000));
 
     return messageSession.Send(findBestLoan, sendOptions);
 }

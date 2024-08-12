@@ -8,8 +8,9 @@ using Microsoft.Extensions.Hosting;
 SharedConventions.ConfigureMicrosoftLoggingIntegration();
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddSingleton<ICreditScoreProvider, CacheCreditScoreProvider>(_ =>
-    new CacheCreditScoreProvider(new RandomCreditScoreProvider()));
+builder.Services.AddSingleton<ICreditScoreProvider>(_ => new HTTPCreditScoreProvider());
+    // new CacheCreditScoreProvider(new HTTPCreditScoreProvider()));
+
 builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
