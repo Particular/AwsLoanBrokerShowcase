@@ -104,3 +104,4 @@ src/scaffolding.config
 # Prometheus & Grafana data
 data-prometheus
 data-grafana
+src/volume
