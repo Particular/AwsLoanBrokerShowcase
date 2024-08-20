@@ -2,13 +2,15 @@ services:
   localstack:
     image: localstack/localstack:3
     environment:
-      - SERVICES=sns,sqs,iam,s3,dynamodb
+      - SERVICES=sns,sqs,iam,s3,dynamodb,lambda
       - DEBUG=1
-      - HOSTNAME=localstack
       - EDGE_PORT=4566
     ports:
       - '4566-4597:4566-4597'
       - "8000:5000"
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
   loan-broker:
     build:
       context: ./
