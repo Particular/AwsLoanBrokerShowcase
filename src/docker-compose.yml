@@ -14,46 +14,69 @@ services:
       - ./localstack:/etc/localstack/init/ready.d
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      ls:
+        ipv4_address: 10.0.2.20
   loan-broker:
     build:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localstack:4566
+      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    dns:
+      - 10.0.2.20
+    networks:
+      - ls
   bank1:
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localstack:4566
+      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    dns:
+      - 10.0.2.20
+    networks:
+      - ls
   bank2:
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localstack:4566
+      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    dns:
+      - 10.0.2.20
+    networks:
+      - ls
   bank3:
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localstack:4566
+      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    dns:
+      - 10.0.2.20
+    networks:
+      - ls
   client:
     build:
       context: ./
       dockerfile: ./Client/Dockerfile
     environment:
-      - LOCALSTACK_URL=http://localstack:4566
+      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
       - OTLP_METRICS_URL=http://adot:5318/v1/metrics
       - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    dns:
+      - 10.0.2.20
+    networks:
+      - ls
     tty: true
     stdin_open: true
     command: sh
@@ -65,6 +88,8 @@ services:
       - ./prometheus:/etc/prometheus
       - ./data-prometheus:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    networks:
+      - ls
   grafana:
     image: grafana/grafana-oss:latest
     ports:
@@ -74,6 +99,8 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning/
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./data-grafana:/var/lib/grafana
+    networks:
+      - ls
   jaeger:
     image: jaegertracing/all-in-one:latest
     environment:
@@ -83,6 +110,8 @@ services:
       - 4318:4318
       - 9411:9411
       - 14250
+    networks:
+      - ls
   adot:
     image: amazon/aws-otel-collector
     command: [ "--config=/etc/otel-agent-config.yaml" ]
@@ -92,3 +121,10 @@ services:
       - "1234:1234"       # adot
     volumes:
       - ./adot/config.yaml:/etc/otel-agent-config.yaml
+    networks:
+      - ls
+networks:
+  ls:
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24

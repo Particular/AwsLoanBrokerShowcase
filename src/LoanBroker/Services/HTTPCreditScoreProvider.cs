@@ -6,7 +6,7 @@ namespace LoanBroker.Services;
 
 public class HTTPCreditScoreProvider : ICreditScoreProvider
 {
-    public int Score(Prospect prospelct)
+    public int Score(Prospect prospect)
     {
         return getScore().GetAwaiter().GetResult();
     }
@@ -14,10 +14,10 @@ public class HTTPCreditScoreProvider : ICreditScoreProvider
     private async Task<int> getScore()
     {
         using var httpClient =  new HttpClient();
-
-        var requestBody = new StringContent("{\n\"SSN\": \"123-12-1234\",\n\"RequestId\": \"123-12-1234\"\n}",Encoding.UTF8, "application/json");
-        var response = await httpClient.PostAsync("http://localhost:5291/score", requestBody);
+        var url = "https://score.lambda-url.us-east-1.localhost.localstack.cloud:4566/?SSN=123-12-1234&RequestId=123";
+         var response = await httpClient.GetAsync(url);
         var score = await response.Content.ReadFromJsonAsync<ScoreResponse>();
+        Console.WriteLine(score);
 
         return score.score;
     }
