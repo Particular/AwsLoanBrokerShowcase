@@ -55,7 +55,7 @@ services:
     stdin_open: true
     command: sh
   prometheus:
-    image: prom/prometheus:v2.21.0
+    image: prom/prometheus:v2.53.2
     ports:
       - '9090:9090'
     volumes:
