@@ -7,14 +7,15 @@ exports.score = async (event) => {
     const max_score = 900;
 
     var ssn_regex = new RegExp("^\\d{3}-\\d{2}-\\d{4}$");
-    let param = event.queryStringParameters;
+    let body = event.body;
+    console.log(event.body);
 
-    if (ssn_regex.test(param.SSN)) {
+    if (ssn_regex.test(body.SSN)) {
         return {
             statusCode: 200,
-            request_id: param.RequestId,
+            request_id: body.requestId,
             body: {
-                SSN: param.SSN,
+                SSN: body.SSN,
                 score: getRandomInt(min_score, max_score),
                 history: getRandomInt(1, 30)
             }
@@ -22,9 +23,9 @@ exports.score = async (event) => {
     } else {
         return {
             statusCode: 400,
-            request_id: param.RequestId,
+            request_id: body.requestId,
             body: {
-                SSN: param.SSN
+                SSN: body.SSN
             }
         };
     }
