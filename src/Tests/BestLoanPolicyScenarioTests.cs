@@ -17,7 +17,7 @@ public class BestLoanPolicyScenarioTests
     public async Task HappyPath()
     {
         var requestId = Guid.NewGuid().ToString()[..8];
-        var prospect = new Prospect("Scrooge", "McDuck");
+        var prospect = new Prospect("Scrooge", "McDuck", "123-45-6789");
 
         var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000, 800);
 
@@ -70,7 +70,7 @@ public class BestLoanPolicyScenarioTests
     public async Task NoResponsesFromBanks()
     {
         var requestId = Guid.NewGuid().ToString()[..8];
-        var prospect = new Prospect("Scrooge", "McDuck");
+        var prospect = new Prospect("Scrooge", "McDuck", "123-45-6789");
         var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000,800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
@@ -93,7 +93,7 @@ public class BestLoanPolicyScenarioTests
     public async Task LoanRequestRefusedByAllBanks()
     {
         var requestId = Guid.NewGuid().ToString()[..8];
-        var prospect = new Prospect("Scrooge", "McDuck");
+        var prospect = new Prospect("Scrooge", "McDuck", "123-45-6789");
         var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000, 800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
@@ -117,7 +117,7 @@ public class BestLoanPolicyScenarioTests
     public async Task LoanRequestRefusedByOneBankAcceptedByAnother()
     {
         var requestId = Guid.NewGuid().ToString()[..8];
-        var prospect = new Prospect("Scrooge", "McDuck");
+        var prospect = new Prospect("Scrooge", "McDuck", "123-45-6789");
         var initialCommand = new FindBestLoanWithScore(requestId, prospect, 30, 1_000_000, 800);
 
         var policy = new TestableSaga<BestLoanPolicy, BestLoanData>(
@@ -144,7 +144,7 @@ public class BestLoanPolicyScenarioTests
 
     class FixedCreditScorer(int score) : ICreditScoreProvider
     {
-        public Task<int> Score(Prospect prospect) => Task.FromResult(score);
+        public Task<int> Score(Prospect prospect, string requestId) => Task.FromResult(score);
     }
 
     static readonly ILogger<BestLoanPolicy> log = new NullLogger<BestLoanPolicy>();
