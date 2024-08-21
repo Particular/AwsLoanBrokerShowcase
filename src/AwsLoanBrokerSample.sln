@@ -41,14 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{C41F
 		grafana\dashboards\loan_broker_dashboard.json = grafana\dashboards\loan_broker_dashboard.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lambdas", "lambdas", "{4162A0DF-09D1-45C0-9C31-4692B4A37E0B}"
-	ProjectSection(SolutionItems) = preProject
-		lambdas\test.js = lambdas\test.js
-		lambdas\function.js = lambdas\function.js
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreditBureau", "CreditBureau\CreditBureau.csproj", "{6CF07A5F-E574-4F98-93E4-46AF855AC7BA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,10 +83,6 @@ Global
 		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CF07A5F-E574-4F98-93E4-46AF855AC7BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CF07A5F-E574-4F98-93E4-46AF855AC7BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CF07A5F-E574-4F98-93E4-46AF855AC7BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CF07A5F-E574-4F98-93E4-46AF855AC7BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +90,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F8D716D1-48D4-4DC4-996D-8A910AC76B14} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
 		{C41FB7F9-08F3-4C99-8C17-3078582AD182} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
-		{4162A0DF-09D1-45C0-9C31-4692B4A37E0B} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
 	EndGlobalSection
 EndGlobal
