@@ -144,7 +144,7 @@ public class BestLoanPolicyScenarioTests
 
     class FixedCreditScorer(int score) : ICreditScoreProvider
     {
-        public int Score(Prospect prospect) => score;
+        public Task<int> Score(Prospect prospect) => Task.FromResult(score);
     }
 
     static readonly ILogger<BestLoanPolicy> log = new NullLogger<BestLoanPolicy>();

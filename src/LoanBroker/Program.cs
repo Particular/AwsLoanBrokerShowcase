@@ -9,7 +9,6 @@ SharedConventions.ConfigureMicrosoftLoggingIntegration();
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddSingleton<ICreditScoreProvider>(_ => new HTTPCreditScoreProvider());
-    // new CacheCreditScoreProvider(new HTTPCreditScoreProvider()));
 
 builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
 
