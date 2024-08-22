@@ -58,12 +58,12 @@ public class BestLoanPolicyScenarioTests
 
         Assert.That(timeoutResults.Length, Is.EqualTo(1));
         var onlyResult = timeoutResults.First();
-        var responseMessage = onlyResult.FindReplyMessage<BestLoanFound>();
+        var publishedMessage = onlyResult.FindPublishedMessage<BestLoanFound>();
 
-        Assert.That(responseMessage, Is.Not.Null);
-        Assert.That(responseMessage.RequestId, Is.EqualTo(requestId));
-        Assert.That(responseMessage.BankId, Is.EqualTo("SecondRegional"));
-        Assert.That(responseMessage.InterestRate, Is.EqualTo(2.95));
+        Assert.That(publishedMessage, Is.Not.Null);
+        Assert.That(publishedMessage.RequestId, Is.EqualTo(requestId));
+        Assert.That(publishedMessage.BankId, Is.EqualTo("SecondRegional"));
+        Assert.That(publishedMessage.InterestRate, Is.EqualTo(2.95));
     }
 
     [Test]
@@ -80,11 +80,11 @@ public class BestLoanPolicyScenarioTests
         var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
         Assert.That(advanceTime.Length, Is.EqualTo(1));
         var handleResult = advanceTime[0];
-        var replyMessage = handleResult.FindReplyMessage<NoQuotesReceived>();
-        Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
+        var publishedMessage = handleResult.FindPublishedMessage<NoQuotesReceived>();
+        Assert.That(publishedMessage.RequestId, Is.EqualTo(requestId));
         Assert.That(handleResult.Completed, Is.True);
-        Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
-        Assert.That(handleResult.Context.PublishedMessages, Is.Empty);
+        Assert.That(handleResult.Context.PublishedMessages.Length, Is.EqualTo(1));
+        Assert.That(handleResult.Context.RepliedMessages, Is.Empty);
         Assert.That(handleResult.Context.TimeoutMessages, Is.Empty);
         Assert.That(handleResult.Context.SentMessages, Is.Empty);
     }
@@ -104,11 +104,11 @@ public class BestLoanPolicyScenarioTests
         var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
         Assert.That(advanceTime.Length, Is.EqualTo(1));
         var handleResult = advanceTime[0];
-        var replyMessage = handleResult.FindReplyMessage<QuoteRequestRefused>();
-        Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
+        var publishedMessage = handleResult.FindPublishedMessage<QuoteRequestRefused>();
+        Assert.That(publishedMessage.RequestId, Is.EqualTo(requestId));
         Assert.That(handleResult.Completed, Is.True);
-        Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
-        Assert.That(handleResult.Context.PublishedMessages, Is.Empty);
+        Assert.That(handleResult.Context.RepliedMessages, Is.Empty);
+        Assert.That(handleResult.Context.PublishedMessages.Length, Is.EqualTo(1));
         Assert.That(handleResult.Context.TimeoutMessages, Is.Empty);
         Assert.That(handleResult.Context.SentMessages, Is.Empty);
     }
@@ -131,13 +131,13 @@ public class BestLoanPolicyScenarioTests
         var advanceTime = await policy.AdvanceTime(TimeSpan.FromMinutes(11));
         Assert.That(advanceTime.Length, Is.EqualTo(1));
         var handleResult = advanceTime[0];
-        var replyMessage = handleResult.FindReplyMessage<BestLoanFound>();
-        Assert.That(replyMessage.RequestId, Is.EqualTo(requestId));
-        Assert.That(replyMessage.BankId, Is.EqualTo(answeringBank));
-        Assert.That(replyMessage.InterestRate, Is.EqualTo(interestRate));
+        var publishedMessage = handleResult.FindPublishedMessage<BestLoanFound>();
+        Assert.That(publishedMessage.RequestId, Is.EqualTo(requestId));
+        Assert.That(publishedMessage.BankId, Is.EqualTo(answeringBank));
+        Assert.That(publishedMessage.InterestRate, Is.EqualTo(interestRate));
         Assert.That(handleResult.Completed, Is.True);
-        Assert.That(handleResult.Context.RepliedMessages.Length, Is.EqualTo(1));
-        Assert.That(handleResult.Context.PublishedMessages, Is.Empty);
+        Assert.That(handleResult.Context.PublishedMessages.Length, Is.EqualTo(1));
+        Assert.That(handleResult.Context.RepliedMessages, Is.Empty);
         Assert.That(handleResult.Context.TimeoutMessages, Is.Empty);
         Assert.That(handleResult.Context.SentMessages, Is.Empty);
     }
