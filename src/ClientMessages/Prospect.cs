@@ -2,5 +2,5 @@
 
 public record Prospect(string Name, string Surname, string SSN)
 {
-    public override string ToString() => $"{Name} {Surname}";
+    public override string ToString() => $"{Name} {Surname} (SSN: {SSN})";
 }
