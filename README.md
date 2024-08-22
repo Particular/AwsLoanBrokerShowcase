@@ -8,10 +8,17 @@ The sample is composed by:
 - A loan broker service, receiving loan requests and orchestrating communication with downstream banks.
 - Three bank adapters, acting like Anti Corruption layers (ACL) towards three different banks offering loans.
 
+The sample also ships the following monitoring services:
+
+- Graphana instance with two different metrics dashboards
+- A Prometheus instance to query raw metrics data
+- A Jaeger instance to visualize OpenTelemetry traces
+
 ## Requirements
 
 - .NET 8 or greater
 - Docker
+- Docker Compose
 
 ## How to run the sample from the development IDE
 
@@ -37,15 +44,17 @@ To stop the LocalStack container, at the command prompt issue the following comm
 docker-compose stop localstack
 ```
 
+By running localstack only, metrics and traces are not captured. To capture and visualize metrics and races, run the Graphana, Prometheus, Jaeger, and Adot containers too. The easiest way is by running the entire solution in Docker containers.
+
 ## How to run the sample using Docker containers
 
-The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside with the LocalStack one to mock the AWS services. To do, from the `src` folder, execute the following command:  
+The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside with the LocalStack one to mock the AWS services. To do so, from the `src` folder, execute the following command:  
 
 ```shell
 docker-compose up --build
 ```
 
-The above command will build all projects, build container images for each of them, deploy them to the local Docker registry, and start them.
+The above command will build all projects, build container images for each of them, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the containers needed to capture and visualize OpenTelemetry traces and metrics.
 
 To run the solution without rebuilding container images, from the `src` folder, using a command prompt, execute the following command:
 
@@ -62,6 +71,13 @@ The docker-compose configuration will start the following containers:
 - BankAdapter2
 - BankAdapter3
 
+Alongside with the containers required to capture and visualize metrics and traces:
+
+- adot
+- prometheus
+- grafana
+- jaeger
+
 All containers will use the same network as the LocalStack container instance.
 
 To interact with the sample, attach a console to the Client running container by executing the following command:
@@ -70,7 +86,7 @@ To interact with the sample, attach a console to the Client running container by
 docker attach src-client-1
 ```
 
-Attach and use the `F` key
+Attach and use the `F` key. To detach from an attached container use `Ctrl+P + Ctrl+Q` on Windows, or  `CMD+P + CMD+Q` on macOS.
 
 ```shell
 docker-compose down
@@ -82,6 +98,10 @@ NServiceBus supports OpenTelemetry.
 All endpoints are configured to send telemetry data to Jaeger.
 
 To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
+
+To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). There are two pre-configured dashboards:
+
+- TBD
 
 ### Sample scenarios
 
