@@ -10,7 +10,7 @@ public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHan
     public async Task Handle(QuoteRequested message, IMessageHandlerContext context)
     {
         logger.LogInformation($"Quote request with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}, credit score: {message.Score}");
-        if (message is { Score: < 900, Amount: < 1_000_000 })
+        if (message is { Score: < 600, Amount: > 1_000_000 })
         {
             var quoteRejected = new QuoteRequestRefusedByBank(message.RequestId, BankIdentifier);
             logger.LogWarning($"Quote for request ID {message.RequestId} refused.");

@@ -70,13 +70,13 @@ return;
 static Task SendMessage(IMessageSession messageSession)
 {
     var requestId = Guid.NewGuid().ToString()[..8];
-    var prospect = new Prospect("Scrooge", "McDuck");
+    var prospect = new Prospect("Scrooge", "McDuck", "123-45-6789");
     Console.WriteLine(
         $"Sending FindBestLoan for prospect {prospect.Name} {prospect.Surname}. Request ID: {requestId}");
 
     var sendOptions = new SendOptions();
 
-    var findBestLoan = new FindBestLoan(requestId, prospect, 10, 1000);
+    var findBestLoan = new FindBestLoan(requestId, prospect, 10, Random.Shared.Next(1000,1_000_000));
 
     return messageSession.Send(findBestLoan, sendOptions);
 }

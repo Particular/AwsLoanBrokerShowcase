@@ -4,6 +4,6 @@ namespace LoanBroker.Services;
 
 public interface ICreditScoreProvider
 {
-    int Score(Prospect prospect);
+    Task<int> Score(Prospect prospect, string requestId);
 
 }

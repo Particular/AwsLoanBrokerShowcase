@@ -4,6 +4,5 @@ namespace LoanBroker.Services;
 
 class RandomCreditScoreProvider : ICreditScoreProvider
 {
-    readonly Random _rnd = new (42);
-    public int Score(Prospect prospect) => _rnd.Next(0, 1000);
+    public Task<int> Score(Prospect prospect, string requestId) => Task.FromResult(Random.Shared.Next(0, 1000));
 }
