@@ -5,25 +5,32 @@ The sample is a basic LoanBroker implementation following the [structure present
 The sample is composed by:
 
 - A client application, sending loan requests.
-- A loan broker service, receiving loan requests and orchestrating communication with downstream banks.
-- Three bank adapters, acting like Anti Corruption layers (ACL) towards three different banks offering loans.
+- A loan broker service that receives loan requests and orchestrates communication with downstream banks.
+- Three bank adapters, acting like Anti Corruption layers (ACL), are directed towards three banks offering loans.
+
+The sample also ships the following monitoring services:
+
+- Grafana instance with two different metrics dashboards
+- A Prometheus instance to query raw metrics data
+- A Jaeger instance to visualize OpenTelemetry traces
 
 ## Requirements
 
 - .NET 8 or greater
 - Docker
+- Docker Compose
 
 ## How to run the sample from the development IDE
 
-The sample uses [LocalStack](https://www.localstack.cloud/) in a Docker container to mock AWS services. Using a command prompt, run LocalStack first by issuing the following command in the `src` directory:
+To mock AWS services, the sample uses [LocalStack](https://www.localstack.cloud/) in a Docker container. Using a command prompt, run LocalStack first by issuing the following command in the `src` directory:
 
 ```shell
 docker-compose up localstack
 ```
 
-The above command will execute the sample `docker-compose.yml` file starting only the LocalStack container.
+The above command will execute the sample `docker-compose.yml` file, starting only with the LocalStack container.
 
-Once the LocalStack container is up and running, from the development environment start the following projects:
+Once the LocalStack container is up and running, from the development environment, start the following projects:
 
 - Client
 - LoanBroker
@@ -31,23 +38,25 @@ Once the LocalStack container is up and running, from the development environmen
 - BankAdapter2
 - BankAdapter3
 
-To stop the LocalStack container, at the command prompt issue the following command from the `src` folder:
+To stop the LocalStack container, at the command prompt, issue the following command from the `src` folder:
 
 ```shell
 docker-compose stop localstack
 ```
 
+Metrics and traces are not captured by running the local stack only. To capture and visualize metrics and races, run the Graphana, Prometheus, Jaeger, and Adot containers, too. The easiest way is to run the entire solution in Docker containers.
+
 ## How to run the sample using Docker containers
 
-The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside with the LocalStack one to mock the AWS services. To do, from the `src` folder, execute the following command:  
+The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside the LocalStack one to mock the AWS services. To do so, from the `src` folder, execute the following command:  
 
 ```shell
 docker-compose up --build
 ```
 
-The above command will build all projects, build container images for each of them, deploy them to the local Docker registry, and start them.
+The above command will build all projects, build container images for each, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the containers needed to capture and visualize OpenTelemetry traces and metrics.
 
-To run the solution without rebuilding container images, from the `src` folder, using a command prompt, execute the following command:
+To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
 docker-compose up
@@ -62,6 +71,13 @@ The docker-compose configuration will start the following containers:
 - BankAdapter2
 - BankAdapter3
 
+Alongside the containers required to capture and visualize metrics and traces:
+
+- adot
+- Prometheus
+- Grafana
+- Jaeger
+
 All containers will use the same network as the LocalStack container instance.
 
 To interact with the sample, attach a console to the Client running container by executing the following command:
@@ -70,7 +86,7 @@ To interact with the sample, attach a console to the Client running container by
 docker attach loanbroker-client-1
 ```
 
-Attach and use the `F` key
+Attach and use the `F` key. To detach from an attached container, use `Ctrl+P + Ctrl+Q` on Windows or `CMD+P + CMD+Q` on macOS.
 
 ```shell
 docker-compose down
@@ -82,6 +98,10 @@ NServiceBus supports OpenTelemetry.
 All endpoints are configured to send telemetry data to Jaeger.
 
 To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
+
+To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). There are two pre-configured dashboards:
+
+- TBD
 
 ### Sample scenarios
 
