@@ -25,8 +25,6 @@ class BestLoanPolicy(
             .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
     }
 
-
-
     public async Task Handle(FindBestLoanWithScore message, IMessageHandlerContext context)
     {
         logger.LogInformation($"FindBestLoan request received from {message.Prospect}, with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}");
@@ -43,8 +41,6 @@ class BestLoanPolicy(
         await RequestTimeout<MaxTimeout>(context, requestExpiration);
         logger.LogInformation($"Quote, with request ID {message.RequestId}, requested to banks. The request expires in {requestExpiration}");
     }
-
-
 
     public Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
@@ -84,26 +80,26 @@ class BestLoanPolicy(
 
     public async Task Timeout(MaxTimeout timeout, IMessageHandlerContext context)
     {
-        IMessage replyMessage;
+        IEvent eventToPublish;
 
         if (Data.Quotes.Count > 0)
         {
             var quote = quoteAggregator.Reduce(Data.Quotes);
-            replyMessage = new BestLoanFound(Data.RequestId, quote.BankId, quote.InterestRate);
+            eventToPublish = new BestLoanFound(Data.RequestId, quote.BankId, quote.InterestRate);
             logger.LogInformation($"Best Loan found for request ID {Data.RequestId}, from bank {quote.BankId}. Details, interest rate: {quote.InterestRate}");
         }
         else if (Data.RejectedBy.Count > 0)
         {
-            replyMessage = new QuoteRequestRefused(Data.RequestId);
+            eventToPublish = new QuoteRequestRefused(Data.RequestId);
             logger.LogWarning($"All banks that responded rejected the quote request with ID {Data.RequestId}");
         }
         else
         {
-            replyMessage = new NoQuotesReceived(Data.RequestId);
+            eventToPublish = new NoQuotesReceived(Data.RequestId);
             logger.LogWarning($"The request ID {Data.RequestId} expired with no responses from banks");
         }
 
-        await context.Publish(replyMessage);
+        await context.Publish(eventToPublish);
         MarkAsComplete();
     }
 
