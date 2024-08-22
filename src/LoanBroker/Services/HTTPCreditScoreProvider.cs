@@ -15,7 +15,7 @@ public class HTTPCreditScoreProvider : ICreditScoreProvider
         var requestRecord = new ScoreRequest(prospect.SSN, requestId);
         var httpResponseMessage = await httpClient.PostAsync(lambdaUrl, JsonContent.Create(requestRecord));
         var scoreResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ScoreResponse>();
-        return scoreResponse.score;
+        return scoreResponse!.score;
     }
 }
 
