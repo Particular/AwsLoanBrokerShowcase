@@ -25,10 +25,10 @@ The sample also ships the following monitoring services:
 To mock AWS services, the sample uses [LocalStack](https://www.localstack.cloud/) in a Docker container. Using a command prompt, run LocalStack first by issuing the following command in the `src` directory:
 
 ```shell
-docker-compose up localstack
+docker-compose up localstack, prometheus, grafana, jaeger, adot
 ```
 
-The above command will execute the sample `docker-compose.yml` file, starting only with the LocalStack container.
+The above command will execute the sample `docker-compose.yml` file, starting only with the necessary infrastructural components, such as the LocalStack container and the containers required for monitoring the endpoints.
 
 Once the LocalStack container is up and running, from the development environment, start the following projects:
 
@@ -41,10 +41,10 @@ Once the LocalStack container is up and running, from the development environmen
 To stop the LocalStack container, at the command prompt, issue the following command from the `src` folder:
 
 ```shell
-docker-compose stop localstack
+docker-compose stop localstack, prometheus, grafana, jaeger, adot
 ```
 
-Metrics and traces are not captured by running the local stack only. To capture and visualize metrics and races, run the Graphana, Prometheus, Jaeger, and Adot containers, too. The easiest way is to run the entire solution in Docker containers.
+If you are not interested in metrics and traces, it is possible to start only the `localstack` container, excluding the following containers: `prometheus`, `grafana`, `jaeger`, `adot`. Without them,  metrics and traces are not captured. 
 
 ## How to run the sample using Docker containers
 
