@@ -86,7 +86,7 @@ To interact with the sample, attach a console to the Client running container by
 docker attach loanbroker-client-1
 ```
 
-Attach and use the `F` key. To detach from an attached container, use `Ctrl+P + Ctrl+Q` on Windows or `CMD+P + CMD+Q` on macOS.
+Attach and use the `F` key. To detach from an attached container, use `Ctrl+P + Ctrl+Q`.
 
 ```shell
 docker-compose down
