@@ -25,7 +25,7 @@ The sample also ships the following monitoring services:
 To mock AWS services, the sample uses [LocalStack](https://www.localstack.cloud/) in a Docker container. Using a command prompt, run LocalStack first by issuing the following command in the `src` directory:
 
 ```shell
-docker-compose up localstack, prometheus, grafana, jaeger, adot
+docker compose up localstack, prometheus, grafana, jaeger, adot
 ```
 
 The above command will execute the sample `docker-compose.yml` file, starting only with the necessary infrastructural components, such as the LocalStack container and the containers required for monitoring the endpoints.
@@ -41,7 +41,7 @@ Once the LocalStack container is up and running, from the development environmen
 To stop the LocalStack and infrastructure containers, at the command prompt, issue the following command from the `src` folder:
 
 ```shell
-docker-compose stop localstack, prometheus, grafana, jaeger, adot
+docker compose stop localstack, prometheus, grafana, jaeger, adot
 ```
 
 If you are not interested in metrics and traces, it is possible to start only the `localstack` container, excluding the following containers: `prometheus`, `grafana`, `jaeger`, and `adot`. Without them, metrics and traces will not be captured. 
@@ -51,7 +51,7 @@ If you are not interested in metrics and traces, it is possible to start only th
 The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside the LocalStack one to mock the AWS services. To do so, from the `src` folder, execute the following command:  
 
 ```shell
-docker-compose up --build
+docker compose up --build
 ```
 
 The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the containers needed to capture and visualize OpenTelemetry traces and metrics.
@@ -59,7 +59,7 @@ The above command will build all projects, build container images, deploy them t
 To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
-docker-compose up
+docker compose up
 ```
 
 The docker-compose configuration will start the following containers:
@@ -93,7 +93,7 @@ To detach from an attached container, use `Ctrl+P + Ctrl+Q`.
 To stop the sample, take down all running containers from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
-docker-compose down
+docker compose down
 ```
 
 ### Telemetry
