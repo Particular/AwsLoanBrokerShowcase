@@ -10,7 +10,7 @@
 }
 
 provider "aws" {
-  region  = "us-west-2"
+  region = "us-west-2"
 }
 
 resource "aws_ecr_repository" "loan_broker_ecr_repo" {
@@ -47,8 +47,29 @@ resource "aws_lambda_function" "loan_broker_credit_score_lambda" {
   timeout       = 300
 }
 
+resource "aws_lambda_permission" "allow_public_lambda_invoke" {
+  statement_id  = "FunctionURLAllowPublicAccess"
+  action        = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.loan_broker_credit_score_lambda.function_name
+  principal     = "*"
+  function_url_auth_type = "NONE"
+}
+
+resource "aws_lambda_function_url" "loan_broker_credit_score_lambda_url" {
+  function_name = aws_lambda_function.loan_broker_credit_score_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins = ["*"]
+    allow_methods = ["*"]
+    allow_headers = ["date", "keep-alive"]
+    expose_headers = ["keep-alive", "date"]
+    max_age           = 86400
+  }
+}
+
 
 # Create docker containers for applications
-# Create labmda
 # invoke transport cli to configure the transport
 # create an empty dynamoDB
