@@ -6,11 +6,11 @@ The sample is composed by:
 
 - A client application, sending loan requests.
 - A loan broker service that receives loan requests and orchestrates communication with downstream banks.
-- Three bank adapters, acting like Anti Corruption layers (ACL), are directed towards three banks offering loans.
+- Three bank adapters, acting like Anti Corruption layers (ACL), simulating communication with downstream banks offering loans.
 
 The sample also ships the following monitoring services:
 
-- Grafana instance with two different metrics dashboards
+- A Grafana instance with two different metrics dashboards
 - A Prometheus instance to query raw metrics data
 - A Jaeger instance to visualize OpenTelemetry traces
 
@@ -38,13 +38,13 @@ Once the LocalStack container is up and running, from the development environmen
 - BankAdapter2
 - BankAdapter3
 
-To stop the LocalStack container, at the command prompt, issue the following command from the `src` folder:
+To stop the LocalStack and infrastructure containers, at the command prompt, issue the following command from the `src` folder:
 
 ```shell
 docker-compose stop localstack, prometheus, grafana, jaeger, adot
 ```
 
-If you are not interested in metrics and traces, it is possible to start only the `localstack` container, excluding the following containers: `prometheus`, `grafana`, `jaeger`, `adot`. Without them,  metrics and traces are not captured. 
+If you are not interested in metrics and traces, it is possible to start only the `localstack` container, excluding the following containers: `prometheus`, `grafana`, `jaeger`, and `adot`. Without them, metrics and traces will not be captured. 
 
 ## How to run the sample using Docker containers
 
@@ -54,7 +54,7 @@ The client application, the LoanBroker service, and the bank adapters can be dep
 docker-compose up --build
 ```
 
-The above command will build all projects, build container images for each, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the containers needed to capture and visualize OpenTelemetry traces and metrics.
+The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the containers needed to capture and visualize OpenTelemetry traces and metrics.
 
 To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
 
@@ -86,7 +86,11 @@ To interact with the sample, attach a console to the Client running container by
 docker attach loanbroker-client-1
 ```
 
-Attach and use the `F` key. To detach from an attached container, use `Ctrl+P + Ctrl+Q`.
+Once attached, use the `F` key to send one loan request. Use the `L` key to send a loan request every second. Sending one request every second is useful for simulating some load and then visualizing rich metrics and traces in Grafana and Jaeger.
+
+To detach from an attached container, use `Ctrl+P + Ctrl+Q`.
+
+To stop the sample, take down all running containers from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
 docker-compose down
@@ -94,12 +98,23 @@ docker-compose down
 
 ### Telemetry
 
-NServiceBus supports OpenTelemetry.
-All endpoints are configured to send telemetry data to Jaeger.
+NServiceBus supports OpenTelemetry. Starting with NServiceBus 9.1, the following metrics can be emitted:
 
-To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
+- `nservicebus.messaging.successes` - Total number of messages processed successfully by the endpoint
+- `nservicebus.messaging.fetches` - Total number of messages fetched from the queue by the endpoint
+- `nservicebus.messaging.failures` - Total number of messages processed unsuccessfully by the endpoint
+- `nservicebus.messaging.handler_time` - The time the user handling code takes to handle a message
+- `nservicebus.messaging.processing_time` - The time the endpoint takes to process a message
+- `nservicebus.messaging.critical_time` - The time between when a message is sent and when it is fully processed
+- `nservicebus.recoverability.immediate` - Total number of immediate retries requested
+- `nservicebus.recoverability.delayed` - Total number of delayed retries requested
+- `nservicebus.recoverability.error` - Total number of messages sent to the error queue
 
-To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). There are two pre-configured dashboards:
+For more information, refer to the [NServiceBus OpenTelemetry documentation](https://docs.particular.net/nservicebus/operations/opentelemetry).
+
+All sample endpoints are configured to send OpenTelemetry traces to Jaeger. To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
+
+Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). There are two pre-configured dashboards:
 
 - TBD
 
@@ -111,7 +126,7 @@ TODO
 - Stop all bank adapters, press F on the client and observe the behavior
 - Stop the LoanBroker, press F on the client and stop the client, start the LoanBroker observe messages flowing, start the client and observe the Loanbroker response eventually coming in.
 
-## How to modify the same to run agains an AWS Account
+## How to modify the same to run against an AWS Account
 
 TODO
 =======
