@@ -10,8 +10,8 @@ The sample is composed by:
 
 The sample also ships the following monitoring services:
 
-- A Grafana instance with two different metrics dashboards
-- A Prometheus instance to query raw metrics data
+- A Prometheus instance to collect, store, and query raw metrics data
+- A Grafana instance with two different metrics dashboards, using Prometheus as data source
 - A Jaeger instance to visualize OpenTelemetry traces
 
 ## Requirements
@@ -114,7 +114,7 @@ For more information, refer to the [NServiceBus OpenTelemetry documentation](htt
 
 All sample endpoints are configured to send OpenTelemetry traces to Jaeger. To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
 
-Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). The default Prometheus credentials are:
+Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Grafana dashboards](http://localhost:3000/dashboards). The default Grafana credentials are:
 
 - Username: `admin`
 - Passowrd: `admin`
@@ -122,13 +122,13 @@ Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the 
 > [!NOTE]
 > Setting a new password can be skipped. When containers are redeployed, the credentials are reset to their default values.
 
-The sample deploys two pre-configured Prometheus dashboards:
+The sample deploys two pre-configured Grafana dashboards:
 
 - The [LoanBroker](http://localhost:3000/d/edmhjobnxatc0b/loanbroker?orgId=1&refresh=5s) dashboard shows various metrics about the business endpoints behavior, such as the differences between the services critical, processing, and handing time.
 - The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics, grouped by endpoints or message type related to message fetches, processing, and failures.  
 
 > [!NOTE]
-> After running the solution multiple times, it might happen that Prometheus suddenly shows random data instead of the expected metrics. To reset dashboards, tear down all containers and delete the `data-grafana` and `data-prometheus` folders from the solution folder. Redeploy the containers.
+> After running the solution multiple times, it might happen that Grafana suddenly shows random data instead of the expected metrics. To reset dashboards, tear down all containers and delete the `data-grafana` and `data-prometheus` folders from the solution folder. Redeploy the containers.
 
 ### Sample scenarios
 
