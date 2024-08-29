@@ -33,6 +33,15 @@ public class NServiceBusEndpointStack : Stack
             QueueName = endpoint.FullQueueName,
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
+
+        if (endpoint.EventsToSubscribe != null)
+        {
+            foreach (var evtType in endpoint.EventsToSubscribe)
+            {
+                //create the needed topic
+                //subscribe
+            }
+        }
     }
 }
 
@@ -48,6 +57,7 @@ public class EndpointDetails(string endpointName)
 
     public string FullErrorQueueName => $"{Prefix}{ErrorQueue}";
 
-
     public TimeSpan RetentionPeriod { get; set; } = TimeSpan.FromDays(4);
+
+    public Type[]? EventsToSubscribe { get; set; }
 }
