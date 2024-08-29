@@ -24,6 +24,7 @@ public class NServiceBusEndpointStack : Stack
         {
             QueueName = endpoint.DelayQueueName,
             Fifo = true,
+            DeliveryDelay = Duration.Seconds(900),
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
