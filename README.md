@@ -1,6 +1,6 @@
 # AWS LoanBroker Sample
 
-The sample is a basic LoanBroker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
+The AWS LoanBroker Sample is a basic loan broker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
 
 The sample is composed by:
 
@@ -48,13 +48,19 @@ If you are not interested in metrics and traces, it is possible to start only th
 
 ## How to run the sample using Docker containers
 
-The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside the LocalStack one to mock the AWS services. To do so, from the `src` folder, execute the following command:  
+The client application, the loan broker service, and the bank adapters can be deployed as Docker containers alongside the LocalStack one to mock the AWS services. To do so, from the `src` folder, execute the following command:  
 
 ```shell
 docker compose up --build
 ```
 
 The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the containers needed to capture and visualize OpenTelemetry traces and metrics.
+
+To stop the running solution, remove all deployed containers. Using a command prompt, from the `src` folder, execute the following command:
+
+```shell
+docker compose down
+```
 
 To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
 
@@ -80,25 +86,19 @@ Alongside the containers required to capture and visualize metrics and traces:
 
 All containers will use the same network as the LocalStack container instance.
 
-To interact with the sample, attach a console to the Client running container by executing the following command:
+To interact with the sample, attach a console to the Client running container (the default container name is `src-client-1`) by executing the following command:
 
 ```shell
 docker attach loanbroker-client-1
 ```
 
-Once attached, use the `F` key to send one loan request. Use the `L` key to send a loan request every second. Sending one request every second is useful for simulating some load and then visualizing rich metrics and traces in Grafana and Jaeger.
+Once attached, use the `F` key to send one loan request. Use the `L` key to send a loan request every second. Sending one request every second helps simulate some load and visualize rich metrics and traces in Grafana and Jaeger.
 
 To detach from an attached container, use `Ctrl+P + Ctrl+Q`.
 
-To stop the sample, take down all running containers from the `src` folder, using a command prompt, execute the following command:
-
-```shell
-docker compose down
-```
-
 ### Telemetry
 
-NServiceBus supports OpenTelemetry. Starting with NServiceBus 9.1, the following metrics can be emitted:
+NServiceBus supports OpenTelemetry. Starting with NServiceBus 9.1, the following metrics are available:
 
 - `nservicebus.messaging.successes` - Total number of messages processed successfully by the endpoint
 - `nservicebus.messaging.fetches` - Total number of messages fetched from the queue by the endpoint
@@ -114,9 +114,21 @@ For more information, refer to the [NServiceBus OpenTelemetry documentation](htt
 
 All sample endpoints are configured to send OpenTelemetry traces to Jaeger. To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
 
-Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). There are two pre-configured dashboards:
+Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Prometheus dashboards](http://localhost:3000/dashboards). The default Prometheus credentials are:
 
-- TBD
+- Username: `admin`
+- Passowrd: `admin`
+
+> [!NOTE]
+> Setting a new password can be skipped. When containers are redeployed, the credentials are reset to their default values.
+
+The sample deploys two pre-configured Prometheus dashboards:
+
+- The [LoanBroker](http://localhost:3000/d/edmhjobnxatc0b/loanbroker?orgId=1&refresh=5s) dashboard shows various metrics about the business endpoints behavior, such as the differences between the services critical, processing, and handing time.
+- The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics, grouped by endpoints or message type related to message fetches, processing, and failures.  
+
+> [!NOTE]
+> After running the solution multiple times, it might happen that Prometheus suddenly shows random data instead of the expected metrics. To reset dashboards, tear down all containers and delete the `data-grafana` and `data-prometheus` folders from the solution folder. Redeploy the containers.
 
 ### Sample scenarios
 
