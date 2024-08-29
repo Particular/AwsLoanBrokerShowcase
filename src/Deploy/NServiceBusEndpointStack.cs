@@ -20,7 +20,7 @@ public class NServiceBusEndpointStack : Stack
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
-        var delayed = new Queue(scope, $"{endpoint.EndpointName}.delays", new QueueProps
+        var delayed = new Queue(scope, $"{endpoint.EndpointName}-delay", new QueueProps
         {
             QueueName = endpoint.DelayQueueName,
             Fifo = true,
