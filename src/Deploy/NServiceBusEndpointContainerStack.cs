@@ -10,6 +10,6 @@ internal class NServiceBusEndpointContainerStack : NServiceBusEndpointStack
     {
         // Queues created by base class
 
-        var container = new ContainerDefinition(scope, "container", containerProps);
+        var container = new ContainerDefinition(this, "container", containerProps);
     }
 }

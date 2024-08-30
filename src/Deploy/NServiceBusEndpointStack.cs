@@ -14,13 +14,13 @@ public class NServiceBusEndpointStack : Stack
     public NServiceBusEndpointStack(EndpointDetails endpoint, Construct scope, string id, IStackProps? props)
         : base(scope, id, props)
     {
-        var queue = new Queue(scope, endpoint.EndpointName, new QueueProps
+        var queue = new Queue(this, endpoint.EndpointName, new QueueProps
         {
             QueueName = endpoint.FullQueueName,
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
-        var delayed = new Queue(scope, $"{endpoint.EndpointName}-delay", new QueueProps
+        var delayed = new Queue(this, $"{endpoint.EndpointName}-delay", new QueueProps
         {
             QueueName = endpoint.DelayQueueName,
             Fifo = true,
@@ -28,7 +28,7 @@ public class NServiceBusEndpointStack : Stack
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
-        var error = new Queue(scope, "error", new QueueProps
+        var error = new Queue(this, "error", new QueueProps
         {
             QueueName = endpoint.FullQueueName,
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
