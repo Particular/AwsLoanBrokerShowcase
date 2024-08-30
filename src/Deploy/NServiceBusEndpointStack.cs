@@ -30,7 +30,7 @@ public class NServiceBusEndpointStack : Stack
 
         var error = new Queue(this, "error", new QueueProps
         {
-            QueueName = endpoint.FullQueueName,
+            QueueName = endpoint.FullErrorQueueName,
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
@@ -53,7 +53,7 @@ public class EndpointDetails(string endpointName)
 
     public string FullQueueName => $"{Prefix}{endpointName}";
 
-    public string DelayQueueName => $"{Prefix}{endpointName}-delay.fifo";
+    public string DelayQueueName => $"{FullQueueName}-delay.fifo";
 
     public string FullErrorQueueName => $"{Prefix}{ErrorQueue}";
 
