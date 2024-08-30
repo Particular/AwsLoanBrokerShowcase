@@ -9,24 +9,24 @@ class LambdaStack : Stack
     public LambdaStack(Construct scope, string id, IStackProps? props = null)
         : base(scope, id, props)
     {
-        var role = new Role(this, "CreditCheckRole", new RoleProps
+        var servicePrincipal = new ServicePrincipal("lambda.amazonaws.com");
+        var policyDocument = new PolicyDocument(new PolicyDocumentProps()
         {
-            InlinePolicies =
-            {
-                { "iam_for_loan_broker_lambda", new PolicyDocument(new PolicyDocumentProps()
+            Statements =
+            [
+                new PolicyStatement(new PolicyStatementProps()
                 {
-                    Statements =
-                    [
-                        new PolicyStatement(new PolicyStatementProps()
-                        {
-                            Actions = ["sts:AssumeRole"],
-                            Principals = [new ServicePrincipal("lambda.amazonaws.com")],
-                            Effect = Effect.ALLOW
-                        })
-                    ]
-                })}
-            }
+                    Actions = ["sts:AssumeRole"],
+                    Principals = [servicePrincipal],
+                    Effect = Effect.ALLOW
+                })
+            ]
         });
+        var roleProps = new RoleProps
+        {
+            AssumedBy = servicePrincipal
+        };
+        var role = new Role(this, "CreditCheckRole", roleProps);
 
         var lambdaPath = Path.GetFullPath(Path.Combine(System.Environment.CurrentDirectory, "..", "..", "..", "..", "lambdas"));
         var lambdaFn = new Function(this, "CreditCheck", new FunctionProps
