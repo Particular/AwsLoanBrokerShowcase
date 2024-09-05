@@ -31,6 +31,8 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+      servicepulse:
+        condition: service_started
     dns:
       - 10.0.2.20
     networks:
@@ -47,6 +49,8 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+      servicepulse:
+        condition: service_started
     dns:
       - 10.0.2.20
     networks:
@@ -63,6 +67,8 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+      servicepulse:
+        condition: service_started
     dns:
       - 10.0.2.20
     networks:
@@ -79,6 +85,8 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+      servicepulse:
+        condition: service_started
     dns:
       - 10.0.2.20
     networks:
@@ -95,6 +103,8 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+      servicepulse:
+        condition: service_started
     dns:
       - 10.0.2.20
     networks:
