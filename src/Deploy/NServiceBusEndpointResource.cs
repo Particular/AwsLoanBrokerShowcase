@@ -9,10 +9,12 @@ using Amazon.CDK.AWS.SQS;
 
 namespace Deploy;
 
-public class NServiceBusEndpointStack : Stack
+public class NServiceBusEndpointResource : Resource
 {
-    public NServiceBusEndpointStack(EndpointDetails endpoint, Construct scope, string id, IStackProps? props)
+    public NServiceBusEndpointResource(EndpointDetails endpoint, Construct scope, string id,
+        IResourceProps? props = null)
         : base(scope, id, props)
+
     {
         var queue = new Queue(this, endpoint.EndpointName, new QueueProps
         {
@@ -25,12 +27,6 @@ public class NServiceBusEndpointStack : Stack
             QueueName = endpoint.DelayQueueName,
             Fifo = true,
             DeliveryDelay = Duration.Seconds(900),
-            RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
-        });
-
-        var error = new Queue(this, "error", new QueueProps
-        {
-            QueueName = endpoint.FullErrorQueueName,
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
@@ -49,13 +45,10 @@ public class EndpointDetails(string endpointName)
 {
     public string EndpointName => endpointName;
     public string? Prefix { get; set; }
-    public string ErrorQueue { get; set; } = "error";
 
     public string FullQueueName => $"{Prefix}{endpointName}";
 
     public string DelayQueueName => $"{FullQueueName}-delay.fifo";
-
-    public string FullErrorQueueName => $"{Prefix}{ErrorQueue}";
 
     public TimeSpan RetentionPeriod { get; set; } = TimeSpan.FromDays(4);
 
