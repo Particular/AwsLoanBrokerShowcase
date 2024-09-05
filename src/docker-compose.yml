@@ -168,6 +168,7 @@ services:
     environment:
       RAVENDB_CONNECTIONSTRING: http://servicecontrol-db:8080
       REMOTEINSTANCES: '[{"api_uri":"http://servicecontrol-audit:44444/api"}]'
+      LICENSINGCOMPONENT_SERVICECONTROLTHROUGHPUTDATAQUEUE: ServiceControl-ThroughputData
     command: --setup-and-run
     restart: unless-stopped
     depends_on:
@@ -216,7 +217,7 @@ services:
     env_file: service-platform.env
     restart: unless-stopped
     environment:
-      - MONITORING_SERVICECONTROLTHROUGHPUTDATAQUEUE=ServiceControl.ThroughputData
+      MONITORING_SERVICECONTROLTHROUGHPUTDATAQUEUE: ServiceControl-ThroughputData
     command: --setup-and-run
     ports:
       - "33633:33633"
