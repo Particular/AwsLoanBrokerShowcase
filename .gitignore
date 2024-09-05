@@ -101,7 +101,5 @@ src/scaffolding.config
 # Visual Studio Code
 .vscode
 
-# Prometheus & Grafana data
-data-prometheus
-data-grafana
-src/volume
+# Docker volumes
+src/volumes
