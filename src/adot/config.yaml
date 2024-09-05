@@ -15,9 +15,17 @@ exporters:
     loglevel: debug
   prometheus:
     endpoint: "0.0.0.0:1234"
+  awsxray:
+    region: us-west-2
+    aws_log_groups: ["loan-broker-1", "loan-broker-2"]
+  otlphttp:
+    endpoint: "http://jaeger:4318"
 
 service:
   pipelines:
     metrics:
       receivers: [otlp]
       exporters: [prometheus]
+    traces:
+      receivers: [otlp]
+      exporters: [awsxray,otlphttp]

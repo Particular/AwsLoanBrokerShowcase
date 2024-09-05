@@ -19,7 +19,6 @@ services:
     networks:
       ls:
         ipv4_address: 10.0.2.20
-
   loan-broker:
     build:
       context: ./
@@ -34,7 +33,6 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   bank1:
     build:
       context: ./
@@ -49,7 +47,6 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   bank2:
     build:
       context: ./
@@ -64,7 +61,6 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   bank3:
     build:
       context: ./
@@ -125,7 +121,6 @@ services:
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     networks:
       - ls
-
   grafana:
     image: grafana/grafana-oss:latest
     ports:
@@ -137,7 +132,6 @@ services:
       - ./volumes/grafana-data:/var/lib/grafana
     networks:
       - ls
-
   jaeger:
     image: jaegertracing/all-in-one:latest
     environment:
@@ -149,9 +143,11 @@ services:
       - 14250
     networks:
       - ls
-
   adot:
     image: amazon/aws-otel-collector
+    environment:
+      - "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
+      - "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
