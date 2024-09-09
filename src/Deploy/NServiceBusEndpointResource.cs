@@ -33,7 +33,8 @@ public class NServiceBusEndpointResource : Resource
                 TableName = $"{endpoint.EndpointName}.NServiceBus.Storage",
                 PartitionKey = new Attribute(){ Name = "PK",Type = AttributeType.STRING },
                 SortKey = new Attribute(){ Name = "SK",Type = AttributeType.STRING },
-                BillingMode = BillingMode.PAY_PER_REQUEST
+                BillingMode = BillingMode.PAY_PER_REQUEST,
+                RemovalPolicy = RemovalPolicy.DESTROY
             });
         }
 
