@@ -9,7 +9,7 @@ class LoanBrokerStack : Stack
     public LoanBrokerStack(Construct scope, string id, IStackProps? props = null)
         : base(scope, id, props)
     {
-        _ = new NServiceBusEndpointResource(new EndpointDetails("LoanBroker"), this, "LoanBroker.LoanBroker");
+        _ = new NServiceBusEndpointResource(new EndpointDetails("LoanBroker"){ EnableDynamoDBPersistence = true}, this, "LoanBroker.LoanBroker");
         _ = new NServiceBusEndpointResource(new EndpointDetails("Client"), this, "LoanBroker.Client");
         var endpointDetails = new EndpointDetails("Bank1Adapter");
         endpointDetails.EventsToSubscribe = [typeof(QuoteRequested)];

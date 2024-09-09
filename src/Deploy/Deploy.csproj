@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Amazon.CDK" Version="1.204.0" />
+    <PackageReference Include="Amazon.CDK.AWS.DynamoDB" Version="1.204.0" />
     <PackageReference Include="Amazon.CDK.AWS.ECS" Version="1.204.0" />
     <PackageReference Include="Amazon.CDK.AWS.Lambda" Version="1.204.0" />
     <PackageReference Include="Amazon.CDK.AWS.SQS" Version="1.204.0" />

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using Amazon.CDK;
+﻿using Amazon.CDK;
+using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.SQS;
+using Attribute = Amazon.CDK.AWS.DynamoDB.Attribute;
 
 namespace Deploy;
 
@@ -16,19 +12,30 @@ public class NServiceBusEndpointResource : Resource
         : base(scope, id, props)
 
     {
-        var queue = new Queue(this, endpoint.EndpointName, new QueueProps
+        _ = new Queue(this, endpoint.EndpointName, new QueueProps
         {
             QueueName = endpoint.FullQueueName,
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
-        var delayed = new Queue(this, $"{endpoint.EndpointName}-delay", new QueueProps
+        _ = new Queue(this, $"{endpoint.EndpointName}-delay", new QueueProps
         {
             QueueName = endpoint.DelayQueueName,
             Fifo = true,
             DeliveryDelay = Duration.Seconds(900),
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
+
+        if (endpoint.EnableDynamoDBPersistence)
+        {
+            _ = new Table(this, $"{endpoint.EndpointName}-storage", new TableProps()
+            {
+                TableName = $"{endpoint.EndpointName}.NServiceBus.Storage",
+                PartitionKey = new Attribute(){ Name = "PK",Type = AttributeType.STRING },
+                SortKey = new Attribute(){ Name = "SK",Type = AttributeType.STRING },
+                BillingMode = BillingMode.PAY_PER_REQUEST
+            });
+        }
 
         if (endpoint.EventsToSubscribe != null)
         {
@@ -53,4 +60,6 @@ public class EndpointDetails(string endpointName)
     public TimeSpan RetentionPeriod { get; set; } = TimeSpan.FromDays(4);
 
     public Type[]? EventsToSubscribe { get; set; }
+
+    public bool EnableDynamoDBPersistence { get; set; }
 }
