@@ -23,6 +23,13 @@ persistence.Sagas().UsePessimisticLocking = true;
 persistence.DynamoClient(new AmazonDynamoDBClient(SharedConventions.EmptyLocalStackCredentials,
     new AmazonDynamoDBConfig { ServiceURL = SharedConventions.LocalStackUrl() }));
 
+//The Deploy project will create it through the AWS CDK
+persistence.DisableTablesCreation();
+persistence.UseSharedTable(new TableConfiguration
+{
+    TableName = "LoanBroker.NServiceBus.Storage"
+});
+
 endpointConfiguration.EnableOutbox();
 
 builder.UseNServiceBus(endpointConfiguration);
