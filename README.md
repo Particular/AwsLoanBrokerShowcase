@@ -67,7 +67,7 @@ All containers will use the same network as the LocalStack container instance.
 To interact with the sample, attach a console to the Client running container by executing the following command:
 
 ```shell
-docker attach src-client-1
+docker attach loanbroker-client-1
 ```
 
 Attach and use the `F` key

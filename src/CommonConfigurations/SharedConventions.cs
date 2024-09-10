@@ -24,7 +24,7 @@ public static class SharedConventions
     public const string OtlpMetricsUrlEnvVar = "OTLP_METRICS_URL";
     public const string OtlpTracesUrlEnvVar = "OTLP_TRACING_URL";
     public static readonly AWSCredentials EmptyLocalStackCredentials = new BasicAWSCredentials("xxx", "xxx");
-    public static readonly Meter LoanBrokerMeter = new ("LoanBroker", "0.1.0");
+    public static readonly Meter LoanBrokerMeter = new("LoanBroker", "0.1.0");
 
     public static string LocalStackUrl() => Environment.GetEnvironmentVariable(LocalStackEdgeEnvVar) ?? LocalStackEdgeDefaultUrl;
 
@@ -49,6 +49,37 @@ public static class SharedConventions
         endpointConfiguration.EnableInstallers();
         EnableMetrics(endpointConfiguration);
         EnableTracing(endpointConfiguration);
+
+        endpointConfiguration.ConnectToServicePlatform(new ServicePlatformConnectionConfiguration
+        {
+            Heartbeats = new()
+            {
+                Enabled = true,
+                HeartbeatsQueue = "Particular-ServiceControl",
+            },
+            CustomChecks = new()
+            {
+                Enabled = true,
+                CustomChecksQueue = "Particular-ServiceControl"
+            },
+            ErrorQueue = "error",
+            SagaAudit = new()
+            {
+                Enabled = true,
+                SagaAuditQueue = "audit"
+            },
+            MessageAudit = new()
+            {
+                Enabled = true,
+                AuditQueue = "audit"
+            },
+            Metrics = new()
+            {
+                Enabled = true,
+                MetricsQueue = "Particular-Monitoring",
+                Interval = TimeSpan.FromSeconds(1)
+            }
+        });
     }
 
 
