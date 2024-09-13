@@ -1,16 +1,17 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.ECS;
+using Amazon.CDK.AWS.ECS.Patterns;
 using Amazon.CDK.AWS.SQS;
 using BankMessages;
 using Deploy;
 
 class LoanBrokerStack : Stack
 {
-
     public LoanBrokerStack(Construct scope, string id, IStackProps? props = null)
         : base(scope, id, props)
     {
-        _ = new NServiceBusEndpointResource(new EndpointDetails("LoanBroker"){ EnableDynamoDBPersistence = true}, this, "LoanBroker.LoanBroker");
+        _ = new NServiceBusEndpointResource(new EndpointDetails("LoanBroker") { EnableDynamoDBPersistence = true },
+            this, "LoanBroker.LoanBroker");
         _ = new NServiceBusEndpointResource(new EndpointDetails("Client"), this, "LoanBroker.Client");
         var endpointDetails = new EndpointDetails("Bank1Adapter");
         endpointDetails.EventsToSubscribe = [typeof(QuoteRequested)];
@@ -20,62 +21,44 @@ class LoanBrokerStack : Stack
 
         _ = new Queue(this, "error", new QueueProps
         {
-            QueueName =  "error",
+            QueueName = "error",
             RetentionPeriod = Duration.Seconds(900)
         });
 
-
-
-        TaskDefinition taskDefinition = new TaskDefinition(this, "ContainersTask", new TaskDefinitionProps());
-        Cluster cluster;
-
-        // Add a container to the task definition
-        var grafanaContainer = taskDefinition.AddContainer("Grafana", new ContainerDefinitionOptions {
-            Image = ContainerImage.FromRegistry("grafana/grafana-oss:latest"),
-            MemoryLimitMiB = 2048
-        });
-
-        grafanaContainer.AddPortMappings(new PortMapping {
-            ContainerPort = 3000,
-            Protocol = Protocol. TCP
-        });
-
-        var volume = new Volume()
-        {
-            Name = "Grafana",
-            DockerVolumeConfiguration = new DockerVolumeConfiguration()
+        _ = new ApplicationLoadBalancedFargateService(this, "Grafana",
+            new ApplicationLoadBalancedFargateServiceProps
             {
-                Autoprovision = true
-            }
-        };
+                TaskImageOptions = new ApplicationLoadBalancedTaskImageOptions
+                {
+                    Image = ContainerImage.FromRegistry("grafana/grafana-oss:latest"),
+                    ContainerPort = 3000,
+                },
+                PublicLoadBalancer = true
+            });
 
-        taskDefinition.AddVolume(volume);
-        // grafanaContainer.AddVolumesFrom(new VolumeFrom
-        // {
-        //
-        // });
+        var prometheus = new ApplicationLoadBalancedFargateService(this, "Prometheus",
+            new ApplicationLoadBalancedFargateServiceProps
+            {
+                TaskImageOptions = new ApplicationLoadBalancedTaskImageOptions
+                {
 
-        // grafana:
-        // TODO: restart: unless-stopped ---> policy from AWS UI
-        // volumes:
-        // - ./grafana/provisioning:/etc/grafana/provisioning/
-        //     - ./grafana/dashboards:/var/lib/grafana/dashboards
-        //     - ./volumes/grafana-data:/var/lib/grafana
-        // networks:
-        // - ls
+                    Image = ContainerImage.FromRegistry("prom/prometheus:v2.53.2"),
+                    ContainerPort = 9090
+                },
+                PublicLoadBalancer = true
 
-        // new Ec2Service(this, "Service", new Ec2ServiceProps {
-        //     Cluster = cluster,
-        //     TaskDefinition = taskDefinition,
-        //     CloudMapOptions = new CloudMapOptions {
-        //         // Create SRV records - useful for bridge networking
-        //         DnsRecordType = DnsRecordType. SRV,
-        //         // Targets port TCP port 7600 `specificContainer`
-        //         Container = specificContainer,
-        //         ContainerPort = 7600
-        //     }
-        // })
-        // new ContainerDefinition()
+            });
+        var cfnTaskDefinition = (CfnTaskDefinition)prometheus.TaskDefinition.Node.DefaultChild;
+        cfnTaskDefinition.AddOverride("properties.containerDefinitions.0.command", "--web.enable-lifecycle");
+
+        // // grafana:
+        // // TODO: restart: unless-stopped ---> policy from AWS UI
+        // // volumes:
+        // // - ./grafana/provisioning:/etc/grafana/provisioning/
+        // //     - ./grafana/dashboards:/var/lib/grafana/dashboards
+        // //     - ./volumes/grafana-data:/var/lib/grafana
+        // // networks:
+        // // - ls
+
     }
-
 }
