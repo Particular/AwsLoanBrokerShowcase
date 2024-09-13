@@ -1,4 +1,4 @@
-﻿using Amazon.CDK;
+using Amazon.CDK;
 using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.SQS;
 using Attribute = Amazon.CDK.AWS.DynamoDB.Attribute;
@@ -42,8 +42,7 @@ public class NServiceBusEndpointResource : Resource
         {
             foreach (var evtType in endpoint.EventsToSubscribe)
             {
-                //create the needed topic
-                //subscribe
+                //TODO: create the needed topic and subscribe
             }
         }
     }

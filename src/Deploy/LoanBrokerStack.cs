@@ -1,4 +1,5 @@
 using Amazon.CDK;
+using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.SQS;
 using BankMessages;
 using Deploy;
@@ -22,6 +23,59 @@ class LoanBrokerStack : Stack
             QueueName =  "error",
             RetentionPeriod = Duration.Seconds(900)
         });
+
+
+
+        TaskDefinition taskDefinition = new TaskDefinition(this, "ContainersTask", new TaskDefinitionProps());
+        Cluster cluster;
+
+        // Add a container to the task definition
+        var grafanaContainer = taskDefinition.AddContainer("Grafana", new ContainerDefinitionOptions {
+            Image = ContainerImage.FromRegistry("grafana/grafana-oss:latest"),
+            MemoryLimitMiB = 2048
+        });
+
+        grafanaContainer.AddPortMappings(new PortMapping {
+            ContainerPort = 3000,
+            Protocol = Protocol. TCP
+        });
+
+        var volume = new Volume()
+        {
+            Name = "Grafana",
+            DockerVolumeConfiguration = new DockerVolumeConfiguration()
+            {
+                Autoprovision = true
+            }
+        };
+
+        taskDefinition.AddVolume(volume);
+        // grafanaContainer.AddVolumesFrom(new VolumeFrom
+        // {
+        //
+        // });
+
+        // grafana:
+        // TODO: restart: unless-stopped ---> policy from AWS UI
+        // volumes:
+        // - ./grafana/provisioning:/etc/grafana/provisioning/
+        //     - ./grafana/dashboards:/var/lib/grafana/dashboards
+        //     - ./volumes/grafana-data:/var/lib/grafana
+        // networks:
+        // - ls
+
+        // new Ec2Service(this, "Service", new Ec2ServiceProps {
+        //     Cluster = cluster,
+        //     TaskDefinition = taskDefinition,
+        //     CloudMapOptions = new CloudMapOptions {
+        //         // Create SRV records - useful for bridge networking
+        //         DnsRecordType = DnsRecordType. SRV,
+        //         // Targets port TCP port 7600 `specificContainer`
+        //         Container = specificContainer,
+        //         ContainerPort = 7600
+        //     }
+        // })
+        // new ContainerDefinition()
     }
 
 }
