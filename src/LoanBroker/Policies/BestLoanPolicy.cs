@@ -10,8 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace LoanBroker.Policies;
 
 class BestLoanPolicy(
-    ILogger<BestLoanPolicy> logger,
-    IQuoteAggregator quoteAggregator) : Saga<BestLoanData>,
+    ILogger<BestLoanPolicy> logger) : Saga<BestLoanData>,
     IAmStartedByMessages<FindBestLoanWithScore>,
     IHandleMessages<QuoteCreated>,
     IHandleMessages<QuoteRequestRefusedByBank>,
@@ -45,7 +44,12 @@ class BestLoanPolicy(
     public Task Handle(QuoteCreated message, IMessageHandlerContext context)
     {
         logger.LogInformation($"Quote, for request ID {message.RequestId}, received from bank {message.BankId}. Interest rate: {message.InterestRate}");
-        Data.Quotes.Add(new Quote(message.BankId, message.InterestRate));
+
+        if (Data.BestQuoteBankId == null || message.InterestRate < Data.BestQuoteInterestRate)
+        {
+            Data.BestQuoteInterestRate = message.InterestRate;
+            Data.BestQuoteBankId = message.BankId;
+        }
 
         var tags = new TagList(
         [
@@ -82,9 +86,9 @@ class BestLoanPolicy(
     {
         IEvent eventToPublish;
 
-        if (Data.Quotes.Count > 0)
+        if (Data.BestQuoteBankId != null)
         {
-            var quote = quoteAggregator.Reduce(Data.Quotes);
+            var quote = new Quote(Data.BestQuoteBankId, Data.BestQuoteInterestRate);
             eventToPublish = new BestLoanFound(Data.RequestId, quote.BankId, quote.InterestRate);
             logger.LogInformation($"Best Loan found for request ID {Data.RequestId}, from bank {quote.BankId}. Details, interest rate: {quote.InterestRate}");
         }
@@ -110,9 +114,10 @@ class BestLoanPolicy(
 
 class BestLoanData : ContainSagaData
 {
-    public DateTime? RequestSentToBanks { get; set; } = null;
+    public DateTime? RequestSentToBanks { get; set; }
     public string RequestId { get; set; } = null!;
-    public List<Quote> Quotes { get; set; } = [];
+    public string? BestQuoteBankId { get; set; }
+    public double BestQuoteInterestRate { get; set; }
     public List<string> RejectedBy { get; set; } = [];
 }
 

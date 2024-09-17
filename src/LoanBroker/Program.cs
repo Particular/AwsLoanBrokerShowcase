@@ -10,8 +10,6 @@ SharedConventions.ConfigureMicrosoftLoggingIntegration();
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddSingleton<ICreditScoreProvider>(_ => new HTTPCreditScoreProvider());
 
-builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
-
 var endpointConfiguration = new EndpointConfiguration("LoanBroker");
 endpointConfiguration.CommonEndpointSetting();
 var routingSettings = endpointConfiguration.UseCommonTransport();
