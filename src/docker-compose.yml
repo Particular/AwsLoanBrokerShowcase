@@ -24,10 +24,7 @@ services:
     build:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file: endpoint.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -42,10 +39,7 @@ services:
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file: endpoint.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -60,10 +54,7 @@ services:
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file: endpoint.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -78,10 +69,7 @@ services:
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file: endpoint.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -92,18 +80,32 @@ services:
     networks:
       - ls
 
-  client:
+  email-sender:
     build:
       context: ./
-      dockerfile: ./Client/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+      dockerfile: ./EmailSender/Dockerfile
+    env_file: endpoint.env
     depends_on:
       localstack:
         condition: service_healthy
       servicepulse:
+        condition: service_started
+    dns:
+      10.0.2.20
+    networks:
+      - ls
+
+  client:
+    build:
+      context: ./
+      dockerfile: ./Client/Dockerfile
+    env_file: endpoint.env
+    depends_on:
+      localstack:
+        condition: service_healthy
+      servicepulse:
+        condition: service_started
+      loan-broker:
         condition: service_started
     dns:
       - 10.0.2.20
@@ -111,7 +113,7 @@ services:
       - ls
     tty: true
     stdin_open: true
-    command: sh
+    command: --demo
 
   prometheus:
     image: prom/prometheus:v2.53.2

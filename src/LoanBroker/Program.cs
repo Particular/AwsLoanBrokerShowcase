@@ -17,7 +17,6 @@ endpointConfiguration.CommonEndpointSetting();
 var routingSettings = endpointConfiguration.UseCommonTransport();
 routingSettings.RouteToEndpoint(typeof(FindBestLoanWithScore), "LoanBroker");
 
-
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
 persistence.Sagas().UsePessimisticLocking = true;
 persistence.DynamoClient(new AmazonDynamoDBClient(SharedConventions.EmptyLocalStackCredentials,
