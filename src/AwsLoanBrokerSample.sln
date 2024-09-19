@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{C41F
 		grafana\provisioning\dashboards\dashboard_provider.yml = grafana\provisioning\dashboards\dashboard_provider.yml
 		grafana\dashboards\loan_broker_dashboard.json = grafana\dashboards\loan_broker_dashboard.json
 		grafana\provisioning\datasources\prometheus_ds.yml = grafana\provisioning\datasources\prometheus_ds.yml
+		grafana\dashboards\demo_dashboard.json = grafana\dashboards\demo_dashboard.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Credit Bureau Lambda", "Credit Bureau Lambda", "{D36B8890-4384-462D-86B9-156627A9B7D3}"
