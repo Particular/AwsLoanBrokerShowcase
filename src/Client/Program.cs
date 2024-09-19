@@ -42,7 +42,7 @@ if (args.Contains("--demo"))
     // Pause to allow other endpoints to create queues
     await Task.Delay(5_000);
 
-    Console.WriteLine("Demo flag detected: Starting in continous send mode");
+    Console.WriteLine("Demo flag detected: Starting in continuous send mode");
     continuousSend = true;
 }
 
