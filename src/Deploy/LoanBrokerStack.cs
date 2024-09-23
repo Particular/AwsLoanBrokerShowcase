@@ -1,6 +1,7 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ECS.Patterns;
+using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.SQS;
 using BankMessages;
 using Deploy;
@@ -23,6 +24,13 @@ class LoanBrokerStack : Stack
         {
             QueueName = "error",
             RetentionPeriod = Duration.Seconds(900)
+        });
+
+        _ = new Function(this, "myLambdaFunction", new FunctionProps
+        {
+            Code = Code.FromAsset(Path.Combine(Directory.GetCurrentDirectory(), "src/lambdas")),
+            Runtime = Runtime.NODEJS_16_X,
+            Handler = "creditbureau.score"
         });
 
         _ = new ApplicationLoadBalancedFargateService(this, "Grafana",
