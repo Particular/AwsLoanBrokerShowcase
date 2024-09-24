@@ -30,13 +30,15 @@ public static class SharedConventions
 
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
     {
-        var url = LocalStackUrl();
-        var sqsConfig = new AmazonSQSConfig { ServiceURL = url };
-        var snsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = url };
+        //If env var contains serviceurl -> use localstack
+        //else assume connection to AWS
+        // var url = LocalStackUrl();
+        // var sqsConfig = new AmazonSQSConfig { ServiceURL = url };
+        // var snsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = url };
 
-        var transport = new SqsTransport(
-            new AmazonSQSClient(EmptyLocalStackCredentials, sqsConfig),
-            new AmazonSimpleNotificationServiceClient(EmptyLocalStackCredentials, snsConfig));
+        var transport = new SqsTransport();
+            // new AmazonSQSClient(EmptyLocalStackCredentials, sqsConfig),
+            // new AmazonSimpleNotificationServiceClient(EmptyLocalStackCredentials, snsConfig));
         return endpointConfiguration.UseTransport(transport);
     }
 
