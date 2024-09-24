@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2;
 using CommonConfigurations;
 using LoanBroker.Messages;
 using LoanBroker.Services;
@@ -19,8 +18,6 @@ routingSettings.RouteToEndpoint(typeof(FindBestLoanWithScore), "LoanBroker");
 
 var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
 persistence.Sagas().UsePessimisticLocking = true;
-persistence.DynamoClient(new AmazonDynamoDBClient(SharedConventions.EmptyLocalStackCredentials,
-    new AmazonDynamoDBConfig { ServiceURL = SharedConventions.LocalStackUrl() }));
 
 endpointConfiguration.EnableOutbox();
 
