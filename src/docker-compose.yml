@@ -10,7 +10,6 @@ services:
       - DISABLE_CORS_CHECKS=1
     ports:
       - '4566-4597:4566-4597'
-      - "8000:5000"
     volumes:
       - ./lambdas:/var/lib/lambdas
       - ./localstack:/etc/localstack/init/ready.d
