@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		prometheus\prometheus.yml = prometheus\prometheus.yml
 		..\README.md = ..\README.md
+		endpoint.env = endpoint.env
+		service-platform.env = service-platform.env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adot", "adot", "{F8D716D1-48D4-4DC4-996D-8A910AC76B14}"
