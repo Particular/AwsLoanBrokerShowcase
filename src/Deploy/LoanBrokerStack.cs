@@ -1,4 +1,5 @@
 using Amazon.CDK;
+using Amazon.CDK.AWS.Ecr.Assets;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ECS.Patterns;
 using Amazon.CDK.AWS.Lambda;
@@ -26,12 +27,14 @@ class LoanBrokerStack : Stack
             RetentionPeriod = Duration.Seconds(900)
         });
 
-        _ = new Function(this, "myLambdaFunction", new FunctionProps
+        _ = new Function(this, "CreditScoreLambda", new FunctionProps
         {
             Code = Code.FromAsset(Path.Combine(Directory.GetCurrentDirectory(), "src/lambdas")),
             Runtime = Runtime.NODEJS_16_X,
             Handler = "creditbureau.score"
         });
+
+        var cluster = new Cluster(this, "LoanBrokerCluster");
 
         _ = new ApplicationLoadBalancedFargateService(this, "Grafana",
             new ApplicationLoadBalancedFargateServiceProps
@@ -41,32 +44,48 @@ class LoanBrokerStack : Stack
                     Image = ContainerImage.FromRegistry("grafana/grafana-oss:latest"),
                     ContainerPort = 3000,
                 },
-                PublicLoadBalancer = true
+                PublicLoadBalancer = true,
+                Cluster = cluster
             });
 
-        var prometheus = new ApplicationLoadBalancedFargateService(this, "Prometheus",
-            new ApplicationLoadBalancedFargateServiceProps
-            {
-                TaskImageOptions = new ApplicationLoadBalancedTaskImageOptions
-                {
+        ApplicationContainer("Client", cluster);
+        ApplicationContainer("Bank1Adapter", cluster);
+        ApplicationContainer("Bank2Adapter", cluster);
+        ApplicationContainer("Bank3Adapter", cluster);
+        ApplicationContainer("LoanBroker", cluster);
+    }
 
-                    Image = ContainerImage.FromRegistry("prom/prometheus:v2.53.2"),
-                    ContainerPort = 9090
-                },
-                PublicLoadBalancer = true
+    private void ApplicationContainer(string applicationName, Cluster cluster)
+    {
+        var appImageAsset = new DockerImageAsset(this, applicationName + "Image", new DockerImageAssetProps
+        {
+            Directory = Path.Combine(Directory.GetCurrentDirectory(), "src"),
+            File = applicationName + "/Dockerfile",
+        });
+        var env = new Dictionary<string, string>();
+        //env.Add("LOCALSTACK_URL", "http://localhost.localstack.cloud:4566");
+        env.Add("OTLP_METRICS_URL", "http://adot:5318/v1/metrics");
+        env.Add("OTLP_TRACING_URL", "http://jaeger:4318/v1/traces");
 
-            });
-        var cfnTaskDefinition = (CfnTaskDefinition)prometheus.TaskDefinition.Node.DefaultChild;
-        cfnTaskDefinition.AddOverride("properties.containerDefinitions.0.command", "--web.enable-lifecycle");
+        FargateTaskDefinition taskDefinition = new FargateTaskDefinition(this, applicationName + "TaskDef", new FargateTaskDefinitionProps
+        {
+            MemoryLimitMiB = 1024,
+            Cpu = 512
+        });
 
-        // // grafana:
-        // // TODO: restart: unless-stopped ---> policy from AWS UI
-        // // volumes:
-        // // - ./grafana/provisioning:/etc/grafana/provisioning/
-        // //     - ./grafana/dashboards:/var/lib/grafana/dashboards
-        // //     - ./volumes/grafana-data:/var/lib/grafana
-        // // networks:
-        // // - ls
 
+        taskDefinition.AddContainer(applicationName+"container", new ContainerDefinitionOptions
+        {
+            Image = ContainerImage.FromDockerImageAsset(appImageAsset),
+            PortMappings = [],
+            Environment = env,
+            Secrets = new Dictionary<string, Secret>()
+        });
+
+        var fargateService = new FargateService(this, applicationName+"Service", new FargateServiceProps()
+        {
+            Cluster = cluster,
+            TaskDefinition = taskDefinition
+        });
     }
 }

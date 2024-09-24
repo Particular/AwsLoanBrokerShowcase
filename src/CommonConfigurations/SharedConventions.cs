@@ -31,7 +31,7 @@ public static class SharedConventions
     public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
     {
         var url = LocalStackUrl();
-        var sqsConfig = new AmazonSQSConfig { ServiceURL = url };
+        var sqsConfig = new AmazonSQSConfig();
         var snsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = url };
 
         var transport = new SqsTransport(
@@ -48,7 +48,7 @@ public static class SharedConventions
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
         //TODO: remove installers, taking into account that we also need to support deploying to LocalStack
-        endpointConfiguration.EnableInstallers();
+     //   endpointConfiguration.EnableInstallers();
 
         EnableMetrics(endpointConfiguration);
         EnableTracing(endpointConfiguration);
