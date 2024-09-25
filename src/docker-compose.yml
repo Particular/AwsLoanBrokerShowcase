@@ -1,7 +1,7 @@
 name: loanbroker
-
 services:
   localstack:
+    profiles: [all, infrastructure]
     image: localstack/localstack:3
     environment:
       - SERVICES=sns,sqs,iam,s3,dynamodb,lambda,cloudwatch
@@ -10,7 +10,6 @@ services:
       - DISABLE_CORS_CHECKS=1
     ports:
       - '4566-4597:4566-4597'
-      - "8000:5000"
     volumes:
       - ./lambdas:/var/lib/lambdas
       - ./localstack:/etc/localstack/init/ready.d
@@ -20,10 +19,13 @@ services:
       ls:
         ipv4_address: 10.0.2.20
   loan-broker:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
-    env_file: endpoint.env
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -34,10 +36,13 @@ services:
     networks:
       - ls
   bank1:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
-    env_file: endpoint.env
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -48,10 +53,13 @@ services:
     networks:
       - ls
   bank2:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
-    env_file: endpoint.env
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -62,10 +70,13 @@ services:
     networks:
       - ls
   bank3:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
-    env_file: endpoint.env
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -75,12 +86,14 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   email-sender:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./EmailSender/Dockerfile
-    env_file: endpoint.env
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -90,12 +103,14 @@ services:
       10.0.2.20
     networks:
       - ls
-
   client:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Client/Dockerfile
-    env_file: endpoint.env
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -110,8 +125,8 @@ services:
     tty: true
     stdin_open: true
     command: --demo
-
   prometheus:
+    profiles: [all, infrastructure]
     image: prom/prometheus:v2.53.2
     ports:
       - '9090:9090'
@@ -122,6 +137,7 @@ services:
     networks:
       - ls
   grafana:
+    profiles: [all, infrastructure]
     image: grafana/grafana-oss:latest
     ports:
       - '3000:3000'
@@ -133,6 +149,7 @@ services:
     networks:
       - ls
   jaeger:
+    profiles: [all, infrastructure]
     image: jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_OTLP_ENABLED=true
@@ -144,10 +161,10 @@ services:
     networks:
       - ls
   adot:
+    profiles: [all, infrastructure]
     image: amazon/aws-otel-collector
-    environment:
-      - "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
-      - "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+    env_file:
+      - aws.env
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
@@ -157,10 +174,12 @@ services:
       - ./adot/config.yaml:/etc/otel-agent-config.yaml
     networks:
       - ls
-
   servicecontrol:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol:latest
-    env_file: service-platform.env
+    env_file:
+      - aws.env
+      - service-platform.env
     ports:
       - "33333:33333"
     environment:
@@ -179,8 +198,8 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   servicecontrol-db:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol-ravendb:latest
     ports:
       - "8080:8080"
@@ -189,10 +208,12 @@ services:
       - ./volumes/servicecontrol-db-config:/opt/RavenDB/config
     networks:
       - ls
-
   servicecontrol-audit:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol-audit:latest
-    env_file: service-platform.env
+    env_file:
+      - aws.env
+      - service-platform.env
     ports:
       - "44444:44444"
     environment:
@@ -208,10 +229,12 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   servicecontrol-monitoring:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol-monitoring:latest
-    env_file: service-platform.env
+    env_file:
+      - aws.env
+      - service-platform.env
     restart: unless-stopped
     command: --setup-and-run
     ports:
@@ -223,8 +246,8 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   servicepulse:
+    profiles: [all, infrastructure]
     image: particular/servicepulse:latest
     ports:
       - "9999:9090"
@@ -241,8 +264,6 @@ services:
         condition: service_healthy
     networks:
       - ls
-
-
 networks:
   ls:
     ipam:
