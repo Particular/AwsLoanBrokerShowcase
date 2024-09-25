@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank3Adapter", "Bank3Adapte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{266D5BA7-E337-47FA-A7E0-2071E806131B}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
-		prometheus\prometheus.yml = prometheus\prometheus.yml
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -39,9 +37,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{C41F
 		grafana\provisioning\dashboards\dashboard_provider.yml = grafana\provisioning\dashboards\dashboard_provider.yml
 		grafana\dashboards\loan_broker_dashboard.json = grafana\dashboards\loan_broker_dashboard.json
 		grafana\provisioning\datasources\prometheus_ds.yml = grafana\provisioning\datasources\prometheus_ds.yml
+		grafana\dashboards\demo_dashboard.json = grafana\dashboards\demo_dashboard.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deploy", "Deploy\Deploy.csproj", "{52251AEE-F9AD-49CE-995A-1C75715BBA41}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Credit Bureau Lambda", "Credit Bureau Lambda", "{D36B8890-4384-462D-86B9-156627A9B7D3}"
+	ProjectSection(SolutionItems) = preProject
+		lambdas\creditbureau.js = lambdas\creditbureau.js
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailSender", "EmailSender\EmailSender.csproj", "{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{69E2DB2E-619F-41FA-B4D9-9304803A7C17}"
+	ProjectSection(SolutionItems) = preProject
+		aws.env = aws.env
+		docker-compose.yml = docker-compose.yml
+		metrics.env = metrics.env
+		service-platform.env = service-platform.env
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{9B290188-139B-4CEC-8633-9AAA9D7BBDD4}"
+	ProjectSection(SolutionItems) = preProject
+		prometheus\prometheus.yml = prometheus\prometheus.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,10 +102,10 @@ Global
 		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE0786C-8F1D-4FAE-842B-A38D8B947504}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52251AEE-F9AD-49CE-995A-1C75715BBA41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52251AEE-F9AD-49CE-995A-1C75715BBA41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52251AEE-F9AD-49CE-995A-1C75715BBA41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52251AEE-F9AD-49CE-995A-1C75715BBA41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,8 +113,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F8D716D1-48D4-4DC4-996D-8A910AC76B14} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
 		{C41FB7F9-08F3-4C99-8C17-3078582AD182} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {92FFF4EC-C855-4829-B9C5-E23BDA2D6B4D}
+		{69E2DB2E-619F-41FA-B4D9-9304803A7C17} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
+		{9B290188-139B-4CEC-8633-9AAA9D7BBDD4} = {266D5BA7-E337-47FA-A7E0-2071E806131B}
 	EndGlobalSection
 EndGlobal

@@ -10,7 +10,6 @@ var endpointConfiguration = new EndpointConfiguration("Bank2Adapter");
 endpointConfiguration.CommonEndpointSetting();
 endpointConfiguration.UseCommonTransport();
 
-
 builder.UseNServiceBus(endpointConfiguration);
 
 var app = builder.Build();

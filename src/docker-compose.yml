@@ -1,7 +1,7 @@
 name: loanbroker
-
 services:
   localstack:
+    profiles: [all, infrastructure]
     image: localstack/localstack:3
     environment:
       - SERVICES=sns,sqs,iam,s3,dynamodb,lambda,cloudwatch
@@ -10,7 +10,6 @@ services:
       - DISABLE_CORS_CHECKS=1
     ports:
       - '4566-4597:4566-4597'
-      - "8000:5000"
     volumes:
       - ./lambdas:/var/lib/lambdas
       - ./localstack:/etc/localstack/init/ready.d
@@ -19,15 +18,14 @@ services:
     networks:
       ls:
         ipv4_address: 10.0.2.20
-
   loan-broker:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -37,15 +35,14 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   bank1:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -55,15 +52,14 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   bank2:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -73,15 +69,14 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   bank3:
+    profiles: [all]
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -91,19 +86,37 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
-  client:
+  email-sender:
+    profiles: [all]
     build:
       context: ./
-      dockerfile: ./Client/Dockerfile
-    environment:
-      - LOCALSTACK_URL=http://localhost.localstack.cloud:4566
-      - OTLP_METRICS_URL=http://adot:5318/v1/metrics
-      - OTLP_TRACING_URL=http://jaeger:4318/v1/traces
+      dockerfile: ./EmailSender/Dockerfile
+    env_file:
+      - metrics.env
+      - aws.env
     depends_on:
       localstack:
         condition: service_healthy
       servicepulse:
+        condition: service_started
+    dns:
+      10.0.2.20
+    networks:
+      - ls
+  client:
+    profiles: [all]
+    build:
+      context: ./
+      dockerfile: ./Client/Dockerfile
+    env_file:
+      - metrics.env
+      - aws.env
+    depends_on:
+      localstack:
+        condition: service_healthy
+      servicepulse:
+        condition: service_started
+      loan-broker:
         condition: service_started
     dns:
       - 10.0.2.20
@@ -111,9 +124,9 @@ services:
       - ls
     tty: true
     stdin_open: true
-    command: sh
-
+    command: --demo
   prometheus:
+    profiles: [all, infrastructure]
     image: prom/prometheus:v2.53.2
     ports:
       - '9090:9090'
@@ -123,8 +136,8 @@ services:
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     networks:
       - ls
-
   grafana:
+    profiles: [all, infrastructure]
     image: grafana/grafana-oss:latest
     ports:
       - '3000:3000'
@@ -135,8 +148,8 @@ services:
       - ./volumes/grafana-data:/var/lib/grafana
     networks:
       - ls
-
   jaeger:
+    profiles: [all, infrastructure]
     image: jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_OTLP_ENABLED=true
@@ -147,9 +160,11 @@ services:
       - 14250
     networks:
       - ls
-
   adot:
+    profiles: [all, infrastructure]
     image: amazon/aws-otel-collector
+    env_file:
+      - aws.env
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
@@ -159,10 +174,12 @@ services:
       - ./adot/config.yaml:/etc/otel-agent-config.yaml
     networks:
       - ls
-
   servicecontrol:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol:latest
-    env_file: service-platform.env
+    env_file:
+      - aws.env
+      - service-platform.env
     ports:
       - "33333:33333"
     environment:
@@ -181,8 +198,8 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   servicecontrol-db:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol-ravendb:latest
     ports:
       - "8080:8080"
@@ -191,10 +208,12 @@ services:
       - ./volumes/servicecontrol-db-config:/opt/RavenDB/config
     networks:
       - ls
-
   servicecontrol-audit:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol-audit:latest
-    env_file: service-platform.env
+    env_file:
+      - aws.env
+      - service-platform.env
     ports:
       - "44444:44444"
     environment:
@@ -210,10 +229,12 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   servicecontrol-monitoring:
+    profiles: [all, infrastructure]
     image: particular/servicecontrol-monitoring:latest
-    env_file: service-platform.env
+    env_file:
+      - aws.env
+      - service-platform.env
     restart: unless-stopped
     command: --setup-and-run
     ports:
@@ -225,8 +246,8 @@ services:
       - 10.0.2.20
     networks:
       - ls
-
   servicepulse:
+    profiles: [all, infrastructure]
     image: particular/servicepulse:latest
     ports:
       - "9999:9090"
@@ -243,8 +264,6 @@ services:
         condition: service_healthy
     networks:
       - ls
-
-
 networks:
   ls:
     ipam:

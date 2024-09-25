@@ -10,6 +10,9 @@ public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHan
 
     public async Task Handle(QuoteRequested message, IMessageHandlerContext context)
     {
+        // Simulate bank latency
+        await Task.Delay(Random.Shared.Next(0, 5000), context.CancellationToken);
+
         logger.LogInformation(
             $"Quote request with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}, credit score: {message.Score}");
 

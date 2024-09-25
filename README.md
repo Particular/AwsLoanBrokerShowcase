@@ -1,137 +1,103 @@
-# AWS LoanBroker Sample
+# AWS LoanBroker example
 
-The sample is a basic LoanBroker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
+The AWS LoanBroker example is a basic loan broker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
 
-The sample is composed by:
+The example is composed by:
 
 - A client application, sending loan requests.
-- A loan broker service, receiving loan requests and orchestrating communication with downstream banks.
-- Three bank adapters, acting like Anti Corruption layers (ACL) towards three different banks offering loans.
+- A credit bureau providing the customers' credit score.
+- A loan broker service that receives loan requests, enriches them with credit scores, and orchestrates communication with downstream banks.
+- Three bank adapters, acting like Anti Corruption layers (ACL), simulating communication with downstream banks offering loans.
+- An email sender simulating email communication with customers.
+
+The example also ships the following monitoring services:
+
+- The Particular platform to monitor endpoints, capture and visualize audit messages, manage failed messages.
+- A Prometheus instance to collect, store, and query raw metrics data.
+- A Grafana instance with three different metrics dashboards, using Prometheus as data source.
+- A Jaeger instance to visualize OpenTelemetry traces.
+- AWS Distro for OpenTelemetry collector (ADOT), to collect and export metrics and traces to various destinations.
+
+The example also exports metrics and traces to AWS CloudWatch and XRay.
 
 ## Requirements
 
 - .NET 8 or greater
 - Docker
+- Docker Compose
 
-## How to run the sample from the development IDE
+## How to run the example
 
-The sample uses [LocalStack](https://www.localstack.cloud/) in a Docker container to mock AWS services. Using a command prompt, run LocalStack first by issuing the following command in the `src` directory:
+The simplest way to run the example is using Docker for both the endpoints and the infrastructure.
+The client application, the loan broker service, the e-mail sender and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability. 
 
-```shell
-docker-compose up localstack
-```
-
-The above command will execute the sample `docker-compose.yml` file starting only the LocalStack container.
-
-Once the LocalStack container is up and running, from the development environment start the following projects:
-
-- Client
-- LoanBroker
-- BankAdapter1
-- BankAdapter2
-- BankAdapter3
-
-To stop the LocalStack container, at the command prompt issue the following command from the `src` folder:
+To run the full example in Docker, execute the following command from the `src` folder:
 
 ```shell
-docker-compose stop localstack
+docker compose --profile all up --build
 ```
 
-## How to run the sample using Docker containers
+The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. 
+The Docker Compose command will also run and configure all the additional infrastructural containers.
 
-The client application, the LoanBroker service, and the bank adapters can be deployed as Docker containers alongside with the LocalStack one to mock the AWS services. To do, from the `src` folder, execute the following command:  
+To stop the running solution and remove all deployed containers. Using a command prompt, from the `src` folder, execute the following command:
 
 ```shell
-docker-compose up --build
+docker compose down
 ```
 
-The above command will build all projects, build container images for each of them, deploy them to the local Docker registry, and start them.
-
-To run the solution without rebuilding container images, from the `src` folder, using a command prompt, execute the following command:
+To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
-docker-compose up
+docker compose --profile all up
 ```
 
-The docker-compose configuration will start the following containers:
+> [!Note]
+> To run transport and persistence using AWS services instead of LocalStack: 
+> - remove the `AWS_ENDPOINT_URL` variable from the [aws.env](src/aws.env) file assure
+> - ensure the following environment variables are defined with appropriate values:
+>   - `AWS_ACCESS_KEY_ID`
+>   - `AWS_SECRET_ACCESS_KEY`
+>   - `AWS_REGION`
 
-- LocalStack
-- Client
-- LoanBroker
-- BankAdapter1
-- BankAdapter2
-- BankAdapter3
+### Running endpoints from the IDE
 
-All containers will use the same network as the LocalStack container instance.
-
-To interact with the sample, attach a console to the Client running container by executing the following command:
+If you prefer to start the endpoints from your IDE in order to debug the code, from the `src` folder, using a command prompt, execute the following command to start the required infrastructure:
 
 ```shell
-docker attach loanbroker-client-1
+docker compose --profile infrastructure up
 ```
 
-Attach and use the `F` key
+## Telemetry
 
-```shell
-docker-compose down
-```
+NServiceBus supports OpenTelemetry. Starting with NServiceBus 9.1, the following metrics are available:
 
-### Telemetry
+- `nservicebus.messaging.successes` - Total number of messages processed successfully by the endpoint
+- `nservicebus.messaging.fetches` - Total number of messages fetched from the queue by the endpoint
+- `nservicebus.messaging.failures` - Total number of messages processed unsuccessfully by the endpoint
+- `nservicebus.messaging.handler_time` - The time the user handling code takes to handle a message
+- `nservicebus.messaging.processing_time` - The time the endpoint takes to process a message
+- `nservicebus.messaging.critical_time` - The time between when a message is sent and when it is fully processed
+- `nservicebus.recoverability.immediate` - Total number of immediate retries requested
+- `nservicebus.recoverability.delayed` - Total number of delayed retries requested
+- `nservicebus.recoverability.error` - Total number of messages sent to the error queue
 
-NServiceBus supports OpenTelemetry.
-All endpoints are configured to send telemetry data to Jaeger.
+For more information, refer to the [NServiceBus OpenTelemetry documentation](https://docs.particular.net/nservicebus/operations/opentelemetry).
 
-To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
+All endpoints are configured to send OpenTelemetry traces to Jaeger. To visualize traces, open the [Jaeger dashboard](http://localhost:16686).
 
-### Sample scenarios
+Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Grafana dashboards](http://localhost:3000/dashboards). The default Grafana credentials are:
 
-TODO
+- Username: `admin`
+- Passowrd: `admin`
 
-- Press F on the client and observe messages flowing bla bla
-- Stop all bank adapters, press F on the client and observe the behavior
-- Stop the LoanBroker, press F on the client and stop the client, start the LoanBroker observe messages flowing, start the client and observe the Loanbroker response eventually coming in.
+> [!NOTE]
+> Setting a new password can be skipped. When containers are redeployed, the credentials are reset to their default values.
 
-## How to modify the same to run agains an AWS Account
+The example deploys two pre-configured Grafana dashboards:
 
-TODO
-=======
-# AwsLoanBrokerSample
+- The [LoanBroker](http://localhost:3000/d/edmhjobnxatc0b/loanbroker?orgId=1&refresh=5s) dashboard shows various metrics about the business endpoints behavior, such as the differences between the services critical, processing, and handing time.
+- The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics, grouped by endpoints or message type related to message fetches, processing, and failures.  
 
-## LocalStack setup
-
-Docker compose file:
-
-```
-services:
-  localstack:
-    image: localstack/localstack
-    environment:
-      - SERVICES=sns,sqs,iam,s3,dynamodb
-      - DEBUG=1
-      - HOSTNAME=localstack
-      - EDGE_PORT=4566
-    ports:
-      - '4566-4597:4566-4597'
-      - "8000:5000"
-```
-
-Set the `ServiceUrl` of the various Amazon client config classes to `http://localhost:{EDGE_PORT}/`.
-Set the various clients to use dummy `BasicAWSCredentials` :
-
-```
-var dummy = new BasicAWSCredentials("xxx","xxx");`
-```
-
-For example:
-
-```
-var edgeUrl = "http://localhost:4566";
-var dummy = new BasicAWSCredentials("xxx","xxx");
-var sqsConfig = new AmazonSQSConfig() { ServiceURL = edgeUrl };
-var snsConfig = new AmazonSimpleNotificationServiceConfig(){ ServiceURL = edgeUrl };
-
-var transport = new SqsTransport(
-    new AmazonSQSClient(dummy, sqsConfig),
-    new AmazonSimpleNotificationServiceClient(dummy, snsConfig));
-```
-The dummy credentials prevent the AWS clients from trying to pickup credentials from environment variables or connect to the AWS cloud IAM service to retrieve authorizations.
+> [!NOTE]
+> After running the solution multiple times, it might happen that Grafana suddenly shows random data instead of the expected metrics. To reset dashboards, tear down all containers and delete the `data-grafana` and `data-prometheus` folders from the solution folder. Redeploy the containers.
