@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using NServiceBus.Configuration.AdvancedExtensibility;
+﻿using NServiceBus.Configuration.AdvancedExtensibility;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;

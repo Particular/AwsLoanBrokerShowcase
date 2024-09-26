@@ -1,8 +1,6 @@
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using BankMessages;
 using ClientMessages;
-using CommonConfigurations;
 using LoanBroker.Messages;
 using LoanBroker.Services;
 using Microsoft.Extensions.Logging;

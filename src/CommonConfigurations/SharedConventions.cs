@@ -1,7 +1,5 @@
-﻿using System.Diagnostics.Metrics;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
-using NServiceBus.Configuration.AdvancedExtensibility;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
 
