@@ -68,6 +68,17 @@ If you prefer to start the endpoints from your IDE in order to debug the code, f
 docker compose --profile infrastructure up -d
 ```
 
+## Monitoring
+
+The example comes with the [Particular platform](https://docs.particular.net/platform/) automatically available as
+Docker containers.
+
+Monitoring information are available in [ServicePulse](http://localhost:9999).
+
+[ServiceInsight](https://docs.particular.net/serviceinsight/) can be used in Windows environments to visualize messages
+flow. You can download the latest version of ServiceInsight from
+the [Particular website](https://particular.net/serviceinsight).
+
 ## Telemetry
 
 NServiceBus supports OpenTelemetry. Starting with NServiceBus 9.1, the following metrics are available:
