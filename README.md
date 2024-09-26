@@ -34,7 +34,7 @@ The client application, the loan broker service, the e-mail sender and the bank 
 To run the full example in Docker, execute the following command from the `src` folder:
 
 ```shell
-docker compose --profile all up --build
+docker compose up --build -d
 ```
 
 The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. 
@@ -49,7 +49,7 @@ docker compose down
 To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
 
 ```shell
-docker compose --profile all up
+docker compose up -d
 ```
 
 > [!Note]
@@ -65,7 +65,7 @@ docker compose --profile all up
 If you prefer to start the endpoints from your IDE in order to debug the code, from the `src` folder, using a command prompt, execute the following command to start the required infrastructure:
 
 ```shell
-docker compose --profile infrastructure up
+docker compose --profile infrastructure up -d
 ```
 
 ## Telemetry

@@ -55,7 +55,7 @@ class BestLoanPolicy(
 
         if (Data.RequestSentToBanks.HasValue)
         {
-            BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
+            CustomTelemetry.BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
         }
         return Task.CompletedTask;
     }
@@ -73,7 +73,7 @@ class BestLoanPolicy(
 
         if (Data.RequestSentToBanks.HasValue)
         {
-            BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
+            CustomTelemetry.BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
         }
         return Task.CompletedTask;
     }
@@ -102,10 +102,6 @@ class BestLoanPolicy(
         await context.Publish(eventToPublish);
         MarkAsComplete();
     }
-
-    static readonly Histogram<double> BankResponseTime =
-        SharedConventions.LoanBrokerMeter.CreateHistogram<double>("loan_broker.bank_processing_time", "s",
-            "The time banks take to respond to quote requests.");
 }
 
 class BestLoanData : ContainSagaData

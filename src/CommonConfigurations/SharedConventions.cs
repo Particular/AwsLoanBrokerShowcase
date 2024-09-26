@@ -1,40 +1,51 @@
 ﻿using System.Diagnostics.Metrics;
+using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Configuration.AdvancedExtensibility;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
-using OpenTelemetry;
-using OpenTelemetry.Exporter;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
+
 
 namespace CommonConfigurations;
 
+public record Customizations(EndpointConfiguration EndpointConfiguration, RoutingSettings Routing);
+
 public static class SharedConventions
 {
-    public const string OtlpMetricsDefaultUrl = "http://localhost:5318/v1/metrics";
-    public const string OtlpTracesDefaultUrl = "http://localhost:4318/v1/traces";
-    public const string OtlpMetricsUrlEnvVar = "OTLP_METRICS_URL";
-    public const string OtlpTracesUrlEnvVar = "OTLP_TRACING_URL";
-    public static readonly Meter LoanBrokerMeter = new("LoanBroker", "0.1.0");
-
-    public static RoutingSettings UseCommonTransport(this EndpointConfiguration endpointConfiguration)
+    public static HostApplicationBuilder ConfigureAwsNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
     {
+        ConfigureMicrosoftLoggingIntegration();
+
+        var endpointConfiguration = new EndpointConfiguration(endpointName);
+
+        // Configure SQS Transport
         var transport = new SqsTransport();
-        return endpointConfiguration.UseTransport(transport);
+        var routing = endpointConfiguration.UseTransport(transport);
+
+        // Configure DynamoDB Persistence
+        var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
+        persistence.Sagas().UsePessimisticLocking = true;
+
+        SetCommonEndpointSettings(endpointConfiguration);
+
+        // Endpoint-specific customization
+        customize?.Invoke(new Customizations(endpointConfiguration, routing));
+
+        builder.UseNServiceBus(endpointConfiguration);
+        return builder;
     }
 
-    public static void CommonEndpointSetting(this EndpointConfiguration endpointConfiguration)
+
+    static void SetCommonEndpointSettings(EndpointConfiguration endpointConfiguration)
     {
         // disable diagnostic writer to prevent docker errors
         // in production each container should map a volume to write diagnostic
         endpointConfiguration.CustomDiagnosticsWriter((_, _) => Task.CompletedTask);
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
+        endpointConfiguration.EnableOutbox();
         endpointConfiguration.EnableInstallers();
-        EnableMetrics(endpointConfiguration);
-        EnableTracing(endpointConfiguration);
+        endpointConfiguration.EnableOpenTelemetryMetrics();
+        endpointConfiguration.EnableOpenTelemetryTracing();
 
         endpointConfiguration.ConnectToServicePlatform(new ServicePlatformConnectionConfiguration
         {
@@ -68,63 +79,19 @@ public static class SharedConventions
         });
     }
 
-
-    static void EnableMetrics(EndpointConfiguration endpointConfiguration)
+    public static void DisableRetries(this EndpointConfiguration endpointConfiguration)
     {
-        var endpointName = endpointConfiguration.GetSettings().EndpointName();
-        var attributes = new Dictionary<string, object>
-        {
-            ["service.name"] = endpointName,
-            ["service.instance.id"] = Guid.NewGuid().ToString(),
-        };
-
-        var resourceBuilder = ResourceBuilder.CreateDefault().AddAttributes(attributes);
-
-        Sdk.CreateMeterProviderBuilder()
-            .SetResourceBuilder(resourceBuilder)
-            .AddMeter("NServiceBus.Core.Pipeline.Incoming")
-            .AddMeter("LoanBroker")
-            .AddOtlpExporter(cfg =>
-            {
-                var url = Environment.GetEnvironmentVariable(OtlpMetricsUrlEnvVar) ?? OtlpMetricsDefaultUrl;
-                cfg.Endpoint = new Uri(url);
-                cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
-            })
-            .Build();
-
-        endpointConfiguration.EnableOpenTelemetry();
-    }
-
-    static void EnableTracing(EndpointConfiguration endpointConfiguration)
-    {
-        var endpointName = endpointConfiguration.GetSettings().EndpointName();
-
-        var attributes = new Dictionary<string, object>
-        {
-            ["service.name"] = endpointName,
-            ["service.instance.id"] = Guid.NewGuid().ToString(),
-        };
-
-        var resourceBuilder = ResourceBuilder.CreateDefault().AddAttributes(attributes);
-
-        Sdk.CreateTracerProviderBuilder()
-            .SetResourceBuilder(resourceBuilder)
-            .AddSource("NServiceBus.Core")
-            .AddOtlpExporter(cfg =>
-            {
-                var url = Environment.GetEnvironmentVariable(OtlpTracesUrlEnvVar) ?? OtlpTracesDefaultUrl;
-                cfg.Endpoint = new Uri(url);
-                cfg.Protocol = OtlpExportProtocol.HttpProtobuf;
-            })
-            .Build();
-
-        endpointConfiguration.EnableOpenTelemetry();
+        endpointConfiguration.Recoverability()
+            .Immediate(customize => customize.NumberOfRetries(0))
+            .Delayed(customize => customize.NumberOfRetries(0));
     }
 
     public static void ConfigureMicrosoftLoggingIntegration()
     {
         // Integrate NServiceBus logging with Microsoft.Extensions.Logging
-        ILoggerFactory extensionsLoggerFactory = new NLogLoggerFactory();
-        LogManager.UseFactory(new ExtensionsLoggerFactory(extensionsLoggerFactory));
+        var nlog = new NLogLoggerFactory();
+        LogManager.UseFactory(new ExtensionsLoggerFactory(nlog));
     }
+
+
 }
