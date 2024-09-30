@@ -15,14 +15,6 @@ class BestLoanPolicy(
     IHandleMessages<QuoteRequestRefusedByBank>,
     IHandleTimeouts<MaxTimeout>
 {
-    protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
-    {
-        mapper.MapSaga(saga => saga.RequestId)
-            .ToMessage<FindBestLoanWithScore>(message => message.RequestId)
-            .ToMessage<QuoteCreated>(message => message.RequestId)
-            .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
-    }
-
     public async Task Handle(FindBestLoanWithScore message, IMessageHandlerContext context)
     {
         logger.LogInformation($"FindBestLoan request received from {message.Prospect}, with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}");
@@ -99,6 +91,14 @@ class BestLoanPolicy(
 
         await context.Publish(eventToPublish);
         MarkAsComplete();
+    }
+
+    protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
+    {
+        mapper.MapSaga(saga => saga.RequestId)
+            .ToMessage<FindBestLoanWithScore>(message => message.RequestId)
+            .ToMessage<QuoteCreated>(message => message.RequestId)
+            .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
     }
 }
 
