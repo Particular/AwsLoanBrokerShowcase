@@ -13,8 +13,8 @@ services:
     volumes:
       - ./lambdas:/var/lib/lambdas
       - ./localstack:/etc/localstack/init/ready.d
-      - "${LOCALSTACK_VOLUME_DIR:-./volumes/localstack}:/var/lib/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       ls:
         ipv4_address: 10.0.2.20
@@ -132,7 +132,7 @@ services:
       - '9090:9090'
     volumes:
       - ./prometheus:/etc/prometheus
-      - ./volumes/prometheus-data:/prometheus
+      - prometheus-data:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     networks:
       - ls
@@ -145,7 +145,7 @@ services:
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning/
       - ./grafana/dashboards:/var/lib/grafana/dashboards
-      - ./volumes/grafana-data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
     networks:
       - ls
   jaeger:
@@ -158,6 +158,8 @@ services:
       - 4318:4318
       - 9411:9411
       - 14250
+    volumes:
+      - jaeger-data:/tmp
     networks:
       - ls
   adot:
@@ -204,8 +206,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./volumes/servicecontrol-db:/opt/RavenDB/Server/RavenData
-      - ./volumes/servicecontrol-db-config:/opt/RavenDB/config
+      - servicecontrol-db:/opt/RavenDB/Server/RavenData
+      - servicecontrol-db-config:/opt/RavenDB/config
     networks:
       - ls
   servicecontrol-audit:
@@ -269,3 +271,10 @@ networks:
     ipam:
       config:
         - subnet: 10.0.2.0/24
+volumes:
+  localstack:
+  grafana-data:
+  prometheus-data:
+  jaeger-data:
+  servicecontrol-db:
+  servicecontrol-db-config:
