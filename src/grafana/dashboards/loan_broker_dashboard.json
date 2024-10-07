@@ -24,7 +24,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -103,7 +104,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -118,7 +120,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -134,7 +137,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -154,7 +158,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -233,7 +238,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -248,7 +254,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -264,7 +271,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -284,7 +292,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -363,7 +372,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -378,7 +388,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -394,7 +405,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -414,7 +426,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -493,7 +506,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -508,7 +522,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -524,7 +539,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -544,7 +560,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -623,7 +640,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -638,7 +656,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -654,7 +673,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -674,7 +694,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -753,7 +774,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",

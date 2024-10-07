@@ -1,6 +1,11 @@
+# Configuration file version
+apiVersion: 1
+
+# List of data sources to insert/update
 datasources:
 - name: Prometheus
   access: proxy
   type: prometheus
+  uid: 8rTXXfF4z
   url: http://prometheus:9090
   isDefault: true
