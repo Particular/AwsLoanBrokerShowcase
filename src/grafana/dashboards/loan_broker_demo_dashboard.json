@@ -24,7 +24,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -102,7 +103,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "editorMode": "builder",
           "expr": "avg by(loan_broker_bank_id) (increase(loan_broker_bank_processing_time_seconds_sum[1m])) / avg by(loan_broker_bank_id) (increase(loan_broker_bank_processing_time_seconds_count[1m]))",
@@ -117,7 +119,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -197,7 +200,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -226,7 +230,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -310,7 +315,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -330,7 +336,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "8rTXXfF4z"
       },
       "fieldConfig": {
         "defaults": {
@@ -409,7 +416,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "8rTXXfF4z"
           },
           "disableTextWrap": false,
           "editorMode": "builder",

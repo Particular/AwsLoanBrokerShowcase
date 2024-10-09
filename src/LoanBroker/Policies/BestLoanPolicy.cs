@@ -1,8 +1,6 @@
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using BankMessages;
 using ClientMessages;
-using CommonConfigurations;
 using LoanBroker.Messages;
 using LoanBroker.Services;
 using Microsoft.Extensions.Logging;
@@ -17,14 +15,6 @@ class BestLoanPolicy(
     IHandleMessages<QuoteRequestRefusedByBank>,
     IHandleTimeouts<MaxTimeout>
 {
-    protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
-    {
-        mapper.MapSaga(saga => saga.RequestId)
-            .ToMessage<FindBestLoanWithScore>(message => message.RequestId)
-            .ToMessage<QuoteCreated>(message => message.RequestId)
-            .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
-    }
-
     public async Task Handle(FindBestLoanWithScore message, IMessageHandlerContext context)
     {
         logger.LogInformation($"FindBestLoan request received from {message.Prospect}, with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}");
@@ -55,7 +45,7 @@ class BestLoanPolicy(
 
         if (Data.RequestSentToBanks.HasValue)
         {
-            BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
+            CustomTelemetry.BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
         }
         return Task.CompletedTask;
     }
@@ -73,7 +63,7 @@ class BestLoanPolicy(
 
         if (Data.RequestSentToBanks.HasValue)
         {
-            BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
+            CustomTelemetry.BankResponseTime.Record((DateTime.UtcNow - Data.RequestSentToBanks!.Value).TotalMilliseconds, tags);
         }
         return Task.CompletedTask;
     }
@@ -103,9 +93,13 @@ class BestLoanPolicy(
         MarkAsComplete();
     }
 
-    static readonly Histogram<double> BankResponseTime =
-        SharedConventions.LoanBrokerMeter.CreateHistogram<double>("loan_broker.bank_processing_time", "s",
-            "The time banks take to respond to quote requests.");
+    protected override void ConfigureHowToFindSaga(SagaPropertyMapper<BestLoanData> mapper)
+    {
+        mapper.MapSaga(saga => saga.RequestId)
+            .ToMessage<FindBestLoanWithScore>(message => message.RequestId)
+            .ToMessage<QuoteCreated>(message => message.RequestId)
+            .ToMessage<QuoteRequestRefusedByBank>(message => message.RequestId);
+    }
 }
 
 class BestLoanData : ContainSagaData

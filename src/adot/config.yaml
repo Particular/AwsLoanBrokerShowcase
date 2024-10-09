@@ -16,12 +16,10 @@ exporters:
   prometheus:
     endpoint: "0.0.0.0:1234"
   awsxray:
-    region: eu-south-1
     aws_log_groups: ["loan-broker-1", "loan-broker-2"]
   otlphttp:
     endpoint: "http://jaeger:4318"
   awsemf:
-    region: eu-south-1
 service:
   pipelines:
     metrics:

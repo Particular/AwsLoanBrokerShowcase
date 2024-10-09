@@ -1,7 +1,7 @@
 name: loanbroker
 services:
   localstack:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: localstack/localstack:3
     environment:
       - SERVICES=sns,sqs,iam,s3,dynamodb,lambda,cloudwatch
@@ -13,13 +13,13 @@ services:
     volumes:
       - ./lambdas:/var/lib/lambdas
       - ./localstack:/etc/localstack/init/ready.d
-      - "${LOCALSTACK_VOLUME_DIR:-./volumes/localstack}:/var/lib/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       ls:
         ipv4_address: 10.0.2.20
   loan-broker:
-    profiles: [all]
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
@@ -36,7 +36,7 @@ services:
     networks:
       - ls
   bank1:
-    profiles: [all]
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
@@ -53,7 +53,7 @@ services:
     networks:
       - ls
   bank2:
-    profiles: [all]
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
@@ -70,7 +70,7 @@ services:
     networks:
       - ls
   bank3:
-    profiles: [all]
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
@@ -87,7 +87,7 @@ services:
     networks:
       - ls
   email-sender:
-    profiles: [all]
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./EmailSender/Dockerfile
@@ -104,7 +104,7 @@ services:
     networks:
       - ls
   client:
-    profiles: [all]
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Client/Dockerfile
@@ -126,18 +126,18 @@ services:
     stdin_open: true
     command: --demo
   prometheus:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: prom/prometheus:v2.53.2
     ports:
       - '9090:9090'
     volumes:
       - ./prometheus:/etc/prometheus
-      - ./volumes/prometheus-data:/prometheus
+      - prometheus-data:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     networks:
       - ls
   grafana:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: grafana/grafana-oss:latest
     ports:
       - '3000:3000'
@@ -145,11 +145,11 @@ services:
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning/
       - ./grafana/dashboards:/var/lib/grafana/dashboards
-      - ./volumes/grafana-data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
     networks:
       - ls
   jaeger:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_OTLP_ENABLED=true
@@ -158,10 +158,12 @@ services:
       - 4318:4318
       - 9411:9411
       - 14250
+    volumes:
+      - jaeger-data:/tmp
     networks:
       - ls
   adot:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: amazon/aws-otel-collector
     env_file:
       - aws.env
@@ -175,7 +177,7 @@ services:
     networks:
       - ls
   servicecontrol:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: particular/servicecontrol:latest
     env_file:
       - aws.env
@@ -199,17 +201,17 @@ services:
     networks:
       - ls
   servicecontrol-db:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: particular/servicecontrol-ravendb:latest
     ports:
       - "8080:8080"
     volumes:
-      - ./volumes/servicecontrol-db:/opt/RavenDB/Server/RavenData
-      - ./volumes/servicecontrol-db-config:/opt/RavenDB/config
+      - servicecontrol-db:/opt/RavenDB/Server/RavenData
+      - servicecontrol-db-config:/opt/RavenDB/config
     networks:
       - ls
   servicecontrol-audit:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: particular/servicecontrol-audit:latest
     env_file:
       - aws.env
@@ -230,7 +232,7 @@ services:
     networks:
       - ls
   servicecontrol-monitoring:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: particular/servicecontrol-monitoring:latest
     env_file:
       - aws.env
@@ -247,7 +249,7 @@ services:
     networks:
       - ls
   servicepulse:
-    profiles: [all, infrastructure]
+    profiles: ['', infrastructure]
     image: particular/servicepulse:latest
     ports:
       - "9999:9090"
@@ -269,3 +271,10 @@ networks:
     ipam:
       config:
         - subnet: 10.0.2.0/24
+volumes:
+  localstack:
+  grafana-data:
+  prometheus-data:
+  jaeger-data:
+  servicecontrol-db:
+  servicecontrol-db-config:
