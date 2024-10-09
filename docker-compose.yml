@@ -24,8 +24,8 @@ services:
       context: ./
       dockerfile: ./LoanBroker/Dockerfile
     env_file:
-      - metrics.env
-      - aws.env
+      - env/metrics.env
+      - env/aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -41,8 +41,8 @@ services:
       context: ./
       dockerfile: ./Bank1Adapter/Dockerfile
     env_file:
-      - metrics.env
-      - aws.env
+      - env/metrics.env
+      - env/aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -58,8 +58,8 @@ services:
       context: ./
       dockerfile: ./Bank2Adapter/Dockerfile
     env_file:
-      - metrics.env
-      - aws.env
+      - env/metrics.env
+      - env/aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -75,8 +75,8 @@ services:
       context: ./
       dockerfile: ./Bank3Adapter/Dockerfile
     env_file:
-      - metrics.env
-      - aws.env
+      - env/metrics.env
+      - env/aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -92,8 +92,8 @@ services:
       context: ./
       dockerfile: ./EmailSender/Dockerfile
     env_file:
-      - metrics.env
-      - aws.env
+      - env/metrics.env
+      - env/aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -109,8 +109,8 @@ services:
       context: ./
       dockerfile: ./Client/Dockerfile
     env_file:
-      - metrics.env
-      - aws.env
+      - env/metrics.env
+      - env/aws.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -131,7 +131,7 @@ services:
     ports:
       - '9090:9090'
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./src/prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     networks:
@@ -143,8 +143,8 @@ services:
       - '3000:3000'
     restart: unless-stopped
     volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning/
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./src/grafana/provisioning:/etc/grafana/provisioning/
+      - ./src/grafana/dashboards:/var/lib/grafana/dashboards
       - grafana-data:/var/lib/grafana
     networks:
       - ls
@@ -166,22 +166,22 @@ services:
     profiles: ['', infrastructure]
     image: amazon/aws-otel-collector
     env_file:
-      - aws.env
+      - env/aws.env
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
       - "5318:5318"       # adot
       - "1234:1234"       # adot
     volumes:
-      - ./adot/config.yaml:/etc/otel-agent-config.yaml
+      - ./src/adot/config.yaml:/etc/otel-agent-config.yaml
     networks:
       - ls
   servicecontrol:
     profiles: ['', infrastructure]
     image: particular/servicecontrol:latest
     env_file:
-      - aws.env
-      - service-platform.env
+      - env/aws.env
+      - env/service-platform.env
     ports:
       - "33333:33333"
     environment:
@@ -214,8 +214,8 @@ services:
     profiles: ['', infrastructure]
     image: particular/servicecontrol-audit:latest
     env_file:
-      - aws.env
-      - service-platform.env
+      - env/aws.env
+      - env/service-platform.env
     ports:
       - "44444:44444"
     environment:
@@ -235,8 +235,8 @@ services:
     profiles: ['', infrastructure]
     image: particular/servicecontrol-monitoring:latest
     env_file:
-      - aws.env
-      - service-platform.env
+      - env/aws.env
+      - env/service-platform.env
     restart: unless-stopped
     command: --setup-and-run
     ports:

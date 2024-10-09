@@ -29,32 +29,32 @@ The example also exports metrics and traces to AWS CloudWatch and XRay.
 ## How to run the example
 
 The simplest way to run the example is using Docker for both the endpoints and the infrastructure.
-The client application, the loan broker service, the e-mail sender and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability. 
+The client application, the loan broker service, the e-mail sender and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability.
 
-To run the full example in Docker, execute the following command from the `src` folder:
+To run the full example in Docker, execute the following command from the root folder:
 
 ```shell
 docker compose up --build -d
 ```
 
-The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. 
+The above command will build all projects, build container images, deploy them to the local Docker registry, and start them.
 The Docker Compose command will also run and configure all the additional infrastructural containers.
 
-To stop the running solution and remove all deployed containers. Using a command prompt, from the `src` folder, execute the following command:
+To stop the running solution and remove all deployed containers. Using a command prompt, execute the following command:
 
 ```shell
 docker compose down
 ```
 
-To run the solution without rebuilding container images from the `src` folder, using a command prompt, execute the following command:
+To run the solution without rebuilding container images, execute the following command:
 
 ```shell
 docker compose up -d
 ```
 
 > [!Note]
-> To run transport and persistence using AWS services instead of LocalStack: 
-> - remove the `AWS_ENDPOINT_URL` variable from the [aws.env](src/aws.env) file assure
+> To run transport and persistence using AWS services instead of LocalStack:
+> - remove the `AWS_ENDPOINT_URL` variable from the [aws.env](env/aws.env) file assure
 > - ensure the following environment variables are defined with appropriate values:
 >   - `AWS_ACCESS_KEY_ID`
 >   - `AWS_SECRET_ACCESS_KEY`
@@ -62,7 +62,7 @@ docker compose up -d
 
 ### Running endpoints from the IDE
 
-If you prefer to start the endpoints from your IDE in order to debug the code, from the `src` folder, using a command prompt, execute the following command to start the required infrastructure:
+If you prefer to start the endpoints from your IDE in order to debug the code, execute the following command from a command prompt in the root directory to start the required infrastructure:
 
 ```shell
 docker compose --profile infrastructure up -d
@@ -108,7 +108,7 @@ Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the 
 The example deploys two pre-configured Grafana dashboards:
 
 - The [LoanBroker](http://localhost:3000/d/edmhjobnxatc0b/loanbroker?orgId=1&refresh=5s) dashboard shows various metrics about the business endpoints behavior, such as the differences between the services critical, processing, and handing time.
-- The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics, grouped by endpoints or message type related to message fetches, processing, and failures.  
+- The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics, grouped by endpoints or message type related to message fetches, processing, and failures.
 
 > [!NOTE]
 > After running the solution multiple times, it might happen that Grafana suddenly shows random data instead of the expected metrics. To reset dashboards, tear down all containers and delete the `data-grafana` and `data-prometheus` folders from the solution folder. Redeploy the containers.
