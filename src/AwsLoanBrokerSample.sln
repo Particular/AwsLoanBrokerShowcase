@@ -49,10 +49,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailSender", "EmailSender\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{69E2DB2E-619F-41FA-B4D9-9304803A7C17}"
 	ProjectSection(SolutionItems) = preProject
-		aws.env = aws.env
-		docker-compose.yml = docker-compose.yml
-		metrics.env = metrics.env
-		service-platform.env = service-platform.env
+		..\docker-compose.yml = ..\docker-compose.yml
+		..\env\aws.env = ..\env\aws.env
+		..\env\metrics.env = ..\env\metrics.env
+		..\env\service-platform.env = ..\env\service-platform.env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{9B290188-139B-4CEC-8633-9AAA9D7BBDD4}"
