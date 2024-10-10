@@ -22,7 +22,7 @@ services:
     profiles: ['']
     build:
       context: ./
-      dockerfile: ./LoanBroker/Dockerfile
+      dockerfile: ./src/LoanBroker/Dockerfile
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -39,7 +39,7 @@ services:
     profiles: ['']
     build:
       context: ./
-      dockerfile: ./Bank1Adapter/Dockerfile
+      dockerfile: ./src/Bank1Adapter/Dockerfile
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -56,7 +56,7 @@ services:
     profiles: ['']
     build:
       context: ./
-      dockerfile: ./Bank2Adapter/Dockerfile
+      dockerfile: ./src/Bank2Adapter/Dockerfile
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -73,7 +73,7 @@ services:
     profiles: ['']
     build:
       context: ./
-      dockerfile: ./Bank3Adapter/Dockerfile
+      dockerfile: ./src/Bank3Adapter/Dockerfile
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -90,7 +90,7 @@ services:
     profiles: ['']
     build:
       context: ./
-      dockerfile: ./EmailSender/Dockerfile
+      dockerfile: ./src/EmailSender/Dockerfile
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -107,7 +107,7 @@ services:
     profiles: ['']
     build:
       context: ./
-      dockerfile: ./Client/Dockerfile
+      dockerfile: ./src/Client/Dockerfile
     env_file:
       - env/metrics.env
       - env/aws.env
