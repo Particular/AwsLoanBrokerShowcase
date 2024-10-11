@@ -1,5 +1,6 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.DynamoDB;
+using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.SQS;
 using Attribute = Amazon.CDK.AWS.DynamoDB.Attribute;
 
@@ -12,13 +13,19 @@ public class NServiceBusEndpointResource : Resource
         : base(scope, id, props)
 
     {
-        _ = new Queue(this, endpoint.EndpointName, new QueueProps
+        var queue = new Queue(this, endpoint.EndpointName, new QueueProps
         {
             QueueName = endpoint.FullQueueName,
-            RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
+            RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds),
         });
+        var policyStatement = new PolicyStatement();
+        policyStatement.Effect = Effect.ALLOW;
+        policyStatement.AddAllResources();
+        policyStatement.AddAnyPrincipal();
+        policyStatement.AddActions(["sqs:*"]);
 
-        _ = new Queue(this, $"{endpoint.EndpointName}-delay", new QueueProps
+        queue.AddToResourcePolicy(policyStatement);
+        var delay = new Queue(this, $"{endpoint.EndpointName}-delay", new QueueProps
         {
             QueueName = endpoint.DelayQueueName,
             Fifo = true,
@@ -26,13 +33,16 @@ public class NServiceBusEndpointResource : Resource
             RetentionPeriod = Duration.Seconds(endpoint.RetentionPeriod.TotalSeconds)
         });
 
+        delay.AddToResourcePolicy(policyStatement);
+
+
         if (endpoint.EnableDynamoDBPersistence)
         {
             _ = new Table(this, $"{endpoint.EndpointName}-storage", new TableProps()
             {
                 TableName = $"{endpoint.EndpointName}.NServiceBus.Storage",
-                PartitionKey = new Attribute(){ Name = "PK",Type = AttributeType.STRING },
-                SortKey = new Attribute(){ Name = "SK",Type = AttributeType.STRING },
+                PartitionKey = new Attribute() { Name = "PK", Type = AttributeType.STRING },
+                SortKey = new Attribute() { Name = "SK", Type = AttributeType.STRING },
                 BillingMode = BillingMode.PAY_PER_REQUEST,
                 RemovalPolicy = RemovalPolicy.DESTROY
             });
