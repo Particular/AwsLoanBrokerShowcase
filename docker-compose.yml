@@ -206,8 +206,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - servicecontrol-db:/opt/RavenDB/Server/RavenData
-      - servicecontrol-db-config:/opt/RavenDB/config
+      - servicecontrol-db:/var/lib/ravendb/data
+      - servicecontrol-db-config:/var/lib/ravendb/config
     networks:
       - ls
   servicecontrol-audit:
