@@ -6,17 +6,17 @@ The example is composed by:
 
 - A client application, sending loan requests.
 - A credit bureau providing the customers' credit score.
-- A loan broker service that receives loan requests, enriches them with credit scores, and orchestrates communication with downstream banks.
-- Three bank adapters, acting like Anti Corruption layers (ACL), simulating communication with downstream banks offering loans.
+- A loan broker service that receives loan requests enriches them with credit scores and orchestrates communication with downstream banks.
+- Three bank adapters, acting like Anti-Corruption layers (ACL), simulate communication with downstream banks offering loans.
 - An email sender simulating email communication with customers.
 
 The example also ships the following monitoring services:
 
-- The Particular platform to monitor endpoints, capture and visualize audit messages, manage failed messages.
+- The Particular platform to monitor endpoints, capture and visualize audit messages, and manage failed messages.
 - A Prometheus instance to collect, store, and query raw metrics data.
-- A Grafana instance with three different metrics dashboards, using Prometheus as data source.
+- A Grafana instance with three different metrics dashboards using Prometheus as the data source.
 - A Jaeger instance to visualize OpenTelemetry traces.
-- AWS Distro for OpenTelemetry collector (ADOT), to collect and export metrics and traces to various destinations.
+- AWS Distro for OpenTelemetry collector (ADOT) to collect and export metrics and traces to various destinations.
 
 The example also exports metrics and traces to AWS CloudWatch and XRay.
 
@@ -29,9 +29,9 @@ The example also exports metrics and traces to AWS CloudWatch and XRay.
 ## How to run the example
 
 The simplest way to run the example is using Docker for both the endpoints and the infrastructure.
-The client application, the loan broker service, the e-mail sender and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability.
+The client application, the loan broker service, the e-mail sender, and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability.
 
-To run the full example in Docker, execute the following command from the root folder:
+To run the complete example in Docker, execute the following command from the root folder:
 
 ```shell
 docker compose up --build -d
@@ -54,7 +54,7 @@ docker compose up -d
 
 > [!Note]
 > To run transport and persistence using AWS services instead of LocalStack:
-> - remove the `AWS_ENDPOINT_URL` variable from the [aws.env](env/aws.env) file assure
+> - remove the `AWS_ENDPOINT_URL` variable from the [aws.env](env/aws.env) file
 > - ensure the following environment variables are defined with appropriate values:
 >   - `AWS_ACCESS_KEY_ID`
 >   - `AWS_SECRET_ACCESS_KEY`
@@ -62,7 +62,7 @@ docker compose up -d
 
 ### Running endpoints from the IDE
 
-If you prefer to start the endpoints from your IDE in order to debug the code, execute the following command from a command prompt in the root directory to start the required infrastructure:
+If you prefer to start the endpoints from your IDE to debug the code, execute the following command from a command prompt in the root directory to start the required infrastructure:
 
 ```shell
 docker compose --profile infrastructure up -d
@@ -70,14 +70,11 @@ docker compose --profile infrastructure up -d
 
 ## Monitoring
 
-The example comes with the [Particular platform](https://docs.particular.net/platform/) automatically available as
-Docker containers.
+The example comes with the [Particular platform](https://docs.particular.net/platform/), automatically available as Docker containers.
 
-Monitoring information are available in [ServicePulse](http://localhost:9999).
+Monitoring information is available in [ServicePulse](http://localhost:9999).
 
-[ServiceInsight](https://docs.particular.net/serviceinsight/) can be used in Windows environments to visualize messages
-flow. You can download the latest version of ServiceInsight from
-the [Particular website](https://particular.net/serviceinsight).
+[ServiceInsight](https://docs.particular.net/serviceinsight/) visualizes message flow in Windows environments. The latest version can be downloaded from the [Particular website](https://particular.net/serviceinsight).
 
 ## Telemetry
 
@@ -100,15 +97,15 @@ All endpoints are configured to send OpenTelemetry traces to Jaeger. To visualiz
 Similarly, endpoints send metrics to Prometheus. To visualize metrics, open the [Grafana dashboards](http://localhost:3000/dashboards). The default Grafana credentials are:
 
 - Username: `admin`
-- Passowrd: `admin`
+- Password: `admin`
 
 > [!NOTE]
 > Setting a new password can be skipped. When containers are redeployed, the credentials are reset to their default values.
 
 The example deploys two pre-configured Grafana dashboards:
 
-- The [LoanBroker](http://localhost:3000/d/edmhjobnxatc0b/loanbroker?orgId=1&refresh=5s) dashboard shows various metrics about the business endpoints behavior, such as the differences between the services critical, processing, and handing time.
-- The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics, grouped by endpoints or message type related to message fetches, processing, and failures.
+- The [LoanBroker](http://localhost:3000/d/edmhjobnxatc0b/loanbroker?orgId=1&refresh=5s) dashboard shows various metrics about the business endpoints behavior, such as the differences between the services critical, processing, and handling time.
+- The [NServiceBus](http://localhost:3000/d/MHqYOIqnz/nservicebus?orgId=1&refresh=5s) dashboard shows the metrics related to message fetches, processing, and failures, grouped by endpoints or message type.
 
 > [!NOTE]
 > After running the solution multiple times, it might happen that Grafana suddenly shows random data instead of the expected metrics. To reset dashboards, tear down all containers and delete the `data-grafana` and `data-prometheus` folders from the solution folder. Redeploy the containers.
