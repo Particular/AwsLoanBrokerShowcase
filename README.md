@@ -2,12 +2,6 @@
 
 The AWS LoanBroker example is a basic loan broker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
 
-The original logical diagram here…
-
-![Logical diagram](img/logical-view.gif)
-
-…is implemented using NServiceBus and AWS services as shown in the architecture diagram here:
-
 ![AWS Architectural Diagram](img/architecture-view.png)
 
 ## What's in the box
