@@ -2,6 +2,16 @@
 
 The AWS LoanBroker example is a basic loan broker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
 
+The original logical diagram here…
+
+![Logical diagram](img/logical-view.gif)
+
+…is implemented using NServiceBus and AWS services as shown in the architecture diagram here:
+
+![AWS Architectural Diagram](img/architecture-view.png)
+
+## What's in the box
+
 The example is composed by:
 
 - A client application, sending loan requests.
@@ -37,8 +47,10 @@ To run the complete example in Docker, execute the following command from the ro
 docker compose up --build -d
 ```
 
-The above command will build all projects, build container images, deploy them to the local Docker registry, and start them.
-The Docker Compose command will also run and configure all the additional infrastructural containers.
+> [!TIP]
+> Once the project is running, check out the [Things to try](#things-to-try) section.
+
+The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the additional infrastructural containers.
 
 To stop the running solution and remove all deployed containers. Using a command prompt, execute the following command:
 
@@ -67,6 +79,23 @@ If you prefer to start the endpoints from your IDE to debug the code, execute th
 ```shell
 docker compose --profile infrastructure up -d
 ```
+
+## Things to try
+
+Once the project is running, here are some things to try. (Links are to `localhost` and will only work when the project is running.)
+
+1. Explore some [traces in the Jaeger UI](http://localhost:16686/search?service=LoanBroker).
+    * The green circles are traces where the entire flow completed successfully.
+    * The red circles are traces that contain an exception at some point. (Bank3 fails 1/3 of the time.) Click into the failed steps and find the exception message and stack trace in the logs.
+2. Check out a selection of [business metrics in Grafana](http://localhost:3000/d/edmhjobnxatc0c/loan-broker-demo?orgId=1&refresh=5s&from=now-15m&to=now&timezone=browser). (User `admin` and password `admin`.)
+    * Some metrics are available for individual message types, even though the messages are processed from the same message queue.
+    * Many more metrics are available by navigating to [Dashboards](http://localhost:3000/dashboards) and selecting a different dashboard.
+3. Explore the [ServicePulse endpoint monitoring dashboard](http://localhost:3000/dashboards), then navigate to [LoanBroker](http://localhost:9999/#/monitoring/endpoint/LoanBroker?historyPeriod=1) to see how these metrics are available for individual message types as well.
+4. Investigate the EmailSender failures (the code is rigged to fail 5% of the time) in the [ServicePulse Failed Messages view](http://localhost:9999/#/failed-messages/failed-message-groups).
+    * Navigate into the failed message group, then to an individual message.
+    * Click on the tabs to see how the stack trace, message headers, and message body help a developer to troubleshoot and fix [systemic errors](https://particular.net/blog/but-all-my-errors-are-severe).
+    * Return to the [failed message groups view](http://localhost:9999/#/failed-messages/failed-message-groups) and request a retry for the entire batch of failed messages.
+    * The message handler will still fail 5% of the time. Click into the message group and see if there are any messages showing Retry Failures.
 
 ## Monitoring
 
