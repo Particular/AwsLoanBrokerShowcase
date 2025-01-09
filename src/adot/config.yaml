@@ -11,8 +11,8 @@ processors:
   batch:
 
 exporters:
-  logging:
-    loglevel: debug
+  debug:
+    verbosity: detailed
   prometheus:
     endpoint: "0.0.0.0:1234"
   awsxray:
