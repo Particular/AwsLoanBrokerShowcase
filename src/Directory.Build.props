@@ -4,9 +4,4 @@
     <NuGetAuditLevel>low</NuGetAuditLevel>
     <NuGetAuditMode Condition="'$(NuGetAuditMode)' == ''">all</NuGetAuditMode>
   </PropertyGroup>
-
-  <ItemGroup>
-    <SourceRoot Include="$([MSBuild]::NormalizePath($(MSBuildThisFileDirectory)..\))" />
-  </ItemGroup>
-
 </Project>
