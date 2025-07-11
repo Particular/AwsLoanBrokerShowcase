@@ -100,7 +100,7 @@ services:
       servicepulse:
         condition: service_started
     dns:
-      10.0.2.20
+      - 10.0.2.20
     networks:
       - ls
   client:
