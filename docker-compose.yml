@@ -131,7 +131,7 @@ services:
     ports:
       - '9090:9090'
     volumes:
-      - ./src/prometheus:/etc/prometheus
+      - ./src/prometheus/:/etc/prometheus/
       - prometheus-data:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     networks:
@@ -143,8 +143,8 @@ services:
       - '3000:3000'
     restart: unless-stopped
     volumes:
-      - ./src/grafana/provisioning:/etc/grafana/provisioning/
-      - ./src/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./src/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./src/grafana/dashboards/:/var/lib/grafana/dashboards/
       - grafana-data:/var/lib/grafana
     networks:
       - ls
