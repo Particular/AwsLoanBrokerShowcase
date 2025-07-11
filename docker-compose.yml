@@ -2,7 +2,7 @@ name: loanbroker
 services:
   localstack:
     profiles: ['', infrastructure]
-    image: localstack/localstack:3
+    image: docker.io/localstack/localstack:3
     environment:
       - SERVICES=sns,sqs,iam,s3,dynamodb,lambda,cloudwatch
       - DEBUG=1
@@ -127,7 +127,7 @@ services:
     command: --demo
   prometheus:
     profiles: ['', infrastructure]
-    image: prom/prometheus:v2.53.2
+    image: docker.io/prom/prometheus:v2.53.2
     ports:
       - '9090:9090'
     volumes:
@@ -138,7 +138,7 @@ services:
       - ls
   grafana:
     profiles: ['', infrastructure]
-    image: grafana/grafana-oss:latest
+    image: docker.io/grafana/grafana-oss:latest
     ports:
       - '3000:3000'
     restart: unless-stopped
@@ -150,7 +150,7 @@ services:
       - ls
   jaeger:
     profiles: ['', infrastructure]
-    image: jaegertracing/all-in-one:latest
+    image: docker.io/jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     ports:
@@ -164,7 +164,7 @@ services:
       - ls
   adot:
     profiles: ['', infrastructure]
-    image: amazon/aws-otel-collector
+    image: docker.io/amazon/aws-otel-collector
     env_file:
       - env/aws.env
     command: [ "--config=/etc/otel-agent-config.yaml" ]
@@ -178,7 +178,7 @@ services:
       - ls
   servicecontrol:
     profiles: ['', infrastructure]
-    image: particular/servicecontrol:latest
+    image: docker.io/particular/servicecontrol:latest
     env_file:
       - env/aws.env
       - env/service-platform.env
@@ -202,7 +202,7 @@ services:
       - ls
   servicecontrol-db:
     profiles: ['', infrastructure]
-    image: particular/servicecontrol-ravendb:latest
+    image: docker.io/particular/servicecontrol-ravendb:latest
     ports:
       - "8080:8080"
     volumes:
@@ -212,7 +212,7 @@ services:
       - ls
   servicecontrol-audit:
     profiles: ['', infrastructure]
-    image: particular/servicecontrol-audit:latest
+    image: docker.io/particular/servicecontrol-audit:latest
     env_file:
       - env/aws.env
       - env/service-platform.env
@@ -233,7 +233,7 @@ services:
       - ls
   servicecontrol-monitoring:
     profiles: ['', infrastructure]
-    image: particular/servicecontrol-monitoring:latest
+    image: docker.io/particular/servicecontrol-monitoring:latest
     env_file:
       - env/aws.env
       - env/service-platform.env
@@ -250,7 +250,7 @@ services:
       - ls
   servicepulse:
     profiles: ['', infrastructure]
-    image: particular/servicepulse:latest
+    image: docker.io/particular/servicepulse:latest
     ports:
       - "9999:9090"
     environment:
