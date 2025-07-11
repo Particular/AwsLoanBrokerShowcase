@@ -8,7 +8,7 @@ static class ConfigureServicesExtensions
 {
     public static HostApplicationBuilder ConfigureServices(this HostApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<ICreditScoreProvider>(_ => new HTTPCreditScoreProvider());
+        builder.Services.AddSingleton<ICreditScoreProvider, HTTPCreditScoreProvider>();
         builder.Services.AddSingleton<IQuoteAggregator, BestRateQuoteAggregator>();
         return builder;
     }
