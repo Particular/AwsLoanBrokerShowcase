@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="NLog.Extensions.Logging" Version="6.0.1" />
+      <PackageReference Include="NLog.Extensions.Logging" Version="6.0.2" />
       <PackageReference Include="NServiceBus" Version="9.2.7" />
       <PackageReference Include="NServiceBus.AmazonSQS" Version="8.0.0" />
       <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="3.0.0" />
