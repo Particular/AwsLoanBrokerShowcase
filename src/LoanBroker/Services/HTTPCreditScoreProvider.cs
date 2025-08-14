@@ -20,6 +20,7 @@ public class HTTPCreditScoreProvider : ICreditScoreProvider
     HttpClient CreateHttpClient()
     {
         var handler = new HttpClientHandler();
+        // Workaround for certification validation failing on Linux
         handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
         return new HttpClient(handler);
     }
