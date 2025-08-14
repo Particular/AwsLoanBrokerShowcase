@@ -10,11 +10,19 @@ public class HTTPCreditScoreProvider : ICreditScoreProvider
 
     public async Task<int> Score(Prospect prospect, string requestId)
     {
-        using var httpClient = new HttpClient();
+        using var httpClient = CreateHttpClient();
         var requestRecord = new ScoreRequest(prospect.SSN, requestId);
         var httpResponseMessage = await httpClient.PostAsync(lambdaUrl, JsonContent.Create(requestRecord));
         var scoreResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ScoreResponse>();
         return scoreResponse!.score;
+    }
+
+    HttpClient CreateHttpClient()
+    {
+        var handler = new HttpClientHandler();
+        // Workaround for certification validation failing on Linux
+        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+        return new HttpClient(handler);
     }
 }
 
