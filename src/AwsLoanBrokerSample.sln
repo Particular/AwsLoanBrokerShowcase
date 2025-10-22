@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{69E2DB
 		..\env\aws.env = ..\env\aws.env
 		..\env\metrics.env = ..\env\metrics.env
 		..\env\service-platform.env = ..\env\service-platform.env
+		..\env\asb.env = ..\env\asb.env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{9B290188-139B-4CEC-8633-9AAA9D7BBDD4}"
