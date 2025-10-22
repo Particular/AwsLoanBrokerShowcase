@@ -9,12 +9,12 @@
     <ItemGroup>
       <PackageReference Include="NLog.Extensions.Logging" Version="6.0.5" />
       <PackageReference Include="NServiceBus" Version="9.2.7" />
-      <PackageReference Include="NServiceBus.AmazonSQS" Version="8.0.0" />
-      <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="3.0.0" />
       <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.1" />
       <PackageReference Include="NServiceBus.Extensions.Logging" Version="3.0.1" />
+      <PackageReference Include="NServiceBus.Persistence.CosmosDB" Version="3.2.1" />
       <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="3.0.2" />
       <PackageReference Include="NServiceBus.SagaAudit" Version="5.0.2" />
+      <PackageReference Include="NServiceBus.Transport.AzureServiceBus" Version="5.1.2" />
       <PackageReference Include="OpenTelemetry" Version="1.13.1" />
       <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.13.1" />
       <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.6.0-rc.1" />
