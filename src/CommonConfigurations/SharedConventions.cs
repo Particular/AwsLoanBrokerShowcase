@@ -50,12 +50,12 @@ public static class SharedConventions
             Heartbeats = new()
             {
                 Enabled = true,
-                HeartbeatsQueue = "Particular-ServiceControl",
+                HeartbeatsQueue = "Particular.ServiceControl",
             },
             CustomChecks = new()
             {
                 Enabled = true,
-                CustomChecksQueue = "Particular-ServiceControl"
+                CustomChecksQueue = "Particular.ServiceControl"
             },
             ErrorQueue = "error",
             SagaAudit = new()
@@ -71,7 +71,7 @@ public static class SharedConventions
             Metrics = new()
             {
                 Enabled = true,
-                MetricsQueue = "Particular-Monitoring",
+                MetricsQueue = "Particular.Monitoring",
                 Interval = TimeSpan.FromSeconds(1)
             }
         });
