@@ -7,7 +7,7 @@ using NServiceBus.Logging;
 
 namespace CommonConfigurations;
 
-public record Customizations(EndpointConfiguration EndpointConfiguration, RoutingSettings Routing);
+public record Customizations(EndpointConfiguration EndpointConfiguration, PersistenceExtensions<CosmosPersistence> Persistence, RoutingSettings Routing);
 
 public static class SharedConventions
 {
@@ -36,19 +36,18 @@ public static class SharedConventions
             throw new ArgumentException(
                 "Cannot find the required CosmosDBPersistence_ConnectionString environment variable");
         }
-        endpointConfiguration.UsePersistence<CosmosPersistence>()
+
+        var persistence = endpointConfiguration.UsePersistence<CosmosPersistence>()
             .CosmosClient(new CosmosClient(cosmosDbConnectionString))
             .DatabaseName("LoanBrokerShowcase")
             .DefaultContainer(
                 containerName: endpointName.ToLowerInvariant() + "_container",
-                partitionKeyPath: "/id")
-            .Sagas()
-                .UsePessimisticLocking();
+                partitionKeyPath: "/id");
 
         SetCommonEndpointSettings(endpointConfiguration);
 
         // Endpoint-specific customization
-        customize?.Invoke(new Customizations(endpointConfiguration, routing));
+        customize?.Invoke(new Customizations(endpointConfiguration, persistence, routing));
 
         builder.UseNServiceBus(endpointConfiguration);
         return builder;
