@@ -77,19 +77,17 @@ public static class SharedConventions
         });
     }
 
-    public static void DisableRetries(this EndpointConfiguration endpointConfiguration)
-    {
-        endpointConfiguration.Recoverability()
-            .Immediate(customize => customize.NumberOfRetries(0))
-            .Delayed(customize => customize.NumberOfRetries(0));
-    }
-
-    public static void ConfigureMicrosoftLoggingIntegration()
+    static void ConfigureMicrosoftLoggingIntegration()
     {
         // Integrate NServiceBus logging with Microsoft.Extensions.Logging
         var nlog = new NLogLoggerFactory();
         LogManager.UseFactory(new ExtensionsLoggerFactory(nlog));
     }
 
-
+    public static void DisableRetries(this EndpointConfiguration endpointConfiguration)
+    {
+        endpointConfiguration.Recoverability()
+            .Immediate(customize => customize.NumberOfRetries(0))
+            .Delayed(customize => customize.NumberOfRetries(0));
+    }
 }
