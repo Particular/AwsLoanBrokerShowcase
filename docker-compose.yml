@@ -25,7 +25,7 @@ services:
       dockerfile: ./src/LoanBroker/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/asb.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -42,7 +42,7 @@ services:
       dockerfile: ./src/Bank1Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/asb.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -59,7 +59,7 @@ services:
       dockerfile: ./src/Bank2Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/asb.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -76,7 +76,7 @@ services:
       dockerfile: ./src/Bank3Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/asb.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -93,7 +93,7 @@ services:
       dockerfile: ./src/EmailSender/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/asb.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -110,7 +110,7 @@ services:
       dockerfile: ./src/Client/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/asb.env
     depends_on:
       localstack:
         condition: service_healthy
@@ -180,7 +180,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol:latest
     env_file:
-      - env/aws.env
+      - env/asb.env
       - env/service-platform.env
     ports:
       - "33333:33333"
@@ -214,7 +214,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol-audit:latest
     env_file:
-      - env/aws.env
+      - env/asb.env
       - env/service-platform.env
     ports:
       - "44444:44444"
@@ -235,7 +235,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol-monitoring:latest
     env_file:
-      - env/aws.env
+      - env/asb.env
       - env/service-platform.env
     restart: unless-stopped
     command: --setup-and-run
