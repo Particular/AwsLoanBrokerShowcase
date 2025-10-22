@@ -2,6 +2,6 @@ using CommonConfigurations;
 using Microsoft.Extensions.Hosting;
 
 Host.CreateApplicationBuilder(args)
-    .ConfigureAwsNServiceBusEndpoint("Bank2Adapter")
+    .ConfigureNServiceBusEndpoint("Bank2Adapter")
     .Build()
     .Run();
