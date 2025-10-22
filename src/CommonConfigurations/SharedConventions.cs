@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
@@ -16,13 +17,33 @@ public static class SharedConventions
 
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 
-        // Configure SQS Transport
-        var transport = new SqsTransport();
+        // Configure Azure Service Bus Transport
+        var asbConnectionString = Environment.GetEnvironmentVariable("AzureServiceBus_ConnectionString");
+        if (string.IsNullOrWhiteSpace(asbConnectionString))
+        {
+            throw new ArgumentException(
+                "Cannot find the required AzureServiceBus_ConnectionString environment variable");
+        }
+        var transport = new AzureServiceBusTransport(asbConnectionString, TopicTopology.Default);
+        //ReceiveOnly is required by the Outbox
+        transport.TransportTransactionMode = TransportTransactionMode.ReceiveOnly;
         var routing = endpointConfiguration.UseTransport(transport);
 
-        // Configure DynamoDB Persistence
-        var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
-        persistence.Sagas().UsePessimisticLocking = true;
+        // Configure CosmosDB Persistence
+        var cosmosDbConnectionString = Environment.GetEnvironmentVariable("CosmosDBPersistence_ConnectionString");
+        if (string.IsNullOrWhiteSpace(cosmosDbConnectionString))
+        {
+            throw new ArgumentException(
+                "Cannot find the required CosmosDBPersistence_ConnectionString environment variable");
+        }
+        endpointConfiguration.UsePersistence<CosmosPersistence>()
+            .CosmosClient(new CosmosClient(cosmosDbConnectionString))
+            .DatabaseName("LoanBrokerShowcase")
+            .DefaultContainer(
+                containerName: endpointName.ToLowerInvariant() + "_container",
+                partitionKeyPath: "/id")
+            .Sagas()
+                .UsePessimisticLocking();
 
         SetCommonEndpointSettings(endpointConfiguration);
 
