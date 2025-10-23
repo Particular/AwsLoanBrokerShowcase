@@ -1,4 +1,5 @@
 ﻿using NServiceBus;
+using CommonMessages;
 
 namespace BankMessages;
 
@@ -7,4 +8,4 @@ public record QuoteRequested(
     int Score,
     int NumberOfYears,
     int Amount
-) : IEvent;
+) : IEvent, ILoanMessage;
