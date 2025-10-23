@@ -115,7 +115,7 @@ class BestLoanData : ContainSagaData
 
 public class MaxTimeout : ILoanMessage
 {
-    public string RequestId { get; set; }
+    public required string RequestId { get; set; }
 }
 
 static class Tags
