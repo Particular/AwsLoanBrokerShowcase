@@ -1,4 +1,5 @@
 ﻿using NServiceBus;
+using CommonMessages;
 
 namespace ClientMessages;
 
@@ -7,4 +8,4 @@ public record FindBestLoan(
     Prospect Prospect,
     int NumberOfYears,
     int Amount
-) : ICommand;
+) : ICommand, ILoanMessage;
