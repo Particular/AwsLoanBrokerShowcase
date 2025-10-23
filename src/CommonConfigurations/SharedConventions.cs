@@ -64,7 +64,7 @@ public static class SharedConventions
         // in production each container should map a volume to write diagnostic
         endpointConfiguration.CustomDiagnosticsWriter((_, _) => Task.CompletedTask);
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-        endpointConfiguration.EnableOutbox();
+        //endpointConfiguration.EnableOutbox();
         endpointConfiguration.EnableInstallers();
         endpointConfiguration.EnableOpenTelemetryMetrics();
         endpointConfiguration.EnableOpenTelemetryTracing();
