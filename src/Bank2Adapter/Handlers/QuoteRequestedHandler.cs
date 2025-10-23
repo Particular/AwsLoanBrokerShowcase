@@ -15,24 +15,15 @@ public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHan
 
         logger.LogInformation($"Quote request with ID {message.RequestId}. Details: number of years {message.NumberOfYears}, amount: {message.Amount}, credit score: {message.Score}");
 
-        while (DateTime.Now.Ticks % 300 == 0)
+        if (DateTime.Now.Ticks % 300 == 0)
         {
-            if (context.CancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
             throw new Exception("Random error");
         }
 
-        while (DateTime.Now.Ticks % 5 == 0)
+        if (DateTime.Now.Ticks % 5 == 0)
         {
-            if (context.CancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            var randomDelayMilliseconds = Random.Next(500, 3000);
-            Thread.Sleep(randomDelayMilliseconds);
+            // Simulate additional bank latency
+            await Task.Delay(Random.Shared.Next(1000, 5000), context.CancellationToken);
         }
 
         if (Random.Next(0, 5) == 0 || message.Score < 90)
