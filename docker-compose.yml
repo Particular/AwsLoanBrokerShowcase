@@ -187,6 +187,7 @@ services:
     environment:
       RAVENDB_CONNECTIONSTRING: http://servicecontrol-db:8080
       REMOTEINSTANCES: '[{"api_uri":"http://servicecontrol-audit:44444/api"}]'
+      SERVICECONTROL_ALLOWMESSAGEEDITING: 'true'
     command: --setup-and-run
     restart: unless-stopped
     depends_on:
