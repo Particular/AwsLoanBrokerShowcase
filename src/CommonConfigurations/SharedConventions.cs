@@ -3,8 +3,6 @@ using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
-using NServiceBus.Persistence.CosmosDB;
-using CommonMessages;
 
 namespace CommonConfigurations;
 
@@ -113,20 +111,5 @@ public static class SharedConventions
         endpointConfiguration.Recoverability()
             .Immediate(customize => customize.NumberOfRetries(0))
             .Delayed(customize => customize.NumberOfRetries(0));
-    }
-}
-
-class CustomPartitionKeyFromMessageExtractor : IPartitionKeyFromMessageExtractor
-{
-    public bool TryExtract(object message, IReadOnlyDictionary<string, string> headers, out PartitionKey? partitionKey)
-    {
-        if (message is ILoanMessage loanMessage)
-        {
-            partitionKey = new PartitionKey(loanMessage.RequestId);
-            return true;
-        }
-
-        partitionKey = null;
-        return false;
     }
 }
