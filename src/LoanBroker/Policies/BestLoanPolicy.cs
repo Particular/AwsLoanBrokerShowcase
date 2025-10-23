@@ -28,7 +28,7 @@ class BestLoanPolicy(
         ), publishOptions);
         Data.RequestSentToBanks = DateTime.UtcNow;
         var requestExpiration = TimeSpan.FromSeconds(10);
-        await RequestTimeout<MaxTimeout>(context, requestExpiration);
+        await RequestTimeout(context, requestExpiration, new MaxTimeout{ RequestId = message.RequestId });
         logger.LogInformation($"Quote, with request ID {message.RequestId}, requested to banks. The request expires in {requestExpiration}");
     }
 
@@ -110,7 +110,10 @@ class BestLoanData : ContainSagaData
     public List<string> RejectedBy { get; set; } = [];
 }
 
-record MaxTimeout;
+record MaxTimeout
+{
+    public string RequestId { get; set; }
+}
 
 static class Tags
 {
