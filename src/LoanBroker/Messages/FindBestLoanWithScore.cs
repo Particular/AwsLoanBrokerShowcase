@@ -1,4 +1,5 @@
 ﻿using ClientMessages;
+using CommonMessages;
 
 namespace LoanBroker.Messages;
 
@@ -8,4 +9,4 @@ public record FindBestLoanWithScore(
     int NumberOfYears,
     int Amount,
     int Score
-) : ICommand;
+) : ICommand, ILoanMessage;

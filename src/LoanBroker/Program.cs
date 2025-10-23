@@ -5,10 +5,8 @@ using Microsoft.Extensions.Hosting;
 
 Host.CreateApplicationBuilder(args)
     .ConfigureServices()
-    .ConfigureNServiceBusEndpoint("LoanBroker", c =>
-    {
+    .ConfigureNServiceBusEndpoint("LoanBroker", c => {
         c.Persistence.Sagas().UsePessimisticLocking();
-
         c.Routing.RouteToEndpoint(typeof(FindBestLoanWithScore), "LoanBroker");
     })
     .Build()

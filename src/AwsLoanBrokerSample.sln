@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.9.34728.123
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11116.177 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank2Adapter", "Bank2Adapter\Bank2Adapter.csproj", "{F3FCC11F-4F87-4998-80DC-1499CDD4C77C}"
 EndProject
@@ -35,9 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{C41F
 	ProjectSection(SolutionItems) = preProject
 		grafana\provisioning\dashboards\dashboard_provider.yml = grafana\provisioning\dashboards\dashboard_provider.yml
 		grafana\dashboards\loan_broker_dashboard.json = grafana\dashboards\loan_broker_dashboard.json
-		grafana\provisioning\datasources\prometheus_ds.yml = grafana\provisioning\datasources\prometheus_ds.yml
 		grafana\dashboards\loan_broker_demo_dashboard.json = grafana\dashboards\loan_broker_demo_dashboard.json
 		grafana\dashboards\nservicebus_dashboard.json = grafana\dashboards\nservicebus_dashboard.json
+		grafana\provisioning\datasources\prometheus_ds.yml = grafana\provisioning\datasources\prometheus_ds.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Credit Bureau Lambda", "Credit Bureau Lambda", "{D36B8890-4384-462D-86B9-156627A9B7D3}"
@@ -49,8 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailSender", "EmailSender\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{69E2DB2E-619F-41FA-B4D9-9304803A7C17}"
 	ProjectSection(SolutionItems) = preProject
-		..\docker-compose.yml = ..\docker-compose.yml
+		..\env\asb.env = ..\env\asb.env
 		..\env\aws.env = ..\env\aws.env
+		..\docker-compose.yml = ..\docker-compose.yml
 		..\env\metrics.env = ..\env\metrics.env
 		..\env\service-platform.env = ..\env\service-platform.env
 		..\env\asb.env = ..\env\asb.env
@@ -60,6 +61,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", 
 	ProjectSection(SolutionItems) = preProject
 		prometheus\prometheus.yml = prometheus\prometheus.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonMessages", "CommonMessages\CommonMessages.csproj", "{92987706-ED17-4F30-820A-B7266CF5423B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,6 +110,10 @@ Global
 		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD9296A8-0CE1-450B-AB1A-B103A6CB7EA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92987706-ED17-4F30-820A-B7266CF5423B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92987706-ED17-4F30-820A-B7266CF5423B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92987706-ED17-4F30-820A-B7266CF5423B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92987706-ED17-4F30-820A-B7266CF5423B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

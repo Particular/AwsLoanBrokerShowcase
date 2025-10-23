@@ -4,6 +4,7 @@ using ClientMessages;
 using LoanBroker.Messages;
 using LoanBroker.Services;
 using Microsoft.Extensions.Logging;
+using CommonMessages;
 
 namespace LoanBroker.Policies;
 
@@ -26,9 +27,11 @@ class BestLoanPolicy(
             message.NumberOfYears,
             message.Amount
         ), publishOptions);
+
         Data.RequestSentToBanks = DateTime.UtcNow;
         var requestExpiration = TimeSpan.FromSeconds(10);
-        await RequestTimeout<MaxTimeout>(context, requestExpiration);
+        var timeoutMessage = new MaxTimeout { RequestId = message.RequestId };
+        await RequestTimeout(context, requestExpiration, timeoutMessage);
         logger.LogInformation($"Quote, with request ID {message.RequestId}, requested to banks. The request expires in {requestExpiration}");
     }
 
@@ -110,7 +113,10 @@ class BestLoanData : ContainSagaData
     public List<string> RejectedBy { get; set; } = [];
 }
 
-record MaxTimeout;
+public class MaxTimeout : ILoanMessage
+{
+    public required string RequestId { get; set; }
+}
 
 static class Tags
 {
