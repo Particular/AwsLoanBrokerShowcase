@@ -23,4 +23,8 @@
       <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
     </ItemGroup>
 
+    <ItemGroup Label="TODO: Temporary fix to fix an AWS SDK vulnerability. To be removed once a new version of the transport if released">
+      <PackageReference Include="AWSSDK.Core" Version="4.0.3.8" />
+    </ItemGroup>
+
 </Project>
