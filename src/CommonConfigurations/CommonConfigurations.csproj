@@ -10,7 +10,7 @@
       <PackageReference Include="NLog.Extensions.Logging" Version="6.1.0" />
       <PackageReference Include="NServiceBus" Version="9.2.8" />
       <PackageReference Include="NServiceBus.AmazonSQS" Version="8.1.0" />
-      <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="3.0.0" />
+      <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="3.0.1" />
       <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.1" />
       <PackageReference Include="NServiceBus.Extensions.Logging" Version="3.0.1" />
       <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="3.0.2" />
