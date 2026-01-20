@@ -106,8 +106,6 @@ The example comes with the [Particular platform](https://docs.particular.net/pla
 
 Monitoring information is available in [ServicePulse](http://localhost:9999).
 
-[ServiceInsight](https://docs.particular.net/serviceinsight/) visualizes message flow in Windows environments. The latest version can be downloaded from the [Particular website](https://particular.net/serviceinsight).
-
 ## Telemetry
 
 NServiceBus supports OpenTelemetry. Starting with NServiceBus 9.1, the following metrics are available:
