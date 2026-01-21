@@ -14,7 +14,7 @@
       <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.1" />
       <PackageReference Include="NServiceBus.Extensions.Logging" Version="3.0.1" />
       <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="3.0.2" />
-      <PackageReference Include="NServiceBus.SagaAudit" Version="5.0.2" />
+      <PackageReference Include="NServiceBus.SagaAudit" Version="6.0.0" />
       <PackageReference Include="OpenTelemetry" Version="1.15.0" />
       <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.14.0" />
       <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.6.0-rc.1" />
