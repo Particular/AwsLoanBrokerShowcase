@@ -24,9 +24,9 @@ Migration of the AWS LoanBroker example to use Azure-equivalent services running
 |-------------|------------------|----------------|
 | **SQS** | Azure Service Bus | Service Bus Emulator (Docker) |
 | **DynamoDB** | SQL Server | SQL Server 2022 (Docker) |
-| **Lambda** | Azure Functions | Azure Functions in container |
+| **Lambda** | Azure Functions | Azure Functions (Docker) |
 | **LocalStack** | Native emulators | Service Bus Emulator + Azurite |
-| **CloudWatch** | Prometheus/Grafana | Existing containers (keep) |
+| **CloudWatch** | Seq | Seq (Docker) |
 | **X-Ray** | Jaeger | Existing container (keep) |
 
 ### NServiceBus Changes
@@ -111,7 +111,7 @@ Migration of the AWS LoanBroker example to use Azure-equivalent services running
 - .NET 10 SDK
 - Docker Desktop (8GB+ RAM)
 - Docker Compose v2+
-- Available ports: 1433, 5672, 10000-10002, 5100, 9090, 3000, 16686, 33333, 9999
+- Available ports: 1433, 5672, 10000-10002, 5100, 5341, 16686, 33333, 9999
 
 ---
 
