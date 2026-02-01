@@ -1,0 +1,15 @@
+﻿{
+  "UserConfig": {
+    "Logging": {
+      "Type": "Console"
+    },
+    "NamespaceConfig": [
+      {
+        "Name": "loanbroker-local",
+        "Properties": {
+          "MessagingSku": "Premium"
+        }
+      }
+    ]
+  }
+}
