@@ -1,15 +1,42 @@
-# AWS LoanBroker example
+# Azure LoanBroker Showcase (Migrated from AWS)
 
-The AWS LoanBroker example is a basic loan broker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
+**Version:** 2.0 - February 2026  
+**Status:** ✅ Production Ready on .NET 10
 
-> [!Note]
-> The showcase, by default, runs locally using LocalStack, and no AWS account is needed. The [how to run the example](#how-to-run-the-example) section details how to configure the solution to connect to AWS services.
+The Azure LoanBroker showcase is a comprehensive loan broker implementation following the [structure presented](https://www.enterpriseintegrationpatterns.com/patterns/messaging/ComposedMessagingExample.html) by [Gregor Hohpe](https://www.enterpriseintegrationpatterns.com/gregor.html) in his [Enterprise Integration Pattern](https://www.enterpriseintegrationpatterns.com/) book.
+
+> [!IMPORTANT]
+> **This showcase has been migrated from AWS to Azure services!**
+> - ✅ All services run on **.NET 10**
+> - ✅ **Azure Service Bus Emulator** (replaces AWS SQS)
+> - ✅ **SQL Server 2022** (replaces DynamoDB)
+> - ✅ **Azure Functions** (replaces Lambda)
+> - ✅ **NServiceBus 10** with Azure transports
+> - ✅ Everything runs **locally in Docker** - no cloud account needed!
+
+## 🎯 Quick Start
+
+```bash
+# Windows
+.\start.ps1
+
+# Linux/Mac
+./start.sh
+
+# Or manually
+docker-compose up -d
+docker-compose up client
+```
+
+**See [README-SETUP.md](README-SETUP.md) for detailed setup instructions.**
+
+---
 
 This is the logical architecture:
 
 ![Logical architecture](https://github.com/user-attachments/assets/5f2ef8b0-c7d4-4cef-ab7b-a8561cbd3282)
 
-And this is how that is represented using AWS services:
+And this is how that is represented using Azure services running locally:
 
 ![AWS Architectural Diagram](img/architecture-view.png)
 
