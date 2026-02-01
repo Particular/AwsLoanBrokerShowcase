@@ -1,31 +1,24 @@
-﻿using System.Net.Http.Json;
+﻿﻿using System.Net.Http.Json;
 using ClientMessages;
 
 namespace LoanBroker.Services;
 
 public class HTTPCreditScoreProvider : ICreditScoreProvider
 {
-    readonly string lambdaUrl = Environment.GetEnvironmentVariable("LAMBDA_URL")
-                                ?? "https://score.lambda-url.us-east-1.localhost.localstack.cloud:4566";
+    readonly string functionUrl = Environment.GetEnvironmentVariable("CREDIT_BUREAU_URL")
+                                ?? "http://creditbureau:8080/api/score";
 
     public async Task<int> Score(Prospect prospect, string requestId)
     {
-        using var httpClient = CreateHttpClient();
+        using var httpClient = new HttpClient();
         var requestRecord = new ScoreRequest(prospect.SSN, requestId);
-        var httpResponseMessage = await httpClient.PostAsync(lambdaUrl, JsonContent.Create(requestRecord));
+        var httpResponseMessage = await httpClient.PostAsync(functionUrl, JsonContent.Create(requestRecord));
+        httpResponseMessage.EnsureSuccessStatusCode();
         var scoreResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ScoreResponse>();
-        return scoreResponse!.score;
-    }
-
-    HttpClient CreateHttpClient()
-    {
-        var handler = new HttpClientHandler();
-        // Workaround for certification validation failing on Linux
-        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-        return new HttpClient(handler);
+        return scoreResponse!.Score;
     }
 }
 
-record ScoreRequest(string SSN, string requestId);
+record ScoreRequest(string SSN, string RequestId);
 
-record ScoreResponse(int score);
+record ScoreResponse(int Score, int History, string SSN, string RequestId);

@@ -44,6 +44,19 @@ services:
     networks:
       ls:
         ipv4_address: 10.0.2.22
+  creditbureau:
+    profiles: ['', infrastructure]
+    build:
+      context: ./
+      dockerfile: ./src/CreditBureau/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      AzureWebJobsStorage: ""
+      FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated"
+    networks:
+      ls:
+        ipv4_address: 10.0.2.23
   loan-broker:
     profiles: ['']
     build:
@@ -56,6 +69,8 @@ services:
       servicebus-emulator:
         condition: service_started
       sqlserver:
+        condition: service_started
+      creditbureau:
         condition: service_started
       servicepulse:
         condition: service_started
