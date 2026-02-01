@@ -1,0 +1,20 @@
+  Determining projects to restore...
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102: Unable to find package Microsoft.Azure.Functions.Worker.Extensions.Http with version (>= 4.0.0) [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Found 6 version(s) in nuget.org [ Nearest version: 3.3.0 ] [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Found 0 version(s) in particular packages [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Versions from C:\Program Files\dotnet\library-packs were not considered [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Versions from Microsoft Visual Studio Offline Packages were not considered [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+  Failed to restore C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj (in 1.23 sec).
+  10 of 11 projects are up-to-date for restore.
+
+Build FAILED.
+
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102: Unable to find package Microsoft.Azure.Functions.Worker.Extensions.Http with version (>= 4.0.0) [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Found 6 version(s) in nuget.org [ Nearest version: 3.3.0 ] [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Found 0 version(s) in particular packages [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Versions from C:\Program Files\dotnet\library-packs were not considered [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+C:\Repos-Particular\AzureLoanBrokerShowcase\src\CreditBureau\CreditBureau.csproj : error NU1102:   - Versions from Microsoft Visual Studio Offline Packages were not considered [C:\Repos-Particular\AzureLoanBrokerShowcase\src\AwsLoanBrokerSample.sln]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:01.97
