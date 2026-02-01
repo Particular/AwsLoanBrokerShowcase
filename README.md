@@ -56,21 +56,34 @@ The example also ships the following monitoring services:
 - A Prometheus instance to collect, store, and query raw metrics data.
 - A Grafana instance with three different metrics dashboards using Prometheus as the data source.
 - A Jaeger instance to visualize OpenTelemetry traces.
-- AWS Distro for OpenTelemetry collector (ADOT) to collect and export metrics and traces to various destinations.
-
-The example also exports metrics and traces to AWS CloudWatch and XRay.
+- OpenTelemetry collector (ADOT) to collect and export metrics and traces to various destinations.
 
 ## Requirements
 
-- .NET 8 or greater
-- Docker
-- Docker Compose
+- .NET 10 SDK
+- Docker Desktop (8GB+ RAM recommended)
+- Docker Compose v2+
 
 ## How to run the example
 
 The simplest way to run the example is using Docker for both the endpoints and the infrastructure.
-The client application, the loan broker service, the e-mail sender, and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability.
+The client application, the loan broker service, the e-mail sender, and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, Azure Service Bus Emulator for messaging, SQL Server for persistence, and the additional containers needed for enabling OpenTelemetry observability.
 
+### Quick Start
+
+Use the automated startup scripts:
+
+**Windows:**
+```powershell
+.\start.ps1
+```
+
+**Linux/Mac:**
+```bash
+./start.sh
+```
+
+**Or manually:**
 To run the complete example in Docker, execute the following command from the root folder:
 
 ```shell
@@ -94,13 +107,8 @@ To run the solution without rebuilding container images, execute the following c
 docker compose up -d
 ```
 
-> [!Note]
-> To run transport and persistence using AWS services instead of LocalStack:
-> - remove the `AWS_ENDPOINT_URL` variable from the [aws.env](env/aws.env) file
-> - ensure the following environment variables are defined with appropriate values:
->   - `AWS_ACCESS_KEY_ID`
->   - `AWS_SECRET_ACCESS_KEY`
->   - `AWS_REGION`
+> [!TIP]
+> For detailed instructions and troubleshooting, see [README-SETUP.md](README-SETUP.md)
 
 ### Running endpoints from the IDE
 

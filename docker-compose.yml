@@ -245,9 +245,18 @@ services:
     image: docker.io/particular/servicecontrol-ravendb:latest
     ports:
       - "8080:8080"
+    environment:
+      - RAVEN_ARGS=--Setup.Mode=None
+      - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
     volumes:
       - servicecontrol-db:/var/lib/ravendb/data
       - servicecontrol-db-config:/var/lib/ravendb/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/studio/index.html || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - ls
   servicecontrol-audit:
