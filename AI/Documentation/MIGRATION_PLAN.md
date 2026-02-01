@@ -81,7 +81,7 @@ Migration of the AWS LoanBroker example to use Azure-equivalent services running
 - ✅ Update `global.json` to .NET 10 SDK
 - ✅ Update all `.csproj` files to `net10.0`
 - ✅ Update all Dockerfiles to .NET 10 base images
-- Update NuGet packages
+- ✅ Update NuGet packages
 - Run tests
 
 ### Phase 2: Azure Service Bus Emulator
