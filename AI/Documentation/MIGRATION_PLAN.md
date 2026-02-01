@@ -1,4 +1,4 @@
-﻿﻿### Phase 5: Integration & Testing
+﻿﻿﻿### Phase 5: Integration & Testing
 - Complete docker-compose.local.yml with all services
 - Update ServiceControl/ServicePulse configurations
 - Test complete message flow
@@ -91,12 +91,12 @@ Migration of the AWS LoanBroker example to use Azure-equivalent services running
 - ✅ Update connection strings to point to emulator
 - ✅ Update endpoint configurations
 
-### Phase 3: SQL Server Persistence
-- Replace `NServiceBus.Persistence.DynamoDB` with `NServiceBus.Persistence.Sql`
-- Add SQL Server 2022 container to docker-compose
-- Configure SQL persistence in SharedConventions
-- Enable installers for schema creation
-- Update connection strings
+### Phase 3: SQL Server Persistence ✅
+- ✅ Replace `NServiceBus.Persistence.DynamoDB` with `NServiceBus.Persistence.Sql`
+- ✅ Add SQL Server 2022 container to docker-compose
+- ✅ Configure SQL persistence in SharedConventions
+- ✅ Enable installers for schema creation
+- ✅ Update connection strings
 
 ### Phase 4: Credit Bureau Migration
 - Create Azure Functions project (.NET 10 Isolated)
