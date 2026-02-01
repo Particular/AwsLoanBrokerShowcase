@@ -59,6 +59,8 @@ static class OpenTelemetryExtensions
             .Build();
 
         endpointConfiguration.EnableOpenTelemetry();
+
+        endpointConfiguration.EnableOpenTelemetry();
     }
 
     const string OtlpMetricsDefaultUrl = "http://localhost:5318/v1/metrics";
