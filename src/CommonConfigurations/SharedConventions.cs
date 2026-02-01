@@ -23,9 +23,13 @@ public static class SharedConventions
         var transport = new AzureServiceBusTransport(connectionString, TopicTopology.Default);
         var routing = endpointConfiguration.UseTransport(transport);
 
-        // Configure DynamoDB Persistence (will be replaced in Phase 3)
-        var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
-        persistence.Sagas().UsePessimisticLocking = true;
+        // Configure SQL Server Persistence
+        var sqlConnectionString = Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING")
+            ?? "Server=sqlserver;Database=NServiceBus;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;";
+
+        var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+        persistence.SqlDialect<SqlDialect.MsSqlServer>();
+        persistence.ConnectionBuilder(() => new Microsoft.Data.SqlClient.SqlConnection(sqlConnectionString));
 
         SetCommonEndpointSettings(endpointConfiguration);
 

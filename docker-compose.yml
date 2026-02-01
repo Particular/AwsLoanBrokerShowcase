@@ -18,6 +18,32 @@ services:
     networks:
       ls:
         ipv4_address: 10.0.2.20
+  servicebus-emulator:
+    profiles: ['', infrastructure]
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    ports:
+      - "5672:5672"
+    environment:
+      ACCEPT_EULA: Y
+    volumes:
+      - ./servicebus-config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
+    networks:
+      ls:
+        ipv4_address: 10.0.2.21
+  sqlserver:
+    profiles: ['', infrastructure]
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: YourStrong@Passw0rd
+      MSSQL_PID: Developer
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      ls:
+        ipv4_address: 10.0.2.22
   loan-broker:
     profiles: ['']
     build:
@@ -25,14 +51,14 @@ services:
       dockerfile: ./src/LoanBroker/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/azure.env
     depends_on:
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
+      sqlserver:
+        condition: service_started
       servicepulse:
         condition: service_started
-    dns:
-      - 10.0.2.20
     networks:
       - ls
   bank1:
@@ -42,14 +68,14 @@ services:
       dockerfile: ./src/Bank1Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/azure.env
     depends_on:
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
+      sqlserver:
+        condition: service_started
       servicepulse:
         condition: service_started
-    dns:
-      - 10.0.2.20
     networks:
       - ls
   bank2:
@@ -59,14 +85,14 @@ services:
       dockerfile: ./src/Bank2Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/azure.env
     depends_on:
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
+      sqlserver:
+        condition: service_started
       servicepulse:
         condition: service_started
-    dns:
-      - 10.0.2.20
     networks:
       - ls
   bank3:
@@ -76,14 +102,14 @@ services:
       dockerfile: ./src/Bank3Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/azure.env
     depends_on:
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
+      sqlserver:
+        condition: service_started
       servicepulse:
         condition: service_started
-    dns:
-      - 10.0.2.20
     networks:
       - ls
   email-sender:
@@ -93,14 +119,14 @@ services:
       dockerfile: ./src/EmailSender/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/azure.env
     depends_on:
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
+      sqlserver:
+        condition: service_started
       servicepulse:
         condition: service_started
-    dns:
-      - 10.0.2.20
     networks:
       - ls
   client:
@@ -110,16 +136,16 @@ services:
       dockerfile: ./src/Client/Dockerfile
     env_file:
       - env/metrics.env
-      - env/aws.env
+      - env/azure.env
     depends_on:
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
+      sqlserver:
+        condition: service_started
       servicepulse:
         condition: service_started
       loan-broker:
         condition: service_started
-    dns:
-      - 10.0.2.20
     networks:
       - ls
     tty: true
@@ -166,7 +192,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/amazon/aws-otel-collector
     env_file:
-      - env/aws.env
+      - env/azure.env
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
@@ -180,7 +206,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol:latest
     env_file:
-      - env/aws.env
+      - env/azure.env
       - env/service-platform.env
     ports:
       - "33333:33333"
@@ -195,10 +221,8 @@ services:
         condition: service_healthy
       servicecontrol-audit:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
-    dns:
-      - 10.0.2.20
+      servicebus-emulator:
+        condition: service_started
     networks:
       - ls
   servicecontrol-db:
@@ -215,7 +239,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol-audit:latest
     env_file:
-      - env/aws.env
+      - env/azure.env
       - env/service-platform.env
     ports:
       - "44444:44444"
@@ -226,27 +250,23 @@ services:
     depends_on:
       servicecontrol-db:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
-    dns:
-      - 10.0.2.20
+      servicebus-emulator:
+        condition: service_started
     networks:
       - ls
   servicecontrol-monitoring:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol-monitoring:latest
     env_file:
-      - env/aws.env
+      - env/azure.env
       - env/service-platform.env
     restart: unless-stopped
     command: --setup-and-run
     ports:
       - "33633:33633"
     depends_on:
-      localstack:
-        condition: service_healthy
-    dns:
-      - 10.0.2.20
+      servicebus-emulator:
+        condition: service_started
     networks:
       - ls
   servicepulse:
@@ -263,8 +283,8 @@ services:
         condition: service_healthy
       servicecontrol-monitoring:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
+      servicebus-emulator:
+        condition: service_started
     networks:
       - ls
 networks:
@@ -279,3 +299,4 @@ volumes:
   jaeger-data:
   servicecontrol-db:
   servicecontrol-db-config:
+  sqlserver-data:

@@ -84,12 +84,12 @@ Migration of the AWS LoanBroker example to use Azure-equivalent services running
 - ✅ Update NuGet packages
 - ✅ Run tests
 
-### Phase 2: Azure Service Bus Emulator
+### Phase 2: Azure Service Bus Emulator ✅
 - ✅ Replace `NServiceBus.AmazonSQS` with `NServiceBus.Transport.AzureServiceBus`
-- Create `servicebus-config.json` for emulator
-- Add Service Bus Emulator container to docker-compose
-- Update connection strings to point to emulator
-- Update endpoint configurations
+- ✅ Create `servicebus-config.json` for emulator
+- ✅ Add Service Bus Emulator container to docker-compose
+- ✅ Update connection strings to point to emulator
+- ✅ Update endpoint configurations
 
 ### Phase 3: SQL Server Persistence
 - Replace `NServiceBus.Persistence.DynamoDB` with `NServiceBus.Persistence.Sql`

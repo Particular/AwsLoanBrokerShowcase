@@ -10,7 +10,8 @@
       <PackageReference Include="NLog.Extensions.Logging" Version="6.1.1" />
       <PackageReference Include="NServiceBus" Version="10.0.0" />
       <PackageReference Include="NServiceBus.Transport.AzureServiceBus" Version="6.0.0" />
-      <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="4.0.0" />
+      <PackageReference Include="NServiceBus.Persistence.Sql" Version="8.1.3" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
       <PackageReference Include="NServiceBus.Extensions.Hosting" Version="4.0.0" />
       <PackageReference Include="NServiceBus.Extensions.Logging" Version="4.0.0" />
       <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="4.0.0" />
