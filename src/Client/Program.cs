@@ -4,7 +4,7 @@ using CommonConfigurations;
 using Microsoft.Extensions.Hosting;
 
 var app = Host.CreateApplicationBuilder(args)
-    .ConfigureAwsNServiceBusEndpoint("Client", c => c.Routing.RouteToEndpoint(typeof(FindBestLoan), "LoanBroker"))
+    .ConfigureAzureNServiceBusEndpoint("Client", c => c.Routing.RouteToEndpoint(typeof(FindBestLoan), "LoanBroker"))
     .Build();
 
 await app.StartAsync();

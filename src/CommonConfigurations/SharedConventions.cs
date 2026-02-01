@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿﻿using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
@@ -6,21 +6,24 @@ using NServiceBus.Logging;
 
 namespace CommonConfigurations;
 
-public record Customizations(EndpointConfiguration EndpointConfiguration, RoutingSettings Routing);
+public record Customizations(EndpointConfiguration EndpointConfiguration, object Routing);
 
 public static class SharedConventions
 {
-    public static HostApplicationBuilder ConfigureAwsNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
+    public static HostApplicationBuilder ConfigureAzureNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
     {
         ConfigureMicrosoftLoggingIntegration();
 
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 
-        // Configure SQS Transport
-        var transport = new SqsTransport();
+        // Configure Azure Service Bus Transport
+        var connectionString = Environment.GetEnvironmentVariable("AZURE_SERVICE_BUS_CONNECTION_STRING")
+            ?? "Endpoint=sb://127.0.0.1;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;";
+
+        var transport = new AzureServiceBusTransport(connectionString, TopicTopology.Default);
         var routing = endpointConfiguration.UseTransport(transport);
 
-        // Configure DynamoDB Persistence
+        // Configure DynamoDB Persistence (will be replaced in Phase 3)
         var persistence = endpointConfiguration.UsePersistence<DynamoPersistence>();
         persistence.Sagas().UsePessimisticLocking = true;
 
