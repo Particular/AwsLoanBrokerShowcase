@@ -1,15 +1,58 @@
 ﻿{
   "UserConfig": {
+    "Namespaces": [
+      {
+        "Name": "sbemulatorns",
+        "Queues": [
+          {
+            "Name": "error",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "audit",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "error.log",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "audit.log",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "particular.monitoring",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "particular.servicecontrol",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "particular.servicecontrol.audit",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "particular.servicecontrol.errors",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "particular.servicecontrol.audit.errors",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "particular.servicecontrol.staging",
+            "MaxDeliveryCount": 10
+          },
+          {
+            "Name": "servicecontrol.throughputdata",
+            "MaxDeliveryCount": 10
+          }
+        ]
+      }
+    ],
     "Logging": {
       "Type": "Console"
-    },
-    "NamespaceConfig": [
-      {
-        "Name": "loanbroker-local",
-        "Properties": {
-          "MessagingSku": "Premium"
-        }
-      }
-    ]
+    }
   }
 }

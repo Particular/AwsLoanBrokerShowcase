@@ -18,14 +18,14 @@ public static class SharedConventions
 
         // Configure Azure Service Bus Transport
         var connectionString = Environment.GetEnvironmentVariable("AZURE_SERVICE_BUS_CONNECTION_STRING")
-            ?? "Endpoint=sb://127.0.0.1;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;";
+            ?? throw new InvalidOperationException("AZURE_SERVICE_BUS_CONNECTION_STRING environment variable is not set.");
 
         var transport = new AzureServiceBusTransport(connectionString, TopicTopology.Default);
         var routing = endpointConfiguration.UseTransport(transport);
 
         // Configure SQL Server Persistence
         var sqlConnectionString = Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING")
-            ?? "Server=sqlserver;Database=NServiceBus;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;";
+            ?? throw new InvalidOperationException("SQL_CONNECTION_STRING environment variable is not set.");
 
         var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
         persistence.SqlDialect<SqlDialect.MsSqlServer>();

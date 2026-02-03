@@ -16,47 +16,57 @@ services:
       - localstack:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      ls:
-        ipv4_address: 10.0.2.20
+      - ls
   servicebus-emulator:
     profiles: ['', infrastructure]
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
     ports:
       - "5672:5672"
+      - "80:80"
     environment:
       ACCEPT_EULA: Y
+      SQL_SERVER: sqlserver
+      MSSQL_SA_PASSWORD: YourStrong@Passw0rd
+      EMULATOR_HTTP_PORT: 80
     volumes:
       - ./servicebus-config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
+    depends_on:
+      sqlserver:
+        condition: service_healthy
     networks:
-      ls:
-        ipv4_address: 10.0.2.21
+      - ls
   sqlserver:
     profiles: ['', infrastructure]
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest
     ports:
       - "1433:1433"
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: YourStrong@Passw0rd
+      MSSQL_SA_PASSWORD: YourStrong@Passw0rd
       MSSQL_PID: Developer
+      MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
     volumes:
       - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -C -Q "SELECT 'Healthcheck OK'"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
     networks:
-      ls:
-        ipv4_address: 10.0.2.22
+      - ls
   creditbureau:
     profiles: ['', infrastructure]
     build:
       context: ./
       dockerfile: ./src/CreditBureau/Dockerfile
     ports:
-      - "8080:8080"
+      - "7071:8080"
     environment:
       AzureWebJobsStorage: ""
       FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated"
     networks:
-      ls:
-        ipv4_address: 10.0.2.23
+      - ls
   loan-broker:
     profiles: ['']
     build:
