@@ -1,11 +1,22 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Client": {
+    "EmailSender": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "EmailSender (LocalStack env)": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "AWS_ENDPOINT_URL": "http://localhost.localstack.cloud:4566",
+        "AWS_ACCESS_KEY_ID": "demo",
+        "AWS_SECRET_ACCESS_KEY": "demo",
+        "AWS_REGION": "us-east-1"
       }
     }
   }
