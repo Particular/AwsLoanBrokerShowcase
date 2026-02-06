@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Client.Handlers;
 
+[Handler]
 public class BestLoanFoundHandler(ILogger<BestLoanFoundHandler> logger) : IHandleMessages<BestLoanFound>
 {
     public Task Handle(BestLoanFound message, IMessageHandlerContext context)

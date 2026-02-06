@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LoanBroker.Handlers;
 
+[Handler]
 public class CreditScoreEnricher(ILogger<CreditScoreEnricher> logger,
     ICreditScoreProvider creditScoreProvider) : IHandleMessages<FindBestLoan>
 {

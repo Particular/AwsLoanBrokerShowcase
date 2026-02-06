@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Bank1Adapter.Handlers;
 
+[Handler]
 public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHandleMessages<QuoteRequested>
 {
     const string BankIdentifier = "Bank1";
