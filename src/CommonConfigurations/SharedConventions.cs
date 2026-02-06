@@ -3,10 +3,9 @@ using NLog.Extensions.Logging;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
 
-
 namespace CommonConfigurations;
 
-public record Customizations(EndpointConfiguration EndpointConfiguration, RoutingSettings Routing);
+public record Customizations(EndpointConfiguration EndpointConfiguration, RoutingSettings Routing, HandlerRegistry Handlers);
 
 public static class SharedConventions
 {
@@ -27,7 +26,7 @@ public static class SharedConventions
         SetCommonEndpointSettings(endpointConfiguration);
 
         // Endpoint-specific customization
-        customize?.Invoke(new Customizations(endpointConfiguration, routing));
+        customize?.Invoke(new Customizations(endpointConfiguration, routing, endpointConfiguration.Handlers));
 
         builder.UseNServiceBus(endpointConfiguration);
         return builder;
@@ -44,6 +43,9 @@ public static class SharedConventions
         endpointConfiguration.EnableInstallers();
         endpointConfiguration.EnableOpenTelemetryMetrics();
         endpointConfiguration.EnableOpenTelemetryTracing();
+
+        var scanner = endpointConfiguration.AssemblyScanner();
+        scanner.Disable = true;
 
         endpointConfiguration.ConnectToServicePlatform(new ServicePlatformConnectionConfiguration
         {

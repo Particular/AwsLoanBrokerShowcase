@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Bank3Adapter.Handlers;
 
+[Handler]
 public class QuoteRequestedHandler(ILogger<QuoteRequestedHandler> logger) : IHandleMessages<QuoteRequested>
 {
     static readonly Random Random = new();

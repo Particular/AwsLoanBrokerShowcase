@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EmailSender.Handlers;
 
+[Handler]
 public class EmailHandler(ILogger<EmailHandler> logger) : IHandleMessages<BestLoanFound>
 {
     public Task Handle(BestLoanFound message, IMessageHandlerContext context)

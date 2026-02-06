@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Client.Handlers;
 
+[Handler]
 public class QuoteRequestRefusedHandler(ILogger<QuoteRequestRefusedHandler> logger) : IHandleMessages<QuoteRequestRefused>
 {
     public Task Handle(QuoteRequestRefused message, IMessageHandlerContext context)
