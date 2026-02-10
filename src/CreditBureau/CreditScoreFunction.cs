@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -22,48 +23,64 @@ public class CreditScoreFunction
 
     [Function("score")]
     public async Task<HttpResponseData> Score(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
+        FunctionContext context)
     {
         _logger.LogInformation("Credit score request received");
 
-        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        var scoreRequest = JsonSerializer.Deserialize<ScoreRequest>(requestBody, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        ScoreRequest? scoreRequest = null;
 
-        if (scoreRequest == null)
+        if (context.Items.TryGetValue(RequestLoggingMiddleware.BufferedBodyBytesKey, out var bufferedObj) &&
+            bufferedObj is byte[] bufferedBytes)
         {
-            var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
-            await badRequest.WriteAsJsonAsync(new { error = "Invalid request body" });
-            return badRequest;
-        }
+            _logger.LogInformation("Reading request body from FunctionContext buffered bytes: {Length}", bufferedBytes.Length);
 
-        if (SsnRegex.IsMatch(scoreRequest.SSN))
-        {
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            var scoreResponse = new ScoreResponse
+            try
             {
-                SSN = scoreRequest.SSN,
-                Score = GetRandomInt(MinScore, MaxScore),
-                History = GetRandomInt(1, 30),
-                RequestId = scoreRequest.RequestId
-            };
-
-            await response.WriteAsJsonAsync(scoreResponse);
-            return response;
+                scoreRequest = JsonSerializer.Deserialize<ScoreRequest>(bufferedBytes);
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogWarning(ex, "Failed to deserialize buffered request body as ScoreRequest");
+            }
         }
         else
         {
+            scoreRequest = await req.ReadFromJsonAsync<ScoreRequest>();
+        }
+
+        if (scoreRequest is null || string.IsNullOrEmpty(scoreRequest.SSN))
+        {
+            var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
+            await badRequest.WriteAsJsonAsync(new { error = "Invalid request body or missing SSN" });
+            return badRequest;
+        }
+
+        if (!SsnRegex.IsMatch(scoreRequest.SSN))
+        {
             var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+
             await badResponse.WriteAsJsonAsync(new
             {
                 SSN = scoreRequest.SSN,
                 RequestId = scoreRequest.RequestId,
                 Error = "Invalid SSN format"
             });
+
             return badResponse;
         }
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+
+        var scoreResponse = new ScoreResponse(
+            GetRandomInt(MinScore, MaxScore),
+            GetRandomInt(1, 30),
+            scoreRequest.SSN,
+            scoreRequest.RequestId);
+
+        await response.WriteAsJsonAsync(scoreResponse);
+
+        return response;
     }
 
     private static int GetRandomInt(int min, int max)
@@ -72,16 +89,12 @@ public class CreditScoreFunction
     }
 }
 
-public record ScoreRequest
-{
-    public string SSN { get; init; } = string.Empty;
-    public string RequestId { get; init; } = string.Empty;
-}
+public record ScoreRequest(
+    [property: JsonPropertyName("ssn")] string SSN,
+    [property: JsonPropertyName("requestId")] string RequestId);
 
-public record ScoreResponse
-{
-    public string SSN { get; init; } = string.Empty;
-    public int Score { get; init; }
-    public int History { get; init; }
-    public string RequestId { get; init; } = string.Empty;
-}
+public record ScoreResponse(
+    [property: JsonPropertyName("score")] int Score,
+    [property: JsonPropertyName("history")] int History,
+    [property: JsonPropertyName("SSN")] string SSN,
+    [property: JsonPropertyName("request_id")] string RequestId);

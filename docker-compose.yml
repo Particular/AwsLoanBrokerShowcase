@@ -34,7 +34,7 @@ services:
       sqlserver:
         condition: service_healthy
     networks:
-      - ls
+      ls:
   sqlserver:
     profiles: ['', infrastructure]
     image: mcr.microsoft.com/mssql/server:2025-latest
@@ -47,16 +47,25 @@ services:
       MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
     volumes:
       - sqlserver-data:/var/opt/mssql
+      - ./src/sqlserver/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    command: >
+      bash -c "
+      /opt/mssql/bin/sqlservr &
+      sleep 30 &&
+      /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"IF DB_ID('NServiceBus') IS NULL CREATE DATABASE [NServiceBus];\" &&
+      wait
+      "
     healthcheck:
       test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -C -Q "SELECT 'Healthcheck OK'"
       interval: 5s
       timeout: 3s
       retries: 10
-      start_period: 15s
+      start_period: 40s
     networks:
-      - ls
+      - ls      
   creditbureau:
     profiles: ['', infrastructure]
+    image: creditbureau.tf689registry.azurecr.io:latest
     build:
       context: ./
       dockerfile: ./src/CreditBureau/Dockerfile
@@ -65,6 +74,8 @@ services:
     environment:
       AzureWebJobsStorage: ""
       FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated"
+      WEBSITES_PORT: "8080"
+      ASPNETCORE_URLS: "http://0.0.0.0:8080"
     networks:
       - ls
   loan-broker:
@@ -74,7 +85,7 @@ services:
       dockerfile: ./src/LoanBroker/Dockerfile
     env_file:
       - env/metrics.env
-      - env/azure.env
+      - env/azure-local.env
     depends_on:
       servicebus-emulator:
         condition: service_started
@@ -93,7 +104,7 @@ services:
       dockerfile: ./src/Bank1Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/azure.env
+      - env/azure-local.env
     depends_on:
       servicebus-emulator:
         condition: service_started
@@ -110,7 +121,7 @@ services:
       dockerfile: ./src/Bank2Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/azure.env
+      - env/azure-local.env
     depends_on:
       servicebus-emulator:
         condition: service_started
@@ -127,7 +138,7 @@ services:
       dockerfile: ./src/Bank3Adapter/Dockerfile
     env_file:
       - env/metrics.env
-      - env/azure.env
+      - env/azure-local.env
     depends_on:
       servicebus-emulator:
         condition: service_started
@@ -144,7 +155,7 @@ services:
       dockerfile: ./src/EmailSender/Dockerfile
     env_file:
       - env/metrics.env
-      - env/azure.env
+      - env/azure-local.env
     depends_on:
       servicebus-emulator:
         condition: service_started
@@ -159,9 +170,18 @@ services:
     build:
       context: ./
       dockerfile: ./src/Client/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      DOTNET_EnableDiagnostics: "1"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
     env_file:
       - env/metrics.env
-      - env/azure.env
+      - env/azure-local.env
     depends_on:
       servicebus-emulator:
         condition: service_started
@@ -217,7 +237,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/amazon/aws-otel-collector
     env_file:
-      - env/azure.env
+      - env/azure-local.env
     command: [ "--config=/etc/otel-agent-config.yaml" ]
     ports:
       - "13133:13133"     # adot health_check
@@ -231,7 +251,7 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol:latest
     env_file:
-      - env/azure.env
+      - env/azure-local.env
       - env/service-platform.env
     ports:
       - "33333:33333"
@@ -239,7 +259,7 @@ services:
       RAVENDB_CONNECTIONSTRING: http://servicecontrol-db:8080
       REMOTEINSTANCES: '[{"api_uri":"http://servicecontrol-audit:44444/api"}]'
       SERVICECONTROL_ALLOWMESSAGEEDITING: 'true'
-    command: --setup-and-run
+    command: --run
     restart: unless-stopped
     depends_on:
       servicecontrol-db:
@@ -273,13 +293,13 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol-audit:latest
     env_file:
-      - env/azure.env
+      - env/azure-local.env
       - env/service-platform.env
     ports:
       - "44444:44444"
     environment:
       RAVENDB_CONNECTIONSTRING: http://servicecontrol-db:8080
-    command: --setup-and-run
+    command: --run
     restart: unless-stopped
     depends_on:
       servicecontrol-db:
@@ -292,10 +312,10 @@ services:
     profiles: ['', infrastructure]
     image: docker.io/particular/servicecontrol-monitoring:latest
     env_file:
-      - env/azure.env
+      - env/azure-local.env
       - env/service-platform.env
     restart: unless-stopped
-    command: --setup-and-run
+    command: --run
     ports:
       - "33633:33633"
     depends_on:

@@ -1,54 +1,22 @@
-﻿{
+{
   "UserConfig": {
     "Namespaces": [
       {
         "Name": "sbemulatorns",
         "Queues": [
-          {
-            "Name": "error",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "audit",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "error.log",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "audit.log",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "particular.monitoring",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "particular.servicecontrol",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "particular.servicecontrol.audit",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "particular.servicecontrol.errors",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "particular.servicecontrol.audit.errors",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "particular.servicecontrol.staging",
-            "MaxDeliveryCount": 10
-          },
-          {
-            "Name": "servicecontrol.throughputdata",
-            "MaxDeliveryCount": 10
-          }
-        ]
+          {"Name": "error", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "audit", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "error.log", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "audit.log", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "particular.monitoring", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "particular.servicecontrol", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "particular.servicecontrol.audit", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "particular.servicecontrol.errors", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "particular.servicecontrol.audit.errors", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "particular.servicecontrol.staging", "Properties": {"MaxDeliveryCount": 10}},
+          {"Name": "servicecontrol.throughputdata", "Properties": {"MaxDeliveryCount": 10}}
+        ],
+        "Topics": []
       }
     ],
     "Logging": {

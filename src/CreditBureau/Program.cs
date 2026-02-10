@@ -1,7 +1,11 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using CreditBureau;
+using Microsoft.Extensions.Hosting;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureFunctionsWorkerDefaults(builder =>
+    {
+        builder.UseMiddleware<RequestLoggingMiddleware>();
+    })
     .Build();
 
 host.Run();

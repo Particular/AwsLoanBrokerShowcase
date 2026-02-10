@@ -1,9 +1,9 @@
-using Azure.Identity;
-using Microsoft.Extensions.Hosting;
+﻿﻿using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
+using NServiceBus.Configuration.AdvancedExtensibility;
 using NServiceBus.Extensions.Logging;
 using NServiceBus.Logging;
-using NServiceBus.Transport;
+
 
 namespace CommonConfigurations;
 
@@ -11,37 +11,26 @@ public record Customizations(EndpointConfiguration EndpointConfiguration, object
 
 public static class SharedConventions
 {
-    public static HostApplicationBuilder ConfigureAzureNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName,
-        Action<Customizations>? customize = null)
+    public static HostApplicationBuilder ConfigureAzureNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
     {
         ConfigureMicrosoftLoggingIntegration();
 
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 
         // Configure Azure Service Bus Transport
-        var connectionString = Environment.GetEnvironmentVariable("AZURE_SERVICE_BUS_CONNECTION_STRING");
+        var connectionString = Environment.GetEnvironmentVariable("AZURE_SERVICE_BUS_CONNECTION_STRING")
+            ?? throw new InvalidOperationException("AZURE_SERVICE_BUS_CONNECTION_STRING environment variable is not set.");
 
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+        //var settings = endpointConfiguration.GetSettings();
+        //settings.Set("NServiceBus.Raw.SetupInfrastructure", false);
 
-        var isFullyQualifiedConnectionString = !connectionString.Contains("sb://");
-
-        // Use custom transport for emulator compatibility
-        var transport = isFullyQualifiedConnectionString
-            ? new AzureServiceBusTransport(connectionString, new DefaultAzureCredential(), TopicTopology.Default)
-                {
-                    TransportTransactionMode = TransportTransactionMode.ReceiveOnly
-                }
-            : new AzureServiceBusTransport(connectionString, TopicTopology.Default)
-                {
-                    TransportTransactionMode = TransportTransactionMode.ReceiveOnly
-                };
+        var transport = new AzureServiceBusTransport(connectionString, TopicTopology.Default);
 
         var routing = endpointConfiguration.UseTransport(transport);
 
         // Configure SQL Server Persistence
-        var sqlConnectionString = Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING");
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(sqlConnectionString);
+        var sqlConnectionString = Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING")
+            ?? throw new InvalidOperationException("SQL_CONNECTION_STRING environment variable is not set.");
 
         var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
         persistence.SqlDialect<SqlDialect.MsSqlServer>();
@@ -53,9 +42,9 @@ public static class SharedConventions
         customize?.Invoke(new Customizations(endpointConfiguration, routing));
 
         builder.UseNServiceBus(endpointConfiguration);
-
         return builder;
     }
+
 
     static void SetCommonEndpointSettings(EndpointConfiguration endpointConfiguration)
     {
@@ -64,7 +53,7 @@ public static class SharedConventions
         endpointConfiguration.CustomDiagnosticsWriter((_, _) => Task.CompletedTask);
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
         endpointConfiguration.EnableOutbox();
-        endpointConfiguration.EnableInstallers();
+        //endpointConfiguration.EnableInstallers();
         endpointConfiguration.EnableOpenTelemetryMetrics();
         endpointConfiguration.EnableOpenTelemetryTracing();
 
@@ -73,12 +62,12 @@ public static class SharedConventions
             Heartbeats = new()
             {
                 Enabled = true,
-                HeartbeatsQueue = "Particular.ServiceControl",
+                HeartbeatsQueue = "Particular-ServiceControl",
             },
             CustomChecks = new()
             {
                 Enabled = true,
-                CustomChecksQueue = "Particular.ServiceControl"
+                CustomChecksQueue = "Particular-ServiceControl"
             },
             ErrorQueue = "error",
             SagaAudit = new()
@@ -94,7 +83,7 @@ public static class SharedConventions
             Metrics = new()
             {
                 Enabled = true,
-                MetricsQueue = "Particular.Monitoring",
+                MetricsQueue = "Particular-Monitoring",
                 Interval = TimeSpan.FromSeconds(1)
             }
         });

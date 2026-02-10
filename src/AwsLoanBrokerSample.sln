@@ -53,6 +53,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{69E2DB
 		..\env\aws.env = ..\env\aws.env
 		..\env\metrics.env = ..\env\metrics.env
 		..\env\service-platform.env = ..\env\service-platform.env
+		..\env\azure.env = ..\env\azure.env
+		..\env\azure-local.env = ..\env\azure-local.env
+		..\docker-compose-azure.yml = ..\docker-compose-azure.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{9B290188-139B-4CEC-8633-9AAA9D7BBDD4}"
@@ -61,6 +64,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreditBureau", "CreditBureau\CreditBureau.csproj", "{509D57E0-D9D7-425A-B3A5-009D7E16647E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Transport.AzureServiceBus", "Transport\NServiceBus.Transport.AzureServiceBus.csproj", "{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -204,6 +209,18 @@ Global
 		{509D57E0-D9D7-425A-B3A5-009D7E16647E}.Release|x64.Build.0 = Release|Any CPU
 		{509D57E0-D9D7-425A-B3A5-009D7E16647E}.Release|x86.ActiveCfg = Release|Any CPU
 		{509D57E0-D9D7-425A-B3A5-009D7E16647E}.Release|x86.Build.0 = Release|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Debug|x64.Build.0 = Debug|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Debug|x86.Build.0 = Debug|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Release|x64.ActiveCfg = Release|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Release|x64.Build.0 = Release|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Release|x86.ActiveCfg = Release|Any CPU
+		{9AD7D408-EF2C-48D7-91EF-B7CB1D618CE8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,140 @@
+﻿name: loanbroker
+services:
+  creditbureau:
+    profiles: ['', infrastructure]
+    image: creditbureau.tf689registry.azurecr.io:latest
+    build:
+      context: ./
+      dockerfile: ./src/CreditBureau/Dockerfile
+    ports:
+      - "7071:8080"
+    environment:
+      AzureWebJobsStorage: ""
+      FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated"
+      WEBSITES_PORT: "8080"
+      ASPNETCORE_URLS: "http://0.0.0.0:8080"
+    networks:
+      - ls
+  loan-broker:
+    profiles: ['']
+    build:
+      context: ./
+      dockerfile: ./src/LoanBroker/Dockerfile
+    env_file:
+      - env/metrics.env
+      - env/azure.env
+    depends_on:
+#      servicebus-emulator:
+#        condition: service_started
+#      sqlserver:
+#        condition: service_started
+      creditbureau:
+        condition: service_started
+#      servicepulse:
+#        condition: service_started
+    networks:
+      - ls
+  bank1:
+    profiles: ['']
+    build:
+      context: ./
+      dockerfile: ./src/Bank1Adapter/Dockerfile
+    env_file:
+      - env/metrics.env
+      - env/azure.env
+#    depends_on:
+#      servicebus-emulator:
+#        condition: service_started
+#      sqlserver:
+#        condition: service_started
+#      servicepulse:
+#        condition: service_started
+    networks:
+      - ls
+  bank2:
+    profiles: ['']
+    build:
+      context: ./
+      dockerfile: ./src/Bank2Adapter/Dockerfile
+    env_file:
+      - env/metrics.env
+      - env/azure.env
+#    depends_on:
+#      servicebus-emulator:
+#        condition: service_started
+#      sqlserver:
+#        condition: service_started
+#      servicepulse:
+#        condition: service_started
+    networks:
+      - ls
+  bank3:
+    profiles: ['']
+    build:
+      context: ./
+      dockerfile: ./src/Bank3Adapter/Dockerfile
+    env_file:
+      - env/metrics.env
+      - env/azure.env
+#    depends_on:
+#      servicebus-emulator:
+#        condition: service_started
+#      sqlserver:
+#        condition: service_started
+#      servicepulse:
+#        condition: service_started
+    networks:
+      - ls
+  email-sender:
+    profiles: ['']
+    build:
+      context: ./
+      dockerfile: ./src/EmailSender/Dockerfile
+    env_file:
+      - env/metrics.env
+      - env/azure.env
+#    depends_on:
+#      servicebus-emulator:
+#        condition: service_started
+#      sqlserver:
+#        condition: service_started
+#      servicepulse:
+#        condition: service_started
+    networks:
+      - ls
+  client:
+    profiles: ['']
+    build:
+      context: ./
+      dockerfile: ./src/Client/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      DOTNET_EnableDiagnostics: "1"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    env_file:
+      - env/metrics.env
+      - env/azure.env
+    depends_on:
+#      servicebus-emulator:
+#        condition: service_started
+#      sqlserver:
+#        condition: service_started
+#      servicepulse:
+#        condition: service_started
+      loan-broker:
+        condition: service_started
+    networks:
+      - ls
+    tty: true
+    stdin_open: true
+    command: --demo
+networks:
+  ls:
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24

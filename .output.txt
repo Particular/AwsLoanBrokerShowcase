@@ -1,0 +1,448 @@
+﻿
+Restore complete (0.6s)
+  NServiceBus.Transport.AzureServiceBus net10.0 succeeded (2.2s) → src\NServiceBus.Transport.AzureServiceBus\src\Transport\bin\Debug\net10.0\NServiceBus.Transport.AzureServiceBus.dll
+  NServiceBus.Transport.AzureServiceBus.Tests net10.0 succeeded (1.1s) → src\NServiceBus.Transport.AzureServiceBus\src\Tests\bin\Debug\net10.0\NServiceBus.Transport.AzureServiceBus.Tests.dll
+NUnit Adapter 6.1.0.0: Test execution started
+Running all tests in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Tests\bin\Debug\net10.0\NServiceBus.Transport.AzureServiceBus.Tests.dll
+   NUnit3TestExecutor discovered 127 of 127 NUnit test cases using Current Discovery mode, Non-Explicit run
+2026-02-06 11:49:22.708 INFO  Logging to 'C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Tests\bin\Debug\net10.0' with level Info
+2026-02-06 11:49:22.733 WARN  Skip handling the message with id 'SomeId' because the lock has expired at '6/02/2026 3:48:52 AM +00:00'. This is usually an indication that the endpoint prefetches more messages than it is able to handle within the configured peek lock duration. Consider tweaking the prefetch configuration to values that are better aligned with the concurrency of the endpoint and the time it takes to handle the messages.
+2026-02-06 11:49:22.735 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00' when not disarmed.
+2026-02-06 11:49:22.735 WARN  The circuit breaker for 'TestCircuitBreaker' will now be triggered with exception 'System.Exception: Test Exception'.
+2026-02-06 11:49:22.913 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00.1000000' when not disarmed.
+2026-02-06 11:49:22.913 INFO  The circuit breaker for 'TestCircuitBreaker' is now disarmed.
+2026-02-06 11:49:22.914 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00.1000000' when not disarmed.
+2026-02-06 11:49:22.973 INFO  The circuit breaker for 'TestCircuitBreaker' is now disarmed.
+2026-02-06 11:49:22.976 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception 0' and might trigger in '00:00:05' when not disarmed.
+2026-02-06 11:49:23.004 INFO  The circuit breaker for 'TestCircuitBreaker' is now disarmed.
+2026-02-06 11:49:23.483 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00.1000000' when not disarmed.
+2026-02-06 11:49:23.483 INFO  The circuit breaker for 'TestCircuitBreaker' is now disarmed.
+2026-02-06 11:49:23.485 ERROR The circuit breaker for 'TestCircuitBreaker' was unable to execute the arm action.
+System.AggregateException: One or more errors occurred. (Exception from armed action) (Test Exception)
+ ---> System.Exception: Exception from armed action
+   at NServiceBus.Transport.AzureServiceBus.Tests.Receiving.RepeatedFailuresOverTimeCircuitBreakerTests.<>c.<Should_rethrow_exception_on_failure>b__3_1() in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Tests\Receiving\RepeatedFailuresOverTimeCircuitBreakerTests.cs:line 84
+   at NServiceBus.Transport.AzureServiceBus.RepeatedFailuresOverTimeCircuitBreaker.Failure(Exception exception, CancellationToken cancellationToken) in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Transport\Receiving\RepeatedFailuresOverTimeCircuitBreaker.cs:line 127
+   --- End of inner exception stack trace ---
+ ---> (Inner Exception #1) System.Exception: Test Exception<---
+2026-02-06 11:49:23.486 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00.1000000' when not disarmed.
+2026-02-06 11:49:23.486 INFO  The circuit breaker for 'TestCircuitBreaker' is now disarmed.
+2026-02-06 11:49:23.487 ERROR The circuit breaker for 'TestCircuitBreaker' was unable to execute the disarm action.
+System.Exception: Exception from disarmed action
+   at NServiceBus.Transport.AzureServiceBus.Tests.Receiving.RepeatedFailuresOverTimeCircuitBreakerTests.<>c.<Should_rethrow_exception_on_success>b__1_2() in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Tests\Receiving\RepeatedFailuresOverTimeCircuitBreakerTests.cs:line 46
+   at NServiceBus.Transport.AzureServiceBus.RepeatedFailuresOverTimeCircuitBreaker.Success() in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Transport\Receiving\RepeatedFailuresOverTimeCircuitBreaker.cs:line 86
+2026-02-06 11:49:23.488 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00' when not disarmed.
+2026-02-06 11:49:23.488 WARN  The circuit breaker for 'TestCircuitBreaker' will now be triggered with exception 'System.Exception: Test Exception'.
+2026-02-06 11:49:23.590 WARN  The circuit breaker for 'TestCircuitBreaker' is now in the armed state due to 'System.Exception: Test Exception' and might trigger in '00:00:00.0500000' when not disarmed.
+2026-02-06 11:49:23.650 WARN  The circuit breaker for 'TestCircuitBreaker' will now be triggered with exception 'System.Exception: Test Exception'.
+2026-02-06 11:49:23.750 ERROR Exception from Send.
+Azure.Messaging.ServiceBus.ServiceBusException: Some exception (MessagingEntityNotFound). For troubleshooting information, see https://aka.ms/azsdk/net/servicebus/exceptions/troubleshoot.
+   at NServiceBus.Transport.AzureServiceBus.Tests.Sending.MessageDispatcherTests.<>c.<Should_rethrow_when_unicast_dispatch_destination_not_available>b__1_1(ServiceBusMessage _) in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Tests\Sending\MessageDispatcherTests.cs:line 59
+   at NServiceBus.Transport.AzureServiceBus.Tests.FakeSender.SendMessageAsync(ServiceBusMessage message, CancellationToken cancellationToken) in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Tests\FakeSender.cs:line 43
+   at NServiceBus.Transport.AzureServiceBus.MessageDispatcher.DispatchForDestination(String destination, Boolean isMulticast, ServiceBusClient client, Transaction transaction, ServiceBusMessage message, CancellationToken cancellationToken) in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Transport\Sending\MessageDispatcher.cs:line 324
+   at NServiceBus.Transport.AzureServiceBus.MessageDispatcher.Dispatch(TransportOperations outgoingMessages, TransportTransaction transaction, CancellationToken cancellationToken) in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Transport\Sending\MessageDispatcher.cs:line 104
+NUnit Adapter 6.1.0.0: Test execution complete
+  NServiceBus.Transport.AzureServiceBus.Tests test net10.0 failed with 5 error(s) (2.3s)
+    /_/src/Particular.Approvals/Approver.cs(136): error TESTERROR:
+      Should_not_set_AutoDeleteOnIdle_when_instance_name_is_null (53ms): Error M
+      essage: System.Exception : Approval verification failed.
+       - Approval File: QueueCreatorTests.Should_not_set_AutoDeleteOnIdle_when_i
+      nstance_name_is_null.approved.txt (length=649)
+       - Received File: QueueCreatorTests.Should_not_set_AutoDeleteOnIdle_when_i
+      nstance_name_is_null.received.txt (length=641)
+
+      Approved: dow": "00:01:00",\n  "MaxDeliveryCount": 2147483647,\n  "EnableB
+      atchedOperations":
+      Received: dow": "00:01:00",\n  "MaxDeliveryCount": 10,\n  "EnableBatchedOp
+      erations": true,\n
+      ---------------------------------------------------^
+      Stack Trace:
+         at Particular.Approvals.Approver.ThrowExceptionWithDiff(String approved
+      File, String receivedFile, String approvedText, String receivedText) in /_
+      /src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_not_set_AutoDeleteOnIdle_when_instance_name_is_null() in C
+      :\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.Azure
+      ServiceBus\src\Tests\Administration\QueueCreatorTests.cs:line 82
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+      1)    at Particular.Approvals.Approver.ThrowExceptionWithDiff(String appro
+      vedFile, String receivedFile, String approvedText, String receivedText) in
+       /_/src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_not_set_AutoDeleteOnIdle_when_instance_name_is_null() in C
+      :\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.Azure
+      ServiceBus\src\Tests\Administration\QueueCreatorTests.cs:line 82
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+    /_/src/Particular.Approvals/Approver.cs(136): error TESTERROR:
+      Should_not_set_AutoDeleteOnIdle_when_null (2ms): Error Message: System.Exc
+      eption : Approval verification failed.
+       - Approval File: QueueCreatorTests.Should_not_set_AutoDeleteOnIdle_when_n
+      ull.approved.txt (length=649)
+       - Received File: QueueCreatorTests.Should_not_set_AutoDeleteOnIdle_when_n
+      ull.received.txt (length=641)
+
+      Approved: dow": "00:01:00",\n  "MaxDeliveryCount": 2147483647,\n  "EnableB
+      atchedOperations":
+      Received: dow": "00:01:00",\n  "MaxDeliveryCount": 10,\n  "EnableBatchedOp
+      erations": true,\n
+      ---------------------------------------------------^
+      Stack Trace:
+         at Particular.Approvals.Approver.ThrowExceptionWithDiff(String approved
+      File, String receivedFile, String approvedText, String receivedText) in /_
+      /src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_not_set_AutoDeleteOnIdle_when_null() in C:\Repos-Particula
+      r\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Te
+      sts\Administration\QueueCreatorTests.cs:line 44
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+      1)    at Particular.Approvals.Approver.ThrowExceptionWithDiff(String appro
+      vedFile, String receivedFile, String approvedText, String receivedText) in
+       /_/src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_not_set_AutoDeleteOnIdle_when_null() in C:\Repos-Particula
+      r\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\Te
+      sts\Administration\QueueCreatorTests.cs:line 44
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+    /_/src/Particular.Approvals/Approver.cs(136): error TESTERROR:
+      Should_not_set_AutoDeleteOnIdle_when_queue_name_does_not_match_instance_na
+      me (1ms): Error Message: System.Exception : Approval verification failed.
+       - Approval File: QueueCreatorTests.Should_not_set_AutoDeleteOnIdle_when_q
+      ueue_name_does_not_match_instance_name.approved.txt (length=649)
+       - Received File: QueueCreatorTests.Should_not_set_AutoDeleteOnIdle_when_q
+      ueue_name_does_not_match_instance_name.received.txt (length=641)
+
+      Approved: dow": "00:01:00",\n  "MaxDeliveryCount": 2147483647,\n  "EnableB
+      atchedOperations":
+      Received: dow": "00:01:00",\n  "MaxDeliveryCount": 10,\n  "EnableBatchedOp
+      erations": true,\n
+      ---------------------------------------------------^
+      Stack Trace:
+         at Particular.Approvals.Approver.ThrowExceptionWithDiff(String approved
+      File, String receivedFile, String approvedText, String receivedText) in /_
+      /src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_not_set_AutoDeleteOnIdle_when_queue_name_does_not_match_in
+      stance_name() in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceB
+      us.Transport.AzureServiceBus\src\Tests\Administration\QueueCreatorTests.cs
+      :line 101
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+      1)    at Particular.Approvals.Approver.ThrowExceptionWithDiff(String appro
+      vedFile, String receivedFile, String approvedText, String receivedText) in
+       /_/src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_not_set_AutoDeleteOnIdle_when_queue_name_does_not_match_in
+      stance_name() in C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceB
+      us.Transport.AzureServiceBus\src\Tests\Administration\QueueCreatorTests.cs
+      :line 101
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+    /_/src/Particular.Approvals/Approver.cs(136): error TESTERROR:
+      Should_only_set_AutoDeleteOnIdle_on_instance_specific_queue (1ms): Error M
+      essage: System.Exception : Approval verification failed.
+       - Approval File: QueueCreatorTests.Should_only_set_AutoDeleteOnIdle_on_in
+      stance_specific_queue.approved.txt (length=1280)
+       - Received File: QueueCreatorTests.Should_only_set_AutoDeleteOnIdle_on_in
+      stance_specific_queue.received.txt (length=1264)
+
+      Approved: dow": "00:01:00",\n  "MaxDeliveryCount": 2147483647,\n  "EnableB
+      atchedOperations":
+      Received: dow": "00:01:00",\n  "MaxDeliveryCount": 10,\n  "EnableBatchedOp
+      erations": true,\n
+      ---------------------------------------------------^
+      Stack Trace:
+         at Particular.Approvals.Approver.ThrowExceptionWithDiff(String approved
+      File, String receivedFile, String approvedText, String receivedText) in /_
+      /src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_only_set_AutoDeleteOnIdle_on_instance_specific_queue() in
+      C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.Azur
+      eServiceBus\src\Tests\Administration\QueueCreatorTests.cs:line 63
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+      1)    at Particular.Approvals.Approver.ThrowExceptionWithDiff(String appro
+      vedFile, String receivedFile, String approvedText, String receivedText) in
+       /_/src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_only_set_AutoDeleteOnIdle_on_instance_specific_queue() in
+      C:\Repos-Particular\AzureLoanBrokerShowcase\src\NServiceBus.Transport.Azur
+      eServiceBus\src\Tests\Administration\QueueCreatorTests.cs:line 63
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+    /_/src/Particular.Approvals/Approver.cs(136): error TESTERROR:
+      Should_set_AutoDeleteOnIdle_when_configured (1ms): Error Message: System.E
+      xception : Approval verification failed.
+       - Approval File: QueueCreatorTests.Should_set_AutoDeleteOnIdle_when_confi
+      gured.approved.txt (length=632)
+       - Received File: QueueCreatorTests.Should_set_AutoDeleteOnIdle_when_confi
+      gured.received.txt (length=624)
+
+      Approved: dow": "00:01:00",\n  "MaxDeliveryCount": 2147483647,\n  "EnableB
+      atchedOperations":
+      Received: dow": "00:01:00",\n  "MaxDeliveryCount": 10,\n  "EnableBatchedOp
+      erations": true,\n
+      ---------------------------------------------------^
+      Stack Trace:
+         at Particular.Approvals.Approver.ThrowExceptionWithDiff(String approved
+      File, String receivedFile, String approvedText, String receivedText) in /_
+      /src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_set_AutoDeleteOnIdle_when_configured() in C:\Repos-Particu
+      lar\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\
+      Tests\Administration\QueueCreatorTests.cs:line 26
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+      1)    at Particular.Approvals.Approver.ThrowExceptionWithDiff(String appro
+      vedFile, String receivedFile, String approvedText, String receivedText) in
+       /_/src/Particular.Approvals/Approver.cs:line 136
+         at Particular.Approvals.Approver.Verify(String value, Func`2 scrubber,
+      String scenario, String callerFilePath, String callerMemberName) in /_/src
+      /Particular.Approvals/Approver.cs:line 74
+         at NServiceBus.Transport.AzureServiceBus.Tests.Administration.QueueCrea
+      torTests.Should_set_AutoDeleteOnIdle_when_configured() in C:\Repos-Particu
+      lar\AzureLoanBrokerShowcase\src\NServiceBus.Transport.AzureServiceBus\src\
+      Tests\Administration\QueueCreatorTests.cs:line 26
+         at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.GetResult
+      ()
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecu
+      tionContext context, Func`1 invoke)
+         at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionConte
+      xt context, Func`1 invoke)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(Te
+      stExecutionContext context)
+         at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExec
+      utionContext context)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.<>c__DisplayClass3
+      _0.<PerformWork>b__0()
+         at NUnit.Framework.Internal.ContextUtils.<>c__DisplayClass1_0`1.<DoIsol
+      ated>b__0(Object _)
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+      --- End of stack trace from previous location ---
+         at System.Threading.ExecutionContext.RunInternal(ExecutionContext execu
+      tionContext, ContextCallback callback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated(ContextCallback cal
+      lback, Object state)
+         at NUnit.Framework.Internal.ContextUtils.DoIsolated[T](Func`1 func)
+         at NUnit.Framework.Internal.Execution.SimpleWorkItem.PerformWork()
+Test summary: total: 127, failed: 5, succeeded: 122, skipped: 0, duration: 2.3s
+Build failed with 5 error(s) in 7.0s
