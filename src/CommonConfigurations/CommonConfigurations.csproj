@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="NLog.Extensions.Logging" Version="6.1.2" />
-      <PackageReference Include="NServiceBus" Version="10.1.2" />
+      <PackageReference Include="NServiceBus" Version="10.1.3" />
       <PackageReference Include="NServiceBus.AmazonSQS" Version="9.0.0" />
       <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="4.0.1" />
       <PackageReference Include="NServiceBus.Extensions.Hosting" Version="4.0.0" />
