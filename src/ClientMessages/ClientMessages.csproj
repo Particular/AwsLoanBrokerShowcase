@@ -7,6 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- OpenTelemetry.Exporter.Jaeger 1.6.0-rc.1 (and all previous versions too) moderate vulnerability -->
+        <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-38h3-2333-qx47" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="NServiceBus.MessageInterfaces" Version="1.0.0" />
     </ItemGroup>
 
