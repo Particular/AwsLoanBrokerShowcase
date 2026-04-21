@@ -15,6 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- OpenTelemetry.Exporter.Jaeger 1.6.0-rc.1 (and all previous versions too) moderate vulnerability -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-38h3-2333-qx47" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="GitHubActionsTestLogger" Version="3.0.3" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" PrivateAssets="All" />
     <PackageReference Include="NUnit" Version="4.5.1" />
