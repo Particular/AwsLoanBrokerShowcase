@@ -1,0 +1,9 @@
+{
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^OpenTelemetry"],
+      "matchManagers": ["nuget"],
+      "groupName": "OpenTelemetry dependencies"
+    }
+  ]
+}
