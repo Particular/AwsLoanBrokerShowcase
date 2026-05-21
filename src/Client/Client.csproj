@@ -5,7 +5,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <ContainerRepository>loanbroker/client</ContainerRepository>
+        <ContainerRepository>loanbroker-aws/client</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>

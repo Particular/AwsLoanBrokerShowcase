@@ -20,7 +20,7 @@ services:
         ipv4_address: 10.0.2.20
   loan-broker:
     profiles: ['']
-    image: loanbroker/loan-broker:latest
+    image: loanbroker-aws/loan-broker:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -35,7 +35,7 @@ services:
       - ls
   bank1:
     profiles: ['']
-    image: loanbroker/bank1:latest
+    image: loanbroker-aws/bank1:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -50,7 +50,7 @@ services:
       - ls
   bank2:
     profiles: ['']
-    image: loanbroker/bank2:latest
+    image: loanbroker-aws/bank2:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -65,7 +65,7 @@ services:
       - ls
   bank3:
     profiles: ['']
-    image: loanbroker/bank3:latest
+    image: loanbroker-aws/bank3:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -80,7 +80,7 @@ services:
       - ls
   email-sender:
     profiles: ['']
-    image: loanbroker/email-sender:latest
+    image: loanbroker-aws/email-sender:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -95,7 +95,7 @@ services:
       - ls
   client:
     profiles: ['']
-    image: loanbroker/client:latest
+    image: loanbroker-aws/client:latest
     env_file:
       - env/metrics.env
       - env/aws.env

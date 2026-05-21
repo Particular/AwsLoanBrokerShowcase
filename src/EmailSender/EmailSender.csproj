@@ -5,7 +5,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <ContainerRepository>loanbroker/email-sender</ContainerRepository>
+        <ContainerRepository>loanbroker-aws/email-sender</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>
