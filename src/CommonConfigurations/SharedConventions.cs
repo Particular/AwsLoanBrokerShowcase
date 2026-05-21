@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using NServiceBus.Extensions.Logging;
-using NServiceBus.Logging;
-
 
 namespace CommonConfigurations;
 
@@ -12,7 +10,8 @@ public static class SharedConventions
 {
     public static HostApplicationBuilder ConfigureAwsNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
     {
-        ConfigureMicrosoftLoggingIntegration();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddNLog();
 
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 
@@ -29,7 +28,7 @@ public static class SharedConventions
         // Endpoint-specific customization
         customize?.Invoke(new Customizations(endpointConfiguration, routing));
 
-        builder.UseNServiceBus(endpointConfiguration);
+        builder.Services.AddNServiceBusEndpoint(endpointConfiguration);
         return builder;
     }
 
@@ -75,13 +74,6 @@ public static class SharedConventions
                 Interval = TimeSpan.FromSeconds(1)
             }
         });
-    }
-
-    static void ConfigureMicrosoftLoggingIntegration()
-    {
-        // Integrate NServiceBus logging with Microsoft.Extensions.Logging
-        var nlog = new NLogLoggerFactory();
-        LogManager.UseFactory(new ExtensionsLoggerFactory(nlog));
     }
 
     public static void DisableRetries(this EndpointConfiguration endpointConfiguration)
