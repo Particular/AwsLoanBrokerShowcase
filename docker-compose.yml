@@ -20,9 +20,7 @@ services:
         ipv4_address: 10.0.2.20
   loan-broker:
     profiles: ['']
-    build:
-      context: ./
-      dockerfile: ./src/LoanBroker/Dockerfile
+    image: loanbroker-aws/loan-broker:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -37,9 +35,7 @@ services:
       - ls
   bank1:
     profiles: ['']
-    build:
-      context: ./
-      dockerfile: ./src/Bank1Adapter/Dockerfile
+    image: loanbroker-aws/bank1:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -54,9 +50,7 @@ services:
       - ls
   bank2:
     profiles: ['']
-    build:
-      context: ./
-      dockerfile: ./src/Bank2Adapter/Dockerfile
+    image: loanbroker-aws/bank2:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -71,9 +65,7 @@ services:
       - ls
   bank3:
     profiles: ['']
-    build:
-      context: ./
-      dockerfile: ./src/Bank3Adapter/Dockerfile
+    image: loanbroker-aws/bank3:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -88,9 +80,7 @@ services:
       - ls
   email-sender:
     profiles: ['']
-    build:
-      context: ./
-      dockerfile: ./src/EmailSender/Dockerfile
+    image: loanbroker-aws/email-sender:latest
     env_file:
       - env/metrics.env
       - env/aws.env
@@ -105,9 +95,7 @@ services:
       - ls
   client:
     profiles: ['']
-    build:
-      context: ./
-      dockerfile: ./src/Client/Dockerfile
+    image: loanbroker-aws/client:latest
     env_file:
       - env/metrics.env
       - env/aws.env

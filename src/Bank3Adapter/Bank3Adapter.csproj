@@ -5,13 +5,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <ContainerRepository>loanbroker-aws/bank3</ContainerRepository>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\.dockerignore">
-      <Link>.dockerignore</Link>
-    </Content>
     <Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />
     <None Remove="appsettings*.json" />
     <ProjectCapability Include="DynamicFileNestingEnabled" />

@@ -4,4 +4,9 @@
     <NuGetAuditLevel>low</NuGetAuditLevel>
     <NuGetAuditMode>all</NuGetAuditMode>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+    <LocalRegistry>Docker</LocalRegistry>
+  </PropertyGroup>
 </Project>

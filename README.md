@@ -35,7 +35,7 @@ The example also exports metrics and traces to AWS CloudWatch and XRay.
 
 ## Requirements
 
-- .NET 8 or greater
+- .NET 10 SDK
 - Docker
 - Docker Compose
 
@@ -44,16 +44,17 @@ The example also exports metrics and traces to AWS CloudWatch and XRay.
 The simplest way to run the example is using Docker for both the endpoints and the infrastructure.
 The client application, the loan broker service, the e-mail sender, and the bank adapters can be deployed as Docker containers alongside the Particular platform to monitor the system, LocalStack to mock the AWS services, and the additional containers needed for enabling OpenTelemetry observability.
 
-To run the complete example in Docker, execute the following command from the root folder:
+To run the complete example in Docker, publish the endpoint container images and start the Compose environment from the root folder:
 
 ```shell
-docker compose up --build -d
+dotnet publish src/AwsLoanBrokerSample.sln -c Release --os linux /t:PublishContainer
+docker compose up -d
 ```
 
 > [!TIP]
 > Once the project is running, check out the [Things to try](#things-to-try) section.
 
-The above command will build all projects, build container images, deploy them to the local Docker registry, and start them. The Docker Compose command will also run and configure all the additional infrastructural containers.
+The `dotnet publish` commands build the projects and publish Linux container images to the local Docker registry using the .NET SDK's built-in container support. The Docker Compose command starts those endpoint images and configures all the additional infrastructural containers.
 
 To stop the running solution and remove all deployed containers. Using a command prompt, execute the following command:
 

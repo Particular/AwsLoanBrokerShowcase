@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Config;
 using NLog.Extensions.Logging;
-using NServiceBus.Extensions.Logging;
-using NServiceBus.Logging;
-
+using NLog.Targets;
 
 namespace CommonConfigurations;
 
@@ -12,7 +13,9 @@ public static class SharedConventions
 {
     public static HostApplicationBuilder ConfigureAwsNServiceBusEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
     {
-        ConfigureMicrosoftLoggingIntegration();
+        builder.Logging.ClearProviders();
+        ConfigureDefaultNLogConsoleTarget(builder);
+        builder.Logging.AddNLog();
 
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 
@@ -29,7 +32,7 @@ public static class SharedConventions
         // Endpoint-specific customization
         customize?.Invoke(new Customizations(endpointConfiguration, routing));
 
-        builder.UseNServiceBus(endpointConfiguration);
+        builder.Services.AddNServiceBusEndpoint(endpointConfiguration);
         return builder;
     }
 
@@ -77,11 +80,21 @@ public static class SharedConventions
         });
     }
 
-    static void ConfigureMicrosoftLoggingIntegration()
+    static void ConfigureDefaultNLogConsoleTarget(HostApplicationBuilder builder)
     {
-        // Integrate NServiceBus logging with Microsoft.Extensions.Logging
-        var nlog = new NLogLoggerFactory();
-        LogManager.UseFactory(new ExtensionsLoggerFactory(nlog));
+        if (builder.Configuration.GetSection("NLog").Exists())
+        {
+            return;
+        }
+
+        var consoleTarget = new ConsoleTarget("console")
+        {
+            Layout = "${longdate} ${uppercase:${level}} ${logger} ${message} ${exception:format=tostring}"
+        };
+
+        var config = new LoggingConfiguration();
+        config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, consoleTarget);
+        NLog.LogManager.Configuration = config;
     }
 
     public static void DisableRetries(this EndpointConfiguration endpointConfiguration)
