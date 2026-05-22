@@ -11,8 +11,6 @@
       <PackageReference Include="NServiceBus" Version="10.2.0" />
       <PackageReference Include="NServiceBus.AmazonSQS" Version="9.0.1" />
       <PackageReference Include="NServiceBus.Persistence.DynamoDB" Version="4.0.2" />
-      <PackageReference Include="NServiceBus.Extensions.Hosting" Version="4.0.1" />
-      <PackageReference Include="NServiceBus.Extensions.Logging" Version="4.0.1" />
       <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="4.0.1" />
       <PackageReference Include="NServiceBus.SagaAudit" Version="6.0.1" />
       <PackageReference Include="OpenTelemetry" Version="1.15.3" />
